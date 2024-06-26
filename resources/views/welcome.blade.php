@@ -13,6 +13,9 @@
 
     @viteReactRefresh
     @vite(['resources/sass/app.scss', 'resources/js/App.tsx'])
+    <script>
+        window.config = @json($settings)
+    </script>
 </head>
 
 <body>

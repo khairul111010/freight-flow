@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Layout from "../components/layouts";
+import Layout from "../Components/layouts";
 
 const router = createBrowserRouter([
     {
@@ -13,13 +13,13 @@ const router = createBrowserRouter([
             {
                 path: "/about",
                 element: <h1>About</h1>,
-            }
-        ]
-    }
+            },
+        ],
+    },
 ]);
 
-const AllRoutes:FC = () => {
+const AllRoutes: FC = () => {
     return <RouterProvider router={router} />;
-}
+};
 
 export default AllRoutes;
