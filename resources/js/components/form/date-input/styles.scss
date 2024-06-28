@@ -1,0 +1,12 @@
+.c-date-input {
+    .rs-picker-toggle {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        border-radius: 10px;
+        z-index: 0;
+    }
+    .rs-picker-toggle-active,
+    .rs-picker.rs-picker-focused {
+        box-shadow: none !important;
+    }
+}

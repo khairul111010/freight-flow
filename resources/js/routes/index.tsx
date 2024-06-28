@@ -1,20 +1,14 @@
 import { FC } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Layout from "../Components/layouts";
+import AppLayout from "../components/layouts/AppLayout";
+import appRoutes from "./AppRoutes";
+import authRoutes from "./AuthRoutes";
+import errorRoutes from "./ErrorRoutes";
 
 const router = createBrowserRouter([
     {
-        element: <Layout />,
-        children: [
-            {
-                path: "/",
-                element: <h1 className="bg-amber-500">Hello, world!</h1>,
-            },
-            {
-                path: "/about",
-                element: <h1>About</h1>,
-            },
-        ],
+        element: <AppLayout />,
+        children: [...appRoutes, ...authRoutes, ...errorRoutes],
     },
 ]);
 

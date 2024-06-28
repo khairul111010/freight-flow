@@ -1,9 +1,8 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
+import Header from "../../components/layouts/Header";
 
-
-const Layout:FC = () => {
+const Layout: FC = () => {
     return (
         <>
             <Header />
@@ -11,7 +10,7 @@ const Layout:FC = () => {
                 <Outlet />
             </main>
         </>
-    )
-}
+    );
+};
 
 export default Layout;

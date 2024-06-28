@@ -1,0 +1,40 @@
+import React, { FC, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import { BaseState } from "../../store";
+import { authEnum } from "../../enums/authEnums";
+import { AuthRoutesEnum } from "../../enums/routeEnums";
+import { setToken, setUser } from "../../store/slices/authSlice";
+
+const AppLayout: FC = () => {
+    const { user } = useSelector((state: BaseState) => state.auth);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const localAccessToken = localStorage.getItem(
+        authEnum.LOCAL_STORAGE_TOKEN_KEY
+    );
+    const localUser = localStorage.getItem(authEnum.LOCAL_STORAGE_USER_KEY);
+    useEffect(() => {
+        if (!localAccessToken && !localUser) {
+            navigate(AuthRoutesEnum.LOGIN);
+        } else {
+            dispatch(setToken(localAccessToken));
+            dispatch(setUser(JSON.parse(localUser as string)));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!user && !localAccessToken && !localUser) {
+            navigate(AuthRoutesEnum.LOGIN);
+        }
+    }, [user]);
+
+    return (
+        <>
+            <Outlet />
+        </>
+    );
+};
+
+export default AppLayout;
