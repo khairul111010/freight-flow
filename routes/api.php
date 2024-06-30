@@ -24,6 +24,8 @@ Route::post('/login', [AuthController::class, "login"]);
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
+    Route::get('/refresh-access-token', [AuthController::class, "refresh"]);
+
     Route::get('/users', [UserController::class, '']);
 
     Route::post('/logout', [AuthController::class, "logout"]);

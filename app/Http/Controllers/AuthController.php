@@ -75,6 +75,41 @@ class AuthController extends Controller
     }
 
 
+    public function refresh()
+    {
+        try {
+
+            $user = User::where('email', auth()->user()->email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Invalid user'
+                ], 401);
+            }
+
+            $user->tokens()->delete();
+
+            $token = $user->createToken('myAppToken')->plainTextToken;
+
+            return response()->json([
+                'message' => 'Refresh successful',
+                'result' => ['user' => $user, 'token' => $token]
+            ], 200);
+
+        } catch (Exception $e) {
+
+            return response()->json([
+                "success" => false,
+                'message' => 'Something went wrong',
+            ], 500);
+
+        }
+
+
+
+    }
+
+
     public function logout(Request $request)
     {
         try {
