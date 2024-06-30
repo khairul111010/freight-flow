@@ -1,3 +1,4 @@
+import { IconAlertCircleFilled } from "@tabler/icons-react";
 import { useField } from "formik";
 import {
     CSSProperties,
@@ -75,13 +76,13 @@ const TextInput: FC<Props> = ({
                 </label>
             )}
             <input
-                className={`leading-[1.5] rounded-md text-[#1F1F1F] font-medium text-base w-full block outline-none ${
+                className={`leading-[1.5] rounded-md font-medium text-base w-full block outline-none ${
                     noBorder
                         ? ""
                         : `border-[2px] ${
                               meta.touched && meta.error
-                                  ? "border-secondary focus:border-secondary bg-[#E5E7EB]"
-                                  : "border-[#DFDFDF] focus:border-primary"
+                                  ? "border-red-500 focus:border-red-500"
+                                  : "focus:border-primary"
                           }`
                 }  placeholder:text-gray-300 ${sizeClass} ${className}`}
                 onChange={handleChange}
@@ -96,8 +97,13 @@ const TextInput: FC<Props> = ({
                     helperMessage
                 ))}
             {meta.touched && meta.error && (
-                <div className="text-sm font-normal text-red-500 mt-1 flex items-center gap-1">
-                    <div>{meta.error}</div>
+                <div className="text-sm font-medium text-red-500 mt-1 flex items-center gap-1">
+                    <div className="flex items-center gap-1">
+                        <div>
+                            <IconAlertCircleFilled size={18} />
+                        </div>
+                        <div>{meta.error}</div>
+                    </div>
                 </div>
             )}
         </div>

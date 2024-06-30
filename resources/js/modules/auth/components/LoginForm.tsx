@@ -2,11 +2,13 @@ import React from "react";
 
 import { Form, Formik, FormikProps } from "formik";
 import { FC, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
 import { useLoginMutation } from "../../../store/apis/authApi";
 import TextInput from "../../../components/form/text-input";
 import Button from "../../../components/button";
+import { AppRoutesEnum } from "../../../enums/routeEnums";
+import toast from "react-hot-toast";
 
 const initialValues = {
     email: "",
@@ -32,7 +34,8 @@ const LoginForm: FC = () => {
         login(values)
             .unwrap()
             .then(() => {
-                navigate("/");
+                toast.success("Logged in successfully");
+                navigate(AppRoutesEnum.DASHBOARD);
             })
             .catch((error) => {
                 if (error.data) {
@@ -63,13 +66,13 @@ const LoginForm: FC = () => {
                     autoComplete="current-password"
                 />
                 <Button
-                    className="w-full"
+                    className="w-full rounded-md font-bold"
                     variant="primary"
                     type="submit"
                     loading={isLoading}
                     disabled={isLoading}
                 >
-                    Sign In
+                    Login
                 </Button>
             </Form>
         </Formik>

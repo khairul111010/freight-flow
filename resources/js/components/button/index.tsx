@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
 import { Link } from "react-router-dom";
+import Spinner from "../preloader/Spinner";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     className?: string;
@@ -34,8 +35,7 @@ const Button = ({
     }[size];
 
     const variantClass = {
-        primary:
-            "border-primary !text-white hover:bg-primary/90 active:hover:bg-primary-dark",
+        primary: "border-primary text-white hover:bg-primary/90",
         "primary-light":
             "border-primary/10 text-primary hover:bg-primary/20 active:hover:bg-primary/20",
         secondary:
@@ -66,7 +66,7 @@ const Button = ({
                         <span
                             className={`${bgClass} absolute w-full h-full flex items-center justify-center`}
                         >
-                            Loading...
+                            <Spinner />
                         </span>
                     )}
                     {children}
@@ -81,7 +81,7 @@ const Button = ({
                         <span
                             className={`${bgClass} absolute w-full h-full flex items-center justify-center`}
                         >
-                            Loading...
+                            <Spinner />
                         </span>
                     )}
                     {children}
