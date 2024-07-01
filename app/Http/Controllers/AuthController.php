@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegistrationRequest;
 use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,15 +11,9 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
 
-    public function register(Request $request)
+    public function register(RegistrationRequest $request)
     {
         try {
-            $request->validate([
-                'name' => 'required|string',
-                'email' => 'required|string|email|unique:users,email',
-                'password' => 'required|string'
-            ]);
-
             $user = new User([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -42,14 +38,9 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
-            $request->validate([
-                'email' => 'required|string|email',
-                'password' => 'required|string'
-            ]);
-
             $user = User::where('email', $request->email)->first();
 
             if (!$user || !password_verify($request->password, $user->password)) {
@@ -95,18 +86,13 @@ class AuthController extends Controller
                 'message' => 'Refresh successful',
                 'result' => ['user' => $user, 'token' => $token]
             ], 200);
-
         } catch (Exception $e) {
 
             return response()->json([
                 "success" => false,
                 'message' => 'Something went wrong',
             ], 500);
-
         }
-
-
-
     }
 
 

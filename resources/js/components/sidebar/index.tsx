@@ -20,15 +20,15 @@ const SideBar: FC<Props> = ({ open, onClose }) => {
             >
                 <div className="h-screen overflow-y-auto scrollbar  min-h-screen">
                     <div className="px-5 pt-[20px] flex items-center relative">
-                        <div className="flex items-center flex-col pl-3 gap-3">
-                            <img src={logo} alt="" />
+                        <div className="flex items-center flex-col pl-3 gap-3 ">
+                            <img src={logo} alt="" className="w-40" />
                         </div>
                         <button
                             className="h-8 w-8 absolute right-2 lg:hidden flex items-center justify-center text-xl"
                             type="button"
                             onClick={() => onClose?.(false)}
                         >
-                            <IconX />
+                            <IconX className="bg-slate-200 rounded-full p-1" />
                         </button>
                     </div>
                     <div className="px-4 py-4">hello</div>

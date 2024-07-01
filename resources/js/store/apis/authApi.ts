@@ -1,5 +1,6 @@
 
 import { baseApi } from '.';
+import { authEnum } from '../../enums/authEnums';
 import { setToken, setUser } from '../slices/authSlice';
 
 const setUserState = (result: any, dispatch: any) => {
@@ -10,28 +11,28 @@ const setUserState = (result: any, dispatch: any) => {
 
 const authApi = baseApi.enhanceEndpoints({addTagTypes: ['Auth']}).injectEndpoints({
     endpoints: (builder) => ({
-        // autoLogin: builder.query<any, void>({
-        //     async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
-        //         const accessToken = localStorage.getItem(authEnum.LOCAL_STORAGE_TOKEN_KEY)
-        //         if (accessToken) {
-        //             return await fetchWithBQ({
-        //                 url: '/auth/refresh-access-token',
-        //             })
-        //         } else {
-        //             return {data: {result: null}}
-        //         }
-        //     },
-        //     providesTags: ['Auth'],
-        //     async onQueryStarted(arg, {queryFulfilled, dispatch}) {
-        //         try {
-        //             const result = await queryFulfilled
-        //             if (result?.data?.result === null) return
-        //             setUserState(result, dispatch)
-        //         } catch (error: any) {
-        //             console.log(error)
-        //         }
-        //     },
-        // }),
+        autoLogin: builder.query<any, void>({
+            async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+                const accessToken = localStorage.getItem(authEnum.LOCAL_STORAGE_TOKEN_KEY)
+                if (accessToken) {
+                    return await fetchWithBQ({
+                        url: '/refresh-access-token',
+                    })
+                } else {
+                    return {data: {result: null}}
+                }
+            },
+            providesTags: ['Auth'],
+            async onQueryStarted(arg, {queryFulfilled, dispatch}) {
+                try {
+                    const result = await queryFulfilled                    
+                    if (result?.data?.result === null) return
+                    setUserState(result, dispatch)
+                } catch (error: any) {
+                    console.log(error)
+                }
+            },
+        }),
         login: builder.mutation({
             query: (body) => ({
                 url: '/login',
@@ -111,6 +112,7 @@ const authApi = baseApi.enhanceEndpoints({addTagTypes: ['Auth']}).injectEndpoint
 })
 
 export const {
+    useLazyAutoLoginQuery,
     useLoginMutation,
     useLogoutMutation,
 } = authApi
