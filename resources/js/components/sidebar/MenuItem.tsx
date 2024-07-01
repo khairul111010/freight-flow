@@ -1,20 +1,25 @@
-import {MenuItem} from '@/types/menu'
-import {FC, useEffect, useRef, useState} from 'react'
-import {useSelector} from 'react-redux'
-import {NavLink, matchPath, useLocation, useParams} from 'react-router-dom'
+import { FC, useEffect, useRef, useState } from "react";
+import { NavLink, matchPath, useLocation, useParams } from "react-router-dom";
+
+export type MenuItemType = {
+    name: string;
+    path: string;
+    icon?: any;
+    subMenu?: MenuItemType[];
+    additionalChildRoutes?: string[];
+    requiredPermissions?: string[];
+};
 
 interface Props {
-    className?: string
-    item: MenuItem
+    className?: string;
+    item: MenuItemType;
 }
 
-const MenuItem: FC<Props> = ({className = '', item}) => {
-    const {user} = useSelector((state: any) => state.auth)
-
-    const menuItemRef = useRef<HTMLLIElement>(null)
-    const [dropdownOpen, setDropdownOpen] = useState(false)
-    let {'*': slug} = useParams()
-    const {pathname} = useLocation()
+const MenuItem: FC<Props> = ({ className = "", item }) => {
+    const menuItemRef = useRef<HTMLLIElement>(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    let { "*": slug } = useParams();
+    const { pathname } = useLocation();
 
     useEffect(() => {
         if (
@@ -23,59 +28,79 @@ const MenuItem: FC<Props> = ({className = '', item}) => {
                 return (
                     pathname?.includes(_item.path as string) ||
                     (item.additionalChildRoutes?.filter(
-                        (route) => route.includes(pathname as string) || matchPath(route, pathname)
+                        (route) =>
+                            route.includes(pathname as string) ||
+                            matchPath(route, pathname)
                     )?.length as number) > 0
-                )
+                );
             }).length > 0
         ) {
-            setDropdownOpen(true)
-        } else if (item.subMenu || menuItemRef.current?.classList.contains('mm-active')) {
-            setDropdownOpen(false)
-            menuItemRef.current?.classList.remove('mm-active')
+            setDropdownOpen(true);
+        } else if (
+            item.subMenu ||
+            menuItemRef.current?.classList.contains("mm-active")
+        ) {
+            setDropdownOpen(false);
+            menuItemRef.current?.classList.remove("mm-active");
             if (menuItemRef.current?.firstChild) {
                 // @ts-ignore
-                menuItemRef.current?.firstChild?.setAttribute('aria-expanded', 'false')
+                menuItemRef.current?.firstChild?.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
             }
         }
-    }, [pathname])
+    }, [pathname]);
 
     return (
-        <li ref={menuItemRef}>
+        <li ref={menuItemRef} className="relative">
             {item.subMenu ? (
                 <NavLink
-                    to='#'
+                    to="#"
                     className={
-                        'font-medium hover:text-white has-arrow text-[#9CA3AF] text-base flex items-center gap-3 px-4 py-3 rounded-[4px] hover:bg-[#2A2D32]'
+                        "font-medium hover:text-white has-arrow text-[#9CA3AF] text-base flex items-center gap-3 px-4 py-3 rounded-[4px] hover:bg-[#2A2D32]"
                     }
                 >
-                    {item.icon && <item.icon className='h-5 w-5 hover:!text-white' />}
-                    <span className='leading-none hover:!text-white'>{item.name}</span>
+                    {item.icon && (
+                        <item.icon className="h-5 w-5 hover:!text-white" />
+                    )}
+                    <span className="leading-none hover:!text-white">
+                        {item.name}
+                    </span>
                 </NavLink>
             ) : (
                 <NavLink
                     to={item.path}
-                    className={({isActive}) => {
-                        return `${className} font-medium text-base flex items-center gap-3 px-4 py-3 my-1 rounded-[4px] ${
+                    className={({ isActive }) => {
+                        return `${className} font-medium text-base flex items-center gap-2 px-4 py-3 my-1 rounded-[4px] ${
                             isActive
-                                ? 'bg-[#2A2D32] hover:bg-[#2A2D32] !text-white focus:no-underline'
-                                : 'hover:bg-[#2A2D32] hover:!text-white text-[#9CA3AF]'
-                        }`
+                                ? "bg-gray-200 hover:bg-gray-200 font-semibold focus:no-underline before:absolute before:h-6 before:w-1 before:bg-primary before:rounded-full"
+                                : "bg-gray-100 hover:bg-gray-200 text-gray-900"
+                        }`;
                     }}
                 >
-                    {item.icon && <item.icon className='h-5 w-5 ' />}
-                    <span className='leading-none '>{item.name}</span>
+                    {item.icon && (
+                        <span className="pl-2">
+                            <item.icon className="h-5 w-5" />
+                        </span>
+                    )}
+                    <span className="leading-none ">{item.name}</span>
                 </NavLink>
             )}
 
             {item.subMenu && (
-                <ul className={`ml-8 ${dropdownOpen ? 'mm-show' : 'mm-collapse'}`}>
+                <ul
+                    className={`ml-8 ${
+                        dropdownOpen ? "mm-show" : "mm-collapse"
+                    }`}
+                >
                     {item.subMenu.map((_item: any, index: number) => {
-                        return <MenuItem item={_item} key={index} />
+                        return <MenuItem item={_item} key={index} />;
                     })}
                 </ul>
             )}
         </li>
-    )
-}
+    );
+};
 
-export default MenuItem
+export default MenuItem;

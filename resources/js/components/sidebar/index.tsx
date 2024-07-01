@@ -1,8 +1,9 @@
 import MetisMenu from "@metismenu/react";
 import { FC } from "react";
-import MenuItem from "./MenuItem";
+import MenuItem, { MenuItemType } from "./MenuItem";
 import { IconX } from "@tabler/icons-react";
 import logo from "../../assets/logo.png";
+import { sidebarMenuConfig } from "../../config/sidebarMenuConfig";
 type Props = {
     open?: boolean;
     onClose?: (open: boolean) => void;
@@ -31,7 +32,15 @@ const SideBar: FC<Props> = ({ open, onClose }) => {
                             <IconX className="bg-slate-200 rounded-full p-1" />
                         </button>
                     </div>
-                    <div className="px-4 py-4">hello</div>
+                    <div className="px-4 py-4">
+                        <MetisMenu>
+                            {sidebarMenuConfig.map(
+                                (item: MenuItemType, index: number) => {
+                                    return <MenuItem item={item} key={index} />;
+                                }
+                            )}
+                        </MetisMenu>
+                    </div>
                 </div>
             </div>
             <div
