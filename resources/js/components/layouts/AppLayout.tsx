@@ -14,18 +14,18 @@ const AppLayout: FC = () => {
     const localAccessToken = localStorage.getItem(
         authEnum.LOCAL_STORAGE_TOKEN_KEY
     );
-    const localUser = localStorage.getItem(authEnum.LOCAL_STORAGE_USER_KEY);
+
     useEffect(() => {
-        if (!localAccessToken && !localUser) {
+        if (!localAccessToken) {
             navigate(AuthRoutesEnum.LOGIN);
         } else {
             dispatch(setToken(localAccessToken));
-            dispatch(setUser(JSON.parse(localUser as string)));
+            dispatch(setUser(user));
         }
     }, []);
 
     useEffect(() => {
-        if (!user && !localAccessToken && !localUser) {
+        if (!user && !localAccessToken) {
             navigate(AuthRoutesEnum.LOGIN);
         }
     }, [user]);

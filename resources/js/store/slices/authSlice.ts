@@ -10,7 +10,6 @@ const authSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             state.user = action.payload
-            localStorage.setItem(authEnum.LOCAL_STORAGE_USER_KEY, JSON.stringify(action.payload))
         },
         setToken: (state, action) => {
             state.token = action.payload
@@ -22,7 +21,6 @@ const authSlice = createSlice({
         },
         removeUser: (state) => {
             state.user = null
-            localStorage.removeItem(authEnum.LOCAL_STORAGE_USER_KEY)
         },
     },
 })
