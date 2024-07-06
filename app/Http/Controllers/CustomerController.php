@@ -33,7 +33,7 @@ class CustomerController extends Controller
             $customer->phone = $request->phone;
             $customer->address = $request->address;
             $customer->currency = $request->currency;
-            $customer->vat = $request->vat;
+            // $customer->vat = $request->vat;
             $customer->save();
 
             return response()->json([
@@ -42,7 +42,6 @@ class CustomerController extends Controller
                 'result' => CustomerResource::make($customer)
             ], 201);
         } catch (Exception $e) {
-            dd($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',

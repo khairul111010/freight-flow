@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChargesController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ManualJournalController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +41,39 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{id}', [CustomerController::class, 'show']);
         Route::put('/{id}', [CustomerController::class, 'update']);
         Route::delete('/{id}', [CustomerController::class, 'destroy']);
+    });
+
+    Route::prefix('invoices')->group(function () {
+        Route::get('/', [InvoiceController::class, 'index']);
+        Route::post('/', [InvoiceController::class, 'store']);
+        Route::get('/{id}', [InvoiceController::class, 'show']);
+        Route::put('/{id}', [InvoiceController::class, 'update']);
+        Route::delete('/{id}', [InvoiceController::class, 'destroy']);
+    });
+
+    Route::prefix('vendors')->group(function () {
+        Route::get('/', [VendorController::class, 'index']);
+        Route::post('/', [VendorController::class, 'store']);
+        Route::get('/{id}', [VendorController::class, 'show']);
+        Route::put('/{id}', [VendorController::class, 'update']);
+        Route::delete('/{id}', [VendorController::class, 'destroy']);
+    });
+    
+
+    Route::prefix('charges')->group(function () {
+        Route::get('/', [ChargesController::class, 'index']);
+        Route::post('/', [ChargesController::class, 'store']);
+        Route::get('/{id}', [ChargesController::class, 'show']);
+        Route::put('/{id}', [ChargesController::class, 'update']);
+        Route::delete('/{id}', [ChargesController::class, 'destroy']);
+    });
+
+    Route::prefix('manual-journals')->group(function () {
+        Route::get('/', [ManualJournalController::class, 'index']);
+        Route::post('/', [ManualJournalController::class, 'store']);
+        Route::get('/{id}', [ManualJournalController::class, 'show']);
+        Route::put('/{id}', [ManualJournalController::class, 'update']);
+        Route::delete('/{id}', [ManualJournalController::class, 'destroy']);
     });
     
 });

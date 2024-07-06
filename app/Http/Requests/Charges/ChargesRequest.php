@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Customer;
+namespace App\Http\Requests\Charges;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CustomerCreateRequest extends FormRequest
+class ChargesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,6 @@ class CustomerCreateRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'email' => 'string|email',
-            'phone' => 'string',
-            'address' => 'string',
-            'currency' => 'string'
         ];
     }
 }
