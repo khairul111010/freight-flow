@@ -1,0 +1,32 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Organization;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class OrganizationSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        \App\Models\Organization::create([
+            'name' => 'SONIKA',
+            'description' => 'SONIKA BD SHIPPERS LTD',
+            'address' => 'Uttara, Dhaka',
+            'logoUrl' => 'https://sonikabd.com/wp-content/uploads/2021/06/sonika-logo.png',
+            'currency' => 'BDT',
+        ]);
+
+        // DB::table('Organization')->insert([
+        //     'name' => 'SONIKA',
+        //     'description' => 'SONIKA BD SHIPPERS LTD',
+        //     'address' => 'Uttara, Dhaka',
+        //     'currency' => 'BDT',
+        // ]);
+    }
+}

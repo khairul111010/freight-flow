@@ -14,11 +14,19 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Customers retrieved successfully',
-            'result' => CustomerResource::collection(Customer::paginate($request->limit ?? 10))
-        ], 200);
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Customers retrieved successfully',
+                'result' => CustomerResource::collection(Customer::paginate($request->limit ?? 10))
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+        
     }
 
     /**
@@ -54,11 +62,19 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer retrieved successfully',
-            'result' => CustomerResource::make(Customer::findOrFail($id))
-        ], 200);
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer retrieved successfully',
+                'result' => CustomerResource::make(Customer::findOrFail($id))
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+        
     }
 
 
