@@ -18,7 +18,6 @@ class OrganizationSeeder extends Seeder
             'name' => 'SONIKA',
             'description' => 'SONIKA BD SHIPPERS LTD',
             'address' => 'Uttara, Dhaka',
-            'logoUrl' => 'https://sonikabd.com/wp-content/uploads/2021/06/sonika-logo.png',
             'currency' => 'BDT',
         ]);
 

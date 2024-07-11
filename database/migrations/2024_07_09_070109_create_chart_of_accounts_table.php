@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organizations', function (Blueprint $table) {
+        Schema::create('chart_of_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('name');
+            $table->string('code')->nullable();
+            $table->string('slug')->nullable();
             $table->string('description')->nullable();
-            $table->string('address')->nullable();
-            $table->string('logo')->nullable();
-            $table->string('currency')->nullable();
-            $table->string('invoice_prefix')->nullable();
-            $table->bigInteger('invoice_start_number')->nullable();
+            $table->string('is_default')->default(true);
+            $table->foreignId('chart_of_account_type_id')->constrained('chart_of_account_types')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organizations');
+        Schema::dropIfExists('chart_of_accounts');
     }
 };

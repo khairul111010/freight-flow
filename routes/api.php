@@ -5,6 +5,7 @@ use App\Http\Controllers\ChargesController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManualJournalController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Http\Request;
@@ -74,6 +75,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{id}', [ManualJournalController::class, 'show']);
         Route::put('/{id}', [ManualJournalController::class, 'update']);
         Route::delete('/{id}', [ManualJournalController::class, 'destroy']);
+    });
+
+    Route::prefix('organizations')->group(function () {
+        Route::get('/', [OrganizationController::class, 'index']);
+        // Route::post('/', [OrganizationController::class, 'store']);
+        Route::post('/{id}', [OrganizationController::class, 'update']);
+        // Route::delete('/{id}', [OrganizationController::class, 'destroy']);
     });
     
 });
