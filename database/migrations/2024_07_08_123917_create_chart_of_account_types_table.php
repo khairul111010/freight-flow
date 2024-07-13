@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('chart_of_account_types', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('varchar');
+            $table->string('category');
             $table->string('type');
             $table->string('hint')->nullable();
             // $table->foreignId('chart_of_account_id')->constrained('chart_of_account')->onUpdate('cascade')->onDelete('cascade');
