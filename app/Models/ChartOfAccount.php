@@ -18,4 +18,9 @@ class ChartOfAccount extends Model
     {
         return $this->belongsTo(ChartOfAccountTypes::class, 'chart_of_account_type_id');
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transactions::class);
+    }
 }
