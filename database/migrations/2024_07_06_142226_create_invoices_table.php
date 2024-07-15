@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('customer_id')->constrained();
-            // $table->foreignId('vendor_id')->constrained();
             $table->string('invoice_number');
             $table->date('invoice_issue_date');
             $table->date('due_date');
@@ -28,6 +26,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->string('currency');
             $table->string('isPaid')->default(0)->comment('0 = unpaid, 1 = paid');
+            $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

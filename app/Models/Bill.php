@@ -9,6 +9,11 @@ class Bill extends Model
 {
     use HasFactory;
 
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
     public function transactions()
     {
         return $this->hasMany(Transactions::class);
