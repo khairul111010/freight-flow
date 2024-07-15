@@ -40,7 +40,7 @@ class InvoiceController extends Controller
             $invoice->invoice_issue_date = $request->invoice_issue_date;
             $invoice->due_date = $request->due_date;
             $invoice->destination = $request->destination;
-            $invoice->cartoonAmount = $request->cartoonAmount;
+            $invoice->cartoon_amount = $request->cartoon_amount;
             $invoice->vat = $request->vat;
             $invoice->exchange = $request->exchange;
             $invoice->paid_amount = $request->paid_amount;
@@ -49,6 +49,7 @@ class InvoiceController extends Controller
             $invoice->currency = $request->currency;
             $invoice->total_amount = $request->total_amount;
             $invoice->isPaid = $request->isPaid;
+            $invoice->customer_id = $request->customer_id;
             $invoice->save();
 
             return response()->json([
