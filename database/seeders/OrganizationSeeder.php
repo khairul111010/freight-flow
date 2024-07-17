@@ -14,7 +14,7 @@ class OrganizationSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Organization::create([
+        Organization::create([
             'name' => 'SONIKA',
             'description' => 'SONIKA BD SHIPPERS LTD',
             'address' => 'Uttara, Dhaka',

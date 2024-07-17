@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tags;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,7 +29,7 @@ class TagsSeeder extends Seeder
         ];
 
         foreach ($chart_of_account_default_tags as $key => $value) {
-            \App\Models\Tags::create([
+            Tags::create([
                 'name' => $value
             ]);
         }

@@ -2,14 +2,16 @@ import MetisMenu from "@metismenu/react";
 import { FC } from "react";
 import MenuItem, { MenuItemType } from "./MenuItem";
 import { IconX } from "@tabler/icons-react";
-import logo from "../../assets/logo.png";
 import { sidebarMenuConfig } from "../../config/sidebarMenuConfig";
+import { useGetOrganizationQuery } from "../../store/apis/organizationApi";
 type Props = {
     open?: boolean;
     onClose?: (open: boolean) => void;
 };
 
 const SideBar: FC<Props> = ({ open, onClose }) => {
+    const { data } = useGetOrganizationQuery();
+
     return (
         <>
             <div
@@ -22,7 +24,15 @@ const SideBar: FC<Props> = ({ open, onClose }) => {
                 <div className="h-screen overflow-y-auto scrollbar  min-h-screen">
                     <div className="px-5 pt-[20px] flex items-center relative">
                         <div className="flex items-center flex-col pl-3 gap-3 ">
-                            <img src={logo} alt="" className="w-40" />
+                            <img
+                                src={
+                                    data && data.logo
+                                        ? data.logo
+                                        : `uploads/logo/logo.png`
+                                }
+                                alt=""
+                                className="w-40"
+                            />
                         </div>
                         <button
                             className="h-8 w-8 absolute right-2 lg:hidden flex items-center justify-center text-xl"

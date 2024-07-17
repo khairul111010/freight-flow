@@ -28,7 +28,7 @@ class OrganizationRequest extends FormRequest
             'logo' => 'mimes:jpeg,jpg,png,webp|max:10000',
             'currency' => 'string',
             'invoice_prefix' => 'string',
-            'invoice_start_number' => 'string'
+            'invoice_start_number' => 'numeric'
         ];
     }
 }

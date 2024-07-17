@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ChartOfAccountTypes;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -124,7 +125,7 @@ class ChartOfAccountTypesSeeder extends Seeder
 
         foreach ($chart_of_account_types as $type => $accounts) {
             foreach ($accounts as $account) {
-                \App\Models\ChartOfAccountTypes::create([
+                ChartOfAccountTypes::create([
                     'name' => $account,
                     'type' => $type,
                     'category' => Str::slug($account, '-'),

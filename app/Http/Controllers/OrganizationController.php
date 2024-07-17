@@ -6,6 +6,7 @@ use App\Http\Requests\Organization\OrganizationRequest;
 use App\Models\Organization;
 use Exception;
 use Illuminate\Http\Request;
+use File;
 
 class OrganizationController extends Controller
 {
@@ -32,28 +33,33 @@ class OrganizationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(OrganizationRequest $request)
     {
         try {
             $organization = Organization::find($request->id)->first();
-            if($organization->invoice_start_number && $request->invoice_start_number) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invoice start number already exists',
-                ], 400);
-            }
-            if($request->hasFile('logo')) {
+
+            if ($request->hasFile('logo')) {
                 $logo = $request->file('logo');
                 $logoName = time() . '.' . $logo->getClientOriginalExtension();
                 $path = 'uploads/logo/';
                 $logo->move($path, $logoName);
-                $organization->logo = $path.$logoName;
+                File::delete($organization->logo);
+                $organization->logo = $path . $logoName;
             }
             $organization->name = $request->name;
             $organization->description = $request->description;
             $organization->address = $request->address;
             $organization->currency = $request->currency;
             $organization->invoice_prefix = $request->invoice_prefix;
+
+            if ($organization->invoice_start_number && $request->invoice_start_number) {
+                $organization->save();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invoice start number already exists',
+                ], 400);
+            }
+
             $organization->invoice_start_number = $request->invoice_start_number;
             $organization->save();
 

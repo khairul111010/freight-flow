@@ -5,6 +5,7 @@ export enum AuthRoutesEnum {
 
 export enum  AppRoutesEnum {
     DASHBOARD = '/',
+    SETTINGS = '/settings',
 }
 
 export enum ErrorRoutesEnum {

@@ -15,6 +15,7 @@ class Organization extends Model
         'address',
         'logo',
         'currency',
+        'invoice_prefix',
         'invoice_start_number'
     ];
 }
