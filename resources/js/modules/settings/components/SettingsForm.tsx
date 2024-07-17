@@ -32,7 +32,7 @@ const validationSchema = object().shape({
             }
         )
         .required("Logo is required"),
-    currency: string().oneOf(["BDT"]).required("Currency is required."),
+    currency: string().oneOf(["BDT", "USD"]).required("Currency is required."),
     invoice_prefix: string().required("Invoice Prefix is required."),
     invoice_start_number: number().required(
         "Invoice Start Number is required."
