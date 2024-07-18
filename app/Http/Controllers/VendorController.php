@@ -14,11 +14,19 @@ class VendorController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Vendors retrieved successfully',
-            'result' => VendorResource::collection(Vendor::paginate($request->limit ?? 10))
-        ], 200);
+
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Vendors retrieved successfully',
+                'result' => Vendor::paginate(10)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**
@@ -49,7 +57,6 @@ class VendorController extends Controller
                 'result' => VendorResource::make($vendor)
             ], 201);
         } catch (Exception $e) {
-            dd($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
@@ -62,11 +69,19 @@ class VendorController extends Controller
      */
     public function show($id)
     {
-        return response()->json([
-            'success' => true,
-            'message' => 'Vendor retrieved successfully',
-            'result' => VendorResource::make(Vendor::findOrFail($id))
-        ], 200);
+
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Vendor retrieved successfully',
+                'result' => Vendor::find($id)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**
@@ -80,9 +95,27 @@ class VendorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, vendor $vendor)
+    public function update(Request $request)
     {
-        //
+        try {
+            $vendor = Vendor::find($request->id);
+            $vendor->name = $request->name;
+            $vendor->email = $request->email;
+            $vendor->phone = $request->phone;
+            $vendor->address = $request->address;
+            $vendor->currency = $request->currency;
+            $vendor->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Vendor updated successfully',
+                'result' => $vendor
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**

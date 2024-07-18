@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', [VendorController::class, 'index']);
         Route::post('/', [VendorController::class, 'store']);
         Route::get('/{id}', [VendorController::class, 'show']);
-        Route::put('/{id}', [VendorController::class, 'update']);
+        Route::patch('/{id}', [VendorController::class, 'update']);
         Route::delete('/{id}', [VendorController::class, 'destroy']);
     });
 
