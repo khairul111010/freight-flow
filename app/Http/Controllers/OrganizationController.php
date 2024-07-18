@@ -36,7 +36,7 @@ class OrganizationController extends Controller
     public function update(OrganizationRequest $request)
     {
         try {
-            $organization = Organization::find($request->id)->first();
+            $organization = Organization::find($request->id);
 
             if ($request->hasFile('logo')) {
                 $logo = $request->file('logo');

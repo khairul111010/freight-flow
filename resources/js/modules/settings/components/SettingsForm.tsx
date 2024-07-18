@@ -43,7 +43,8 @@ const SettingsForm = () => {
     const formikRef = useRef<FormikProps<any>>(null);
     const [fileError, setFileError] = useState<any>("");
     const { data } = useGetOrganizationQuery();
-    const [updateOrganization] = useUpdateOrganizationMutation();
+    const [updateOrganization, { isLoading: submitting }] =
+        useUpdateOrganizationMutation();
 
     const handleSubmit = (values: any) => {
         console.log(values);
@@ -123,7 +124,12 @@ const SettingsForm = () => {
                         />
 
                         <div className="flex items-center justify-center">
-                            <Button type="submit" className="rounded-md">
+                            <Button
+                                loading={submitting}
+                                disabled={submitting}
+                                type="submit"
+                                className="rounded-md"
+                            >
                                 Update
                             </Button>
                         </div>

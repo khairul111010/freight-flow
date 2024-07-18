@@ -18,7 +18,7 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Customers retrieved successfully',
-                'result' => CustomerResource::collection(Customer::paginate($request->limit ?? 10))
+                'result' => Customer::paginate(10)
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -26,7 +26,7 @@ class CustomerController extends Controller
                 'message' => 'Something went wrong!',
             ], 500);
         }
-        
+
     }
 
     /**
@@ -66,7 +66,7 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Customer retrieved successfully',
-                'result' => CustomerResource::make(Customer::findOrFail($id))
+                'result' => Customer::find($id)
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -74,16 +74,34 @@ class CustomerController extends Controller
                 'message' => 'Something went wrong!',
             ], 500);
         }
-        
+
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request)
     {
-        //
+        try {
+            $customer = Customer::find($request->id);
+            $customer->name = $request->name;
+            $customer->email = $request->email;
+            $customer->phone = $request->phone;
+            $customer->address = $request->address;
+            $customer->currency = $request->currency;
+            $customer->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer updated successfully',
+                'result' => $customer
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**

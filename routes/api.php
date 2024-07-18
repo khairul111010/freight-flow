@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public routes
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, "login"]);
 
@@ -40,7 +41,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', [CustomerController::class, 'index']);
         Route::post('/', [CustomerController::class, 'store']);
         Route::get('/{id}', [CustomerController::class, 'show']);
-        Route::put('/{id}', [CustomerController::class, 'update']);
+        Route::patch('/{id}', [CustomerController::class, 'update']);
         Route::delete('/{id}', [CustomerController::class, 'destroy']);
     });
 
@@ -59,7 +60,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/{id}', [VendorController::class, 'update']);
         Route::delete('/{id}', [VendorController::class, 'destroy']);
     });
-    
+
 
     Route::prefix('charges')->group(function () {
         Route::get('/', [ChargesController::class, 'index']);
@@ -83,7 +84,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/{id}', [OrganizationController::class, 'update']);
         // Route::delete('/{id}', [OrganizationController::class, 'destroy']);
     });
-    
+
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
