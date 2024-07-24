@@ -13,6 +13,29 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
+            $table->string('invoice_number');
+            $table->date('invoice_issue_date');
+            $table->date('due_date');
+            $table->string('destination');
+            $table->string('master_air_way_bill')->nullable();
+            $table->float('master_air_way_bill_fee')->nullable();
+            $table->integer('cartoon_amount');
+            $table->float('gross_weight')->nullable();
+            $table->float('chargeable_weight')->nullable();
+            $table->float('bill_rate')->nullable();
+            $table->float('bill_cgc')->nullable();
+            $table->float('bill_handling_fee')->nullable();
+            $table->float('others')->nullable();
+            $table->float('bill_total_usd')->nullable();
+            $table->float('bill_exchange_rate')->nullable();
+            $table->float('bill_invoice_amount')->default(0);
+            $table->float('bill_received_amount')->default(0);
+            $table->float('bill_due_balance')->default(0);
+            $table->text('bill_notes')->nullable();
+            $table->string('currency')->default('bdt');
+            $table->string('bill_payment_method');
+            $table->foreignId('vendor_id')->constrained('vendors')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('bill_bank_account_id')->constrained('bank_accounts')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

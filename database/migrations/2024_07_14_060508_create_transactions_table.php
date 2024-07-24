@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('transaction_date');
             $table->boolean('is_debit')->default(false);
             $table->boolean('record_payment')->default(false);
+            $table->string('invoice_number');
             $table->foreignId('chart_of_account_id')->constrained('chart_of_accounts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('bill_id')->constrained('bills')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('invoice_id')->constrained('invoices')->onUpdate('cascade')->onDelete('cascade');
