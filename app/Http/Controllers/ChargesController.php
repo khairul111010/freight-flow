@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Charges;
+use App\Models\Charge;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -15,8 +15,8 @@ class ChargesController extends Controller
     {
         return response()->json([
             'success' => true,
-            'message' => 'Charges retrieved successfully',
-            'result' => Charges::all()
+            'message' => 'Charge retrieved successfully',
+            'result' => Charge::all()
         ], 200);
     }
 
@@ -34,14 +34,14 @@ class ChargesController extends Controller
     public function store(Request $request)
     {
         try {
-            $charges = new Charges();
-            $charges->name = $request->name;
-            $charges->save();
+            $charge = new Charge();
+            $charge->name = $request->name;
+            $charge->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Charges created successfully',
-                'result' => $charges
+                'message' => 'Charge created successfully',
+                'result' => $charge
             ], 201);
         } catch (Exception $e) {
             return response()->json([
@@ -54,7 +54,7 @@ class ChargesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Charges $charges)
+    public function show(Charge $charge)
     {
         //
     }
@@ -62,7 +62,7 @@ class ChargesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Charges $charges)
+    public function edit(Charge $charge)
     {
         //
     }
@@ -70,7 +70,7 @@ class ChargesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Charges $charges)
+    public function update(Request $request, Charge $charge)
     {
         //
     }
@@ -78,7 +78,7 @@ class ChargesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Charges $charges)
+    public function destroy(Charge $charge)
     {
         //
     }
