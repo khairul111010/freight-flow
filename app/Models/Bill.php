@@ -19,8 +19,9 @@ class Bill extends Model
     //     return $this->hasMany(Charge::class);
     // }
 
-    public function bank_account() {
-        return $this->belongsTo(Bank_Account::class);
+    public function bank_account()
+    {
+        return $this->belongsTo(BankAccounts::class);
     }
 
     public function transactions()

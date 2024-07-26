@@ -13,17 +13,18 @@ class Invoice extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-    
+
     // public function invoiceCharges() {
     //     return $this->hasMany(Charge::class, 'invoice_charge_id');
     // }
-    
+
     // public function billCharges() {
     //     return $this->hasMany(Charge::class, 'bill_charge_id');
     // }
 
-    public function bank_account() {
-        return $this->belongsTo(Bank_Account::class);
+    public function bank_account()
+    {
+        return $this->belongsTo(BankAccounts::class);
     }
 
     public function transactions()

@@ -74,7 +74,7 @@ const MenuItem: FC<Props> = ({ className = "", item }) => {
                     className={({ isActive }) => {
                         return `${className} font-medium text-base flex items-center gap-2 px-4 py-3 my-2 rounded-[4px] ${
                             isActive
-                                ? "bg-gray-100 hover:bg-gray-100 font-semibold focus:no-underline before:absolute before:h-6 before:w-1 before:bg-primary before:rounded-full"
+                                ? "bg-gray-100 hover:bg-gray-100 font-semibold focus:no-underline before:absolute before:h-7 before:w-1 before:bg-primary before:rounded-full"
                                 : "bg-gray-50 hover:bg-gray-100 text-gray-900"
                         }`;
                     }}

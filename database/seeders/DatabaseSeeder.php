@@ -18,5 +18,9 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        $this->call(ChartOfAccountTypesSeeder::class);
+        $this->call(OrganizationSeeder::class);
+        $this->call(TagsSeeder::class);
+        $this->call(ChartOfAccountsDefaultSeeder::class);
     }
 }
