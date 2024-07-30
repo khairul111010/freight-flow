@@ -11,6 +11,9 @@ export enum  AppRoutesEnum {
     VENDORS = '/vendors',
     VENDORS_ADD = '/vendors/add',
     VENDORS_EDIT = '/vendors/edit/:id',
+    INVOICE = '/invoice',
+    INVOICE_ADD = '/invoice/add',
+    INVOICE_EDIT = '/invoice/edit/:id',
     SETTINGS = '/settings',
 }
 
