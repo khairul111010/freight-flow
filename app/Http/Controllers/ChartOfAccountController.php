@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChartOfAccount;
+use App\Models\ChartOfAccountTag;
+use App\Models\Tags;
 use Illuminate\Http\Request;
 
 class ChartOfAccountController extends Controller
@@ -37,6 +39,15 @@ class ChartOfAccountController extends Controller
     public function show(ChartOfAccount $chartOfAccount)
     {
         //
+    }
+
+    public function getAccountsByTag(Request $request, $tagName)
+    {
+        $accounts = ChartOfAccount::whereHas('tags', function ($query) use ($tagName) {
+            $query->where('name', $tagName);
+        })->get();
+
+        dd($accounts->toArray());
     }
 
     /**

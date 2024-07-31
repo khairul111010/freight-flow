@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChargesController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManualJournalController;
@@ -93,6 +94,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/{id}', [OrganizationController::class, 'update']);
         // Route::delete('/{id}', [OrganizationController::class, 'destroy']);
     });
+<<<<<<< Updated upstream
+=======
+
+    Route::prefix(('chart-of-accounts'))->group(function () {
+        Route::get('/', [ChartOfAccountController::class, 'index']);
+        Route::get('/tags/{tagName}', [ChartOfAccountController::class, 'getAccountsByTag']);
+        Route::post('/', [ChartOfAccountController::class, 'store']);
+        Route::get('/{id}', [ChartOfAccountController::class, 'show']);
+        Route::put('/{id}', [ChartOfAccountController::class, 'update']);
+        Route::delete('/{id}', [ChartOfAccountController::class, 'destroy']);
+    });
+
+>>>>>>> Stashed changes
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
