@@ -94,8 +94,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/{id}', [OrganizationController::class, 'update']);
         // Route::delete('/{id}', [OrganizationController::class, 'destroy']);
     });
-<<<<<<< Updated upstream
-=======
 
     Route::prefix(('chart-of-accounts'))->group(function () {
         Route::get('/', [ChartOfAccountController::class, 'index']);
@@ -105,8 +103,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::put('/{id}', [ChartOfAccountController::class, 'update']);
         Route::delete('/{id}', [ChartOfAccountController::class, 'destroy']);
     });
-
->>>>>>> Stashed changes
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
