@@ -15,10 +15,19 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         try {
+            $query = Customer::query();
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('phone', 'like', '%' . $search . '%')
+                    ->orWhere('address', 'like', '%' . $search . '%')
+                    ->orWhere('currency', 'like', '%' . $search . '%');
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Customers retrieved successfully',
-                'result' => Customer::paginate(10)
+                'result' => $query->paginate(10)
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -26,7 +35,6 @@ class CustomerController extends Controller
                 'message' => 'Something went wrong!',
             ], 500);
         }
-
     }
 
     /**
@@ -74,7 +82,6 @@ class CustomerController extends Controller
                 'message' => 'Something went wrong!',
             ], 500);
         }
-
     }
 
 
