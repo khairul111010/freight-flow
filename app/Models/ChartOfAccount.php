@@ -9,9 +9,9 @@ class ChartOfAccount extends Model
 {
     use HasFactory;
 
-    public function chartOfAccountTags()
+    public function tags()
     {
-        return $this->hasMany(ChartOfAccountTag::class);
+        return $this->belongsToMany(Tags::class, 'chart_of_account_tags', 'chart_of_account_id', 'tag_id');
     }
 
     public function chartOfAccountTypes()

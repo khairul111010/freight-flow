@@ -39,8 +39,9 @@ return new class extends Migration
             $table->string('currency')->default('bdt');
             $table->string('invoice_payment_method');
             // $table->string('isPaid')->default(0)->comment('0 = unpaid, 1 = paid');
-            $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('invoice_bank_account_id')->constrained('bank_accounts')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained('customer')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('chart_of_account_id')->constrained('chart_of_account')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('invoice_bank_account_id')->constrained('bank_account')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -83,6 +83,7 @@ class InvoiceController extends Controller
                 $invoice->currency = $request->currency;
                 // $invoice->isPaid = $request->isPaid;
                 $invoice->customer_id = $request->customer_id;
+                $invoice->chart_of_account_id = $request->chart_of_account_id;
                 $invoice->invoice_payment_method = $request->invoice_payment_method;
                 if(
                     $request->invoice_payment_method == 'bank' && !$request->invoice_bank_account_id
@@ -91,7 +92,12 @@ class InvoiceController extends Controller
                         'success' => false,
                         'message' => 'Bank Account Required for bank transactions',
                     ], 400);
-                }
+                } else if(
+                    $request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id
+                    ) {
+                        $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
+                    }
+
                 $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
                 // $invoice->invoiceCharges()->createMany($request->invoice_charge);
                 // $invoice->billCharges()->createMany($request->bill_charge);
@@ -115,7 +121,7 @@ class InvoiceController extends Controller
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
                     'invoice_number' => $request->invoice_number,
-                    'chart_of_account_id' => $request->invoice_payment_method == 'bank' ? $request->invoice_bank_account_id : $accounts_receivable_chart_of_account->id,
+                    'chart_of_account_id' => $request->chart_of_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -146,9 +152,11 @@ class InvoiceController extends Controller
                 $bill->bill_due_balance = $request->bill_due_balance;
                 $bill->bill_notes = $request->bill_notes;
                 $bill->currency = $request->currency;
+                $bill->bill_payment_method = $request->bill_payment_method;
                 // $bill->isPaid = $request->isPaid;
                 $bill->vendor_id = $request->vendor_id;
-                $bill->bill_payment_method = $request->bill_payment_method;
+                $bill->chart_of_account_id = $request->chart_of_account_id;
+
                 if(
                     $request->bill_payment_method == 'bank' && !$request->bill_bank_account_id
                     ) {
@@ -156,8 +164,11 @@ class InvoiceController extends Controller
                         'success' => false,
                         'message' => 'Bank Account Required for bank transactions',
                     ], 400);
-                }
-                $bill->bill_bank_account_id = $request->bill_bank_account_id;
+                } else if(
+                    $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
+                    ) {
+                        $bill->bill_bank_account_id = $request->bill_bank_account_id;
+                    }
                 $bill->save();
 
                 $accounts_payable_chart_of_account = ChartOfAccount::where('slug', 'accounts-payable')->first();
@@ -178,7 +189,7 @@ class InvoiceController extends Controller
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
                     'invoice_number' => $request->invoice_number,
-                    'chart_of_account_id' => $request->bill_payment_method == 'bank' ? $request->bill_bank_account_id : $accounts_payable_chart_of_account->id,
+                    'chart_of_account_id' => $request->chart_of_account_id,
                     'bill_id' => $bill->id,
                 ];
 

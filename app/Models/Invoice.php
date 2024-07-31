@@ -22,6 +22,11 @@ class Invoice extends Model
     //     return $this->hasMany(Charge::class, 'bill_charge_id');
     // }
 
+    public function chart_of_account()
+    {
+        return $this->belongsTo(BankAccounts::class);
+    }
+
     public function bank_account()
     {
         return $this->belongsTo(BankAccounts::class);

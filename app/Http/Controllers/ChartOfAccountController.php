@@ -41,13 +41,13 @@ class ChartOfAccountController extends Controller
         //
     }
 
-    public function getAccountsByTag($tagName)
+    public function getAccountsByTag(Request $request, $tagName)
     {
         $accounts = ChartOfAccount::whereHas('tags', function ($query) use ($tagName) {
             $query->where('name', $tagName);
         })->get();
 
-        return response()->json($accounts);
+        dd($accounts->toArray());
     }
 
     /**
