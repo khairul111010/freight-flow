@@ -78,10 +78,9 @@ class InvoiceController extends Controller
                 $invoice->invoice_exchange_rate = $request->invoice_exchange_rate;
                 $invoice->invoice_payable_bdt = $request->invoice_payable_bdt;
                 $invoice->invoice_paid_amount = $request->invoice_paid_amount;
-                $invoice->invoice_due_balance = $request->invoice_due_balance;
+                $invoice->invoice_due_balance = $invoice->invoice_payable_bdt - $invoice->invoice_paid_amount;
                 $invoice->invoice_notes = $request->invoice_notes;
                 $invoice->currency = $request->currency;
-                // $invoice->isPaid = $request->isPaid;
                 $invoice->customer_id = $request->customer_id;
                 $invoice->chart_of_account_id = $request->chart_of_account_id;
                 $invoice->invoice_payment_method = $request->invoice_payment_method;
@@ -97,10 +96,6 @@ class InvoiceController extends Controller
                     ) {
                         $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
                     }
-
-                $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
-                // $invoice->invoiceCharges()->createMany($request->invoice_charge);
-                // $invoice->billCharges()->createMany($request->bill_charge);
                 $invoice->save();
 
                 $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
@@ -116,7 +111,7 @@ class InvoiceController extends Controller
                 ];
 
                 $invoice_credit_transaction = [
-                    'amount' => $request->invoice_paid_amount,
+                    'amount' => $request->invoice_due_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
@@ -145,11 +140,13 @@ class InvoiceController extends Controller
                 $bill->chargeable_weight = $request->chargeable_weight;
                 $bill->bill_rate = $request->bill_rate;
                 $bill->bill_cgc = $request->bill_cgc;
+                $bill->bill_handling_fee = $request->bill_handling_fee;
                 $bill->bill_total_usd = $request->bill_total_usd;
+                $bill->others = $request->others;
                 $bill->bill_exchange_rate = $request->bill_exchange_rate;
-                $bill->bill_invoice_amount = $request->bill_invoice_amount;
+                $bill->bill_amount = $request->bill_amount;
                 $bill->bill_received_amount = $request->bill_received_amount;
-                $bill->bill_due_balance = $request->bill_due_balance;
+                $bill->bill_due_balance = $bill->bill_amount - $bill->bill_received_amount;
                 $bill->bill_notes = $request->bill_notes;
                 $bill->currency = $request->currency;
                 $bill->bill_payment_method = $request->bill_payment_method;
@@ -184,7 +181,7 @@ class InvoiceController extends Controller
                 ];
 
                 $bill_debit_transaction = [
-                    'amount' => $request->bill_received_amount,
+                    'amount' => $request->bill_due_balance,
                     'transaction_type' => 'bill',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
@@ -208,7 +205,6 @@ class InvoiceController extends Controller
                 ], 201);
             });
         } catch (Exception $e) {
-            dd($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
