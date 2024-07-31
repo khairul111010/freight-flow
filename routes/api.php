@@ -8,6 +8,7 @@ use App\Http\Controllers\ManualJournalController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Models\Banks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -78,13 +79,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/{id}', [ManualJournalController::class, 'destroy']);
     });
 
+    Route::prefix('bank')->group(function () {
+        Route::get('/', [Banks::class, 'index']);
+        Route::post('/', [Banks::class, 'store']);
+        Route::get('/{id}', [Banks::class, 'show']);
+        Route::put('/{id}', [Banks::class, 'update']);
+        Route::delete('/{id}', [Banks::class, 'destroy']);
+    });
+
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'index']);
         // Route::post('/', [OrganizationController::class, 'store']);
         Route::post('/{id}', [OrganizationController::class, 'update']);
         // Route::delete('/{id}', [OrganizationController::class, 'destroy']);
     });
-
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

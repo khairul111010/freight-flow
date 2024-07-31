@@ -8,6 +8,7 @@ import CustomersAdd from "../modules/customers/pages/CustomersAdd";
 import VendorsAdd from "../modules/vendors/pages/VendorsAdd";
 import CustomersEdit from "../modules/customers/pages/CustomersEdit";
 import VendorsEdit from "../modules/vendors/pages/VendorsEdit";
+import Invoice from "../modules/invoice/pages/Invoice";
 
 const appRoutes: RouteObject[] = [
     {
@@ -16,6 +17,18 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.DASHBOARD,
                 element: <>Dashboard</>,
+            },
+            {
+                path: AppRoutesEnum.INVOICE,
+                element: <Invoice />,
+            },
+            {
+                path: AppRoutesEnum.INVOICE_ADD,
+                element: <CustomersAdd />,
+            },
+            {
+                path: AppRoutesEnum.INVOICE_EDIT,
+                element: <CustomersEdit />,
             },
             {
                 path: AppRoutesEnum.CUSTOMERS,
