@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankAccounts;
+use Exception;
 use Illuminate\Http\Request;
 
 class BankAccountsController extends Controller
@@ -10,9 +11,31 @@ class BankAccountsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        try {
+            $query = BankAccounts::query();
+            if ($request->has('search')) {
+                $search = $request->search;
+                $query->with('bank')
+                    ->where(function ($q) use ($search) {
+                        $q->where('account_name', 'like', '%' . $search . '%')
+                            ->orWhere('account_number', 'like', '%' . $search . '%')
+                            ->orWhere('account_routing_number', 'like', '%' . $search . '%')
+                            ->orWhere('branch', 'like', '%' . $search . '%');
+                    });
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Customers retrieved successfully',
+                'result' => $query->paginate(10)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**
@@ -28,15 +51,44 @@ class BankAccountsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $bank_account = new BankAccounts();
+            $bank_account->account_name = $request->account_name;
+            $bank_account->account_number = $request->account_number;
+            $bank_account->account_routing_number = $request->account_routing_number;
+            $bank_account->branch = $request->branch;
+            $bank_account->bank_id = $request->bank_id;
+            $bank_account->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Bank Account created successfully',
+                'result' => $bank_account
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(BankAccounts $bankAccounts)
+    public function show($id)
     {
-        //
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Bank Account retrieved successfully',
+                'result' => BankAccounts::find($id)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**
@@ -50,9 +102,27 @@ class BankAccountsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BankAccounts $bankAccounts)
+    public function update(Request $request)
     {
-        //
+        try {
+            $bank_account = BankAccounts::find($request->id);
+            $bank_account->account_name = $request->account_name;
+            $bank_account->account_number = $request->account_number;
+            $bank_account->account_routing_number = $request->account_routing_number;
+            $bank_account->branch = $request->branch;
+            $bank_account->bank_id = $request->bank_id;
+            $bank_account->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Bank Account updated successfully',
+                'result' => $bank_account
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**

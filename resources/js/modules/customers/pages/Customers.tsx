@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
 
@@ -10,21 +10,35 @@ import { classNames } from "primereact/utils";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import Pagination from "../../../components/pagination";
+import useDebounce from "../../../hooks/useDebounce";
+import SearchInput from "../../../components/form/search-input/SearchInput";
 
 const Customers = () => {
+    const [search, setSearch] = useState("");
+    const debouncedValue = useDebounce(search, 500);
+    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
     const [getCustomers, { data, isLoading }] = useLazyGetCustomersQuery();
     useEffect(() => {
-        getCustomers({ page: 1 });
-    }, []);
+        getCustomers({ page: 1, search: debouncedValue });
+    }, [debouncedValue]);
 
     return (
         <div>
-            <Button
-                className="w-fit rounded-md"
-                to={AppRoutesEnum.CUSTOMERS_ADD}
-            >
-                Add Customer
-            </Button>
+            <div className="flex items-center justify-between">
+                <Button
+                    className="w-fit rounded-md"
+                    to={AppRoutesEnum.CUSTOMERS_ADD}
+                >
+                    Add Customer
+                </Button>
+                <SearchInput
+                    name="search"
+                    placeholder="Search"
+                    onChange={(e) => handleSearch(e)}
+                />
+            </div>
             <div className="bg-white rounded-md overflow-hidden mt-4">
                 {isLoading ? (
                     <div className="flex items-center justify-center py-10">
@@ -63,6 +77,7 @@ const Customers = () => {
                             <Column field="email" header="Email"></Column>
                             <Column field="phone" header="Phone"></Column>
                             <Column field="address" header="Address"></Column>
+                            <Column field="currency" header="Currency"></Column>
                             <Column
                                 header="Action"
                                 body={(rowData) => {
@@ -77,9 +92,6 @@ const Customers = () => {
                                             >
                                                 <IconPencil />
                                             </Link>
-                                            <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
-                                                <IconTrash />
-                                            </div>
                                         </div>
                                     );
                                 }}
@@ -94,6 +106,7 @@ const Customers = () => {
                                 onPageChange={({ currentPage }) =>
                                     getCustomers({
                                         page: currentPage,
+                                        search: debouncedValue,
                                     })
                                 }
                             />

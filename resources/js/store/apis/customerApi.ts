@@ -5,7 +5,7 @@ const customerApi = baseApi
     .injectEndpoints({
         endpoints: (builder) => ({
             getCustomers: builder.query<any, any>({
-                query: (pagination) => `/customers?page=${pagination.page || 1}`,
+                query: (pagination) => `/customers?page=${pagination.page || 1}&search=${pagination.search || ""}`,
                 providesTags: ["Customers"],
                 transformResponse: (response: any) => response.result,
             }),

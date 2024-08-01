@@ -2,33 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\VendorResource;
-use App\Models\vendor;
+use App\Models\Bank;
 use Exception;
 use Illuminate\Http\Request;
 
-class VendorController extends Controller
+class BankController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-
         try {
-            $query = Vendor::query();
-            if ($request->has('search')) {
-                $search = $request->search;
-                $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                    ->orWhere('phone', 'like', '%' . $search . '%')
-                    ->orWhere('address', 'like', '%' . $search . '%')
-                    ->orWhere('currency', 'like', '%' . $search . '%');
-            }
             return response()->json([
                 'success' => true,
-                'message' => 'Vendors retrieved successfully',
-                'result' => $query->paginate(10)
+                'message' => 'Banks retrieved successfully',
+                'result' => Bank::all()
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -52,18 +41,14 @@ class VendorController extends Controller
     public function store(Request $request)
     {
         try {
-            $vendor = new Vendor();
-            $vendor->name = $request->name;
-            $vendor->email = $request->email;
-            $vendor->phone = $request->phone;
-            $vendor->address = $request->address;
-            $vendor->currency = $request->currency;
-            $vendor->save();
+            $bank = new Bank();
+            $bank->name = $request->name;
+            $bank->save();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Vendor created successfully',
-                'result' => VendorResource::make($vendor)
+                'message' => 'Bank created successfully',
+                'result' => $bank
             ], 201);
         } catch (Exception $e) {
             return response()->json([
@@ -78,12 +63,11 @@ class VendorController extends Controller
      */
     public function show($id)
     {
-
         try {
             return response()->json([
                 'success' => true,
-                'message' => 'Vendor retrieved successfully',
-                'result' => Vendor::find($id)
+                'message' => 'Bank retrieved successfully',
+                'result' => Bank::find($id)
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -96,9 +80,8 @@ class VendorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(vendor $vendor)
+    public function edit(Request $request)
     {
-        //
     }
 
     /**
@@ -107,17 +90,13 @@ class VendorController extends Controller
     public function update(Request $request)
     {
         try {
-            $vendor = Vendor::find($request->id);
-            $vendor->name = $request->name;
-            $vendor->email = $request->email;
-            $vendor->phone = $request->phone;
-            $vendor->address = $request->address;
-            $vendor->currency = $request->currency;
-            $vendor->save();
+            $bank = Bank::find($request->id);
+            $bank->name = $request->name;
+            $bank->save();
             return response()->json([
                 'success' => true,
-                'message' => 'Vendor updated successfully',
-                'result' => $vendor
+                'message' => 'Bank updated successfully',
+                'result' => $bank
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -130,7 +109,7 @@ class VendorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(vendor $vendor)
+    public function destroy(Bank $banks)
     {
         //
     }

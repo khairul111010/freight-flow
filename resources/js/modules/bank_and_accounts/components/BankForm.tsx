@@ -3,48 +3,39 @@ import React, { FC, useEffect, useRef } from "react";
 import { object, string } from "yup";
 import TextInput from "../../../components/form/text-input";
 import Button from "../../../components/button";
-import {
-    useCreateCustomerMutation,
-    useUpdateCustomerMutation,
-} from "../../../store/apis/customerApi";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
-import SelectInput from "../../../components/form/select-input";
+import {
+    useCreateBankMutation,
+    useUpdateBankMutation,
+} from "../../../store/apis/bankApi";
+
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
     name: "",
-    email: "",
-    phone: "",
-    address: "",
-    currency: "BDT",
 };
 
 const validationSchema = object().shape({
     name: string().required("Name is required."),
-    email: string().nullable(),
-    phone: string().nullable(),
-    address: string().nullable(),
-    currency: string().oneOf(["BDT", "USD"]),
 });
-const CustomerAddForm: FC<Props> = ({ editData, onSuccess }) => {
+const BankForm: FC<Props> = ({ editData, onSuccess }) => {
     const navigate = useNavigate();
     const formikRef = useRef<FormikProps<any>>(null);
-    const [createCustomer, { isLoading }] = useCreateCustomerMutation();
-    const [updateCustomer, { isLoading: updating }] =
-        useUpdateCustomerMutation();
+    const [createBank, { isLoading }] = useCreateBankMutation();
+    const [updateBank, { isLoading: updating }] = useUpdateBankMutation();
     const handleSubmit = (values: any) => {
         if (editData) {
-            updateCustomer({ id: values.id, body: values }).then((res: any) => {
+            updateBank({ id: values.id, body: values }).then((res: any) => {
                 console.log(res);
                 toast.success("Updated Successfully");
-                navigate(AppRoutesEnum.CUSTOMERS);
+                navigate(AppRoutesEnum.BANK);
             });
         } else {
-            createCustomer(values).then((res: any) => {
+            createBank(values).then((res: any) => {
                 console.log(res);
                 toast.success("Created Successfully");
-                navigate(AppRoutesEnum.CUSTOMERS);
+                navigate(AppRoutesEnum.BANK);
             });
         }
     };
@@ -66,18 +57,6 @@ const CustomerAddForm: FC<Props> = ({ editData, onSuccess }) => {
                 return (
                     <Form className="min-w-[600px] bg-gray-50 p-4 border mx-4 rounded-lg text-gray-600">
                         <TextInput name="name" label="Name" />
-                        <TextInput name="email" label="Email" />
-                        <TextInput name="phone" label="Phone" />
-                        <TextInput name="address" label="Address" />
-                        {/* <TextInput name="currency" label="Currency" /> */}
-                        <SelectInput
-                            name="currency"
-                            label="Currency"
-                            options={[
-                                { value: "BDT", label: "BDT" },
-                                { value: "USD", label: "USD" },
-                            ]}
-                        />
 
                         <div className="flex items-center justify-center">
                             <Button
@@ -86,7 +65,7 @@ const CustomerAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                 type="submit"
                                 className="rounded-md"
                             >
-                                {editData ? `Update` : `Add`} Customer
+                                {editData ? `Update` : `Add`} Bank
                             </Button>
                         </div>
                     </Form>
@@ -96,4 +75,4 @@ const CustomerAddForm: FC<Props> = ({ editData, onSuccess }) => {
     );
 };
 
-export default CustomerAddForm;
+export default BankForm;

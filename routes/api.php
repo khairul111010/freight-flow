@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BankAccountsController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\ChargesController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CustomerController;
@@ -9,7 +11,7 @@ use App\Http\Controllers\ManualJournalController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
-use App\Models\Banks;
+use App\Models\Bank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -81,11 +83,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::prefix('bank')->group(function () {
-        Route::get('/', [Banks::class, 'index']);
-        Route::post('/', [Banks::class, 'store']);
-        Route::get('/{id}', [Banks::class, 'show']);
-        Route::put('/{id}', [Banks::class, 'update']);
-        Route::delete('/{id}', [Banks::class, 'destroy']);
+        Route::get('/', [BankController::class, 'index']);
+        Route::post('/', [BankController::class, 'store']);
+        Route::get('/{id}', [BankController::class, 'show']);
+        Route::patch('/{id}', [BankController::class, 'update']);
+        Route::delete('/{id}', [BankController::class, 'destroy']);
+    });
+
+    Route::prefix('bank-account')->group(function () {
+        Route::get('/', [BankAccountsController::class, 'index']);
+        Route::post('/', [BankAccountsController::class, 'store']);
+        Route::get('/{id}', [BankAccountsController::class, 'show']);
+        Route::patch('/{id}', [BankAccountsController::class, 'update']);
+        Route::delete('/{id}', [BankAccountsController::class, 'destroy']);
     });
 
     Route::prefix('organizations')->group(function () {

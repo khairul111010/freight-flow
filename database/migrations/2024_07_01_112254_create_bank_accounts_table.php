@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('account_name');
             $table->string('account_number');
+            $table->string('account_routing_number');
             $table->string('branch')->nullable();
             $table->foreignId('bank_id')->constrained('banks')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

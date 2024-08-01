@@ -5,7 +5,7 @@ const vendorApi = baseApi
     .injectEndpoints({
         endpoints: (builder) => ({
             getVendors: builder.query<any, any>({
-                query: (pagination) => `/vendors?page=${pagination.page || 1}`,
+                query: (pagination) => `/vendors?page=${pagination.page || 1}&search=${pagination.search || ""}`,
                 providesTags: ["Vendors"],
                 transformResponse: (response: any) => response.result,
             }),

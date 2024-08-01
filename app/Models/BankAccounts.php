@@ -9,7 +9,8 @@ class BankAccounts extends Model
 {
     use HasFactory;
 
-    public function bank() {
-        return $this->belongsTo(Banks::class);
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
     }
 }

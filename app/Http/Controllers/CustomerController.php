@@ -49,7 +49,6 @@ class CustomerController extends Controller
             $customer->phone = $request->phone;
             $customer->address = $request->address;
             $customer->currency = $request->currency;
-            // $customer->vat = $request->vat;
             $customer->save();
 
             return response()->json([

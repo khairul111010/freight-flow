@@ -9,6 +9,12 @@ import VendorsAdd from "../modules/vendors/pages/VendorsAdd";
 import CustomersEdit from "../modules/customers/pages/CustomersEdit";
 import VendorsEdit from "../modules/vendors/pages/VendorsEdit";
 import Invoice from "../modules/invoice/pages/Invoice";
+import BankAndAccounts from "../modules/bank_and_accounts/pages/BankAndAccounts";
+import BankAdd from "../modules/bank_and_accounts/pages/BankAdd";
+import BankEdit from "../modules/bank_and_accounts/pages/BankEdit";
+import BankAccountAdd from "../modules/bank_and_accounts/pages/BankAccountAdd";
+import BankAccountEdit from "../modules/bank_and_accounts/pages/BankAccountEdit";
+import InvoiceAdd from "../modules/invoice/pages/InvoiceAdd";
 
 const appRoutes: RouteObject[] = [
     {
@@ -24,7 +30,7 @@ const appRoutes: RouteObject[] = [
             },
             {
                 path: AppRoutesEnum.INVOICE_ADD,
-                element: <CustomersAdd />,
+                element: <InvoiceAdd />,
             },
             {
                 path: AppRoutesEnum.INVOICE_EDIT,
@@ -53,6 +59,26 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.VENDORS_EDIT,
                 element: <VendorsEdit />,
+            },
+            {
+                path: AppRoutesEnum.BANK,
+                element: <BankAndAccounts />,
+            },
+            {
+                path: AppRoutesEnum.BANK_ADD,
+                element: <BankAdd />,
+            },
+            {
+                path: AppRoutesEnum.BANK_EDIT,
+                element: <BankEdit />,
+            },
+            {
+                path: AppRoutesEnum.BANK_ACCOUNT_ADD,
+                element: <BankAccountAdd />,
+            },
+            {
+                path: AppRoutesEnum.BANK_ACCOUNT_EDIT,
+                element: <BankAccountEdit />,
             },
             {
                 path: AppRoutesEnum.SETTINGS,

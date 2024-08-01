@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
+import SelectInput from "../../../components/form/select-input";
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
     name: "",
@@ -68,7 +69,14 @@ const CustomerAddForm: FC<Props> = ({ editData, onSuccess }) => {
                         <TextInput name="email" label="Email" />
                         <TextInput name="phone" label="Phone" />
                         <TextInput name="address" label="Address" />
-                        <TextInput name="currency" label="Currency" />
+                        <SelectInput
+                            name="currency"
+                            label="Currency"
+                            options={[
+                                { value: "BDT", label: "BDT" },
+                                { value: "USD", label: "USD" },
+                            ]}
+                        />
 
                         <div className="flex items-center justify-center">
                             <Button

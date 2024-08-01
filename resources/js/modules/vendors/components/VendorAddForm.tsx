@@ -10,6 +10,7 @@ import {
     useCreateVendorMutation,
     useUpdateVendorMutation,
 } from "../../../store/apis/vendorApi";
+import SelectInput from "../../../components/form/select-input";
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
     name: "",
@@ -67,7 +68,14 @@ const VendorAddForm: FC<Props> = ({ editData, onSuccess }) => {
                         <TextInput name="email" label="Email" />
                         <TextInput name="phone" label="Phone" />
                         <TextInput name="address" label="Address" />
-                        <TextInput name="currency" label="Currency" />
+                        <SelectInput
+                            name="currency"
+                            label="Currency"
+                            options={[
+                                { value: "BDT", label: "BDT" },
+                                { value: "USD", label: "USD" },
+                            ]}
+                        />
 
                         <div className="flex items-center justify-center">
                             <Button
