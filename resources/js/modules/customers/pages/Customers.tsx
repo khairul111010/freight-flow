@@ -73,6 +73,12 @@ const Customers = () => {
                             value={(data && data.data) || []}
                             stripedRows
                         >
+                            <Column
+                                header="SL. NO"
+                                body={(rowData, { rowIndex }) => {
+                                    return <>{rowIndex + 1}</>;
+                                }}
+                            />
                             <Column field="name" header="Name"></Column>
                             <Column field="email" header="Email"></Column>
                             <Column field="phone" header="Phone"></Column>
