@@ -66,24 +66,25 @@ class InvoiceController extends Controller
                 $invoice->cartoon_amount = $request->cartoon_amount;
                 $invoice->gross_weight = $request->gross_weight;
                 $invoice->chargeable_weight = $request->chargeable_weight;
+                $invoice->kg = $request->kg;
                 $invoice->invoice_rate = $request->invoice_rate;
-                $invoice->freight_amount = $request->freight_amount;
-                $invoice->invoice_thc = $request->invoice_thc;
-                $invoice->invoice_ssc = $request->invoice_ssc;
-                $invoice->invoice_cd = $request->invoice_cd;
                 $invoice->invoice_cgc = $request->invoice_cgc;
-                $invoice->invoice_total_usd = $request->invoice_total_usd;
+                $invoice->invoice_dtc = $request->invoice_dtc;
                 $invoice->invoice_ait = $request->invoice_ait;
                 $invoice->invoice_vat = $request->invoice_vat;
+                $invoice->others = $request->others;
+                $invoice->invoice_total_usd = $request->invoice_total_usd;
                 $invoice->invoice_exchange_rate = $request->invoice_exchange_rate;
-                $invoice->invoice_payable_bdt = $request->invoice_payable_bdt;
-                $invoice->invoice_paid_amount = $request->invoice_paid_amount;
-                $invoice->invoice_due_balance = $invoice->invoice_payable_bdt - $invoice->invoice_paid_amount;
+                $invoice->invoice_receivable_amount_bdt = $request->invoice_receivable_amount_bdt;
+                $invoice->invoice_received_amount = $request->invoice_received_amount;
+
+                $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
+
                 $invoice->invoice_notes = $request->invoice_notes;
-                $invoice->currency = $request->currency;
+                $invoice->invoice_payment_method = $request->invoice_payment_method;
+                // $invoice->currency = $request->currency;
                 $invoice->customer_id = $request->customer_id;
                 $invoice->chart_of_account_id = $request->chart_of_account_id;
-                $invoice->invoice_payment_method = $request->invoice_payment_method;
                 if(
                     $request->invoice_payment_method == 'bank' && !$request->invoice_bank_account_id
                     ) {
@@ -101,7 +102,7 @@ class InvoiceController extends Controller
                 $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
 
                 $invoice_debit_transaction = [
-                    'amount' => $request->invoice_paid_amount,
+                    'amount' => $request->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
@@ -111,7 +112,7 @@ class InvoiceController extends Controller
                 ];
 
                 $invoice_credit_transaction = [
-                    'amount' => $request->invoice_due_amount,
+                    'amount' => $request->invoice_due_balance,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
@@ -135,20 +136,30 @@ class InvoiceController extends Controller
                 $bill->destination = $request->destination;
                 $bill->master_air_way_bill = $request->master_air_way_bill;
                 $bill->master_air_way_bill_fee = $request->master_air_way_bill_fee;
+                $bill->unit = $request->unit;
                 $bill->cartoon_amount = $request->cartoon_amount;
                 $bill->gross_weight = $request->gross_weight;
                 $bill->chargeable_weight = $request->chargeable_weight;
                 $bill->bill_rate = $request->bill_rate;
+
+                $freight_amount = $bill->chargeable_weight * $bill->bill_rate;
+                $bill->bill_freight_amount = $freight_amount;
+
+                $bill->bill_thc = $request->bill_thc;
+                $bill->bill_ssc = $request->bill_ssc;
+                $bill->bill_cd = $request->bill_cd;
                 $bill->bill_cgc = $request->bill_cgc;
-                $bill->bill_handling_fee = $request->bill_handling_fee;
+                $bill->bill_ams = $request->bill_ams;
+                $bill->bill_itt = $request->bill_itt;
                 $bill->bill_total_usd = $request->bill_total_usd;
-                $bill->others = $request->others;
+                $bill->bill_ait = $request->bill_ait;
+                $bill->bill_vat = $request->bill_vat;            
                 $bill->bill_exchange_rate = $request->bill_exchange_rate;
-                $bill->bill_amount = $request->bill_amount;
-                $bill->bill_received_amount = $request->bill_received_amount;
-                $bill->bill_due_balance = $bill->bill_amount - $bill->bill_received_amount;
+                $bill->bill_payable_bdt = ($bill->bill_total_usd + $bill->bill_ait + $bill->bill_vat) * $bill->bill_exchange_rate;
+                $bill->bill_paid_amount = $request->bill_paid_amount;
+                $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
                 $bill->bill_notes = $request->bill_notes;
-                $bill->currency = $request->currency;
+                // $bill->currency = $request->currency;
                 $bill->bill_payment_method = $request->bill_payment_method;
                 // $bill->isPaid = $request->isPaid;
                 $bill->vendor_id = $request->vendor_id;
@@ -171,7 +182,7 @@ class InvoiceController extends Controller
                 $accounts_payable_chart_of_account = ChartOfAccount::where('slug', 'accounts-payable')->first();
 
                 $bill_credit_transaction = [
-                    'amount' => $request->bill_received_amount,
+                    'amount' => $request->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
@@ -208,7 +219,7 @@ class InvoiceController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
-            ], 500);
+            ], 500); 
         }
     }
 
