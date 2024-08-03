@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_number');
             $table->date('invoice_issue_date');
-            $table->date('due_date');
+            $table->date('invoice_due_date');
             $table->string('destination');
             $table->string('master_air_way_bill')->nullable();
             $table->float('master_air_way_bill_fee')->nullable();

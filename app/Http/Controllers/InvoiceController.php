@@ -59,7 +59,7 @@ class InvoiceController extends Controller
                 $invoice = new Invoice();
                 $invoice->invoice_number = $invoice_number;
                 $invoice->invoice_issue_date = $request->invoice_issue_date;
-                $invoice->due_date = $request->due_date;
+                $invoice->invoice_due_date = $request->invoice_due_date;
                 $invoice->destination = $request->destination;
                 $invoice->master_air_way_bill = $request->master_air_way_bill;
                 $invoice->master_air_way_bill_fee = $request->master_air_way_bill_fee;
@@ -131,8 +131,8 @@ class InvoiceController extends Controller
 
                 $bill = new Bill();
                 $bill->invoice_number = $invoice_number;
-                $bill->invoice_issue_date = $request->invoice_issue_date;
-                $bill->due_date = $request->due_date;
+                $bill->bill_issue_date = $request->bill_issue_date;
+                $bill->bill_due_date = $request->bill_due_date;
                 $bill->destination = $request->destination;
                 $bill->master_air_way_bill = $request->master_air_way_bill;
                 $bill->master_air_way_bill_fee = $request->master_air_way_bill_fee;
@@ -155,9 +155,13 @@ class InvoiceController extends Controller
                 $bill->bill_ait = $request->bill_ait;
                 $bill->bill_vat = $request->bill_vat;            
                 $bill->bill_exchange_rate = $request->bill_exchange_rate;
+
                 $bill->bill_payable_bdt = ($bill->bill_total_usd + $bill->bill_ait + $bill->bill_vat) * $bill->bill_exchange_rate;
+
                 $bill->bill_paid_amount = $request->bill_paid_amount;
+
                 $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
+                
                 $bill->bill_notes = $request->bill_notes;
                 // $bill->currency = $request->currency;
                 $bill->bill_payment_method = $request->bill_payment_method;
