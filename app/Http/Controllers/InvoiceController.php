@@ -40,19 +40,42 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+        // dd('here');
         try {
-            DB::transaction(function () use ($request) {
+            $organization = Organization::find(1);
+            $organization_invoice_prefix = $organization->invoice_prefix;
+            $organization_invoice_number = $organization->invoice_start_number;
 
-                $organization_invoice_prefix = Organization::find(1)->invoice_prefix;
-                $organization_invoice_number = Organization::find(1)->invoice_number;
+            if (is_null($organization_invoice_prefix) || is_null($organization_invoice_number)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please update Organization Invoice Prefix or Number first!',
+                ], 404);
+            }
 
-                if(!$organization_invoice_prefix || !$organization_invoice_number) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Please update Organization Invoice Prefix or Number first!',
-                    ], 404);
-                }
+            if (
+                $request->invoice_payment_method == 'bank' && !$request->invoice_bank_account_id
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bank Account Required for bank transactions',
+                ], 400);
+            }
 
+            if (
+                $request->bill_payment_method == 'bank' && !$request->bill_bank_account_id
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bank Account Required for bank transactions',
+                ], 400);
+            }
+
+            DB::transaction(function () use (
+                $organization_invoice_prefix,
+                $organization_invoice_number,
+                $request
+            ) {
                 $total_invoice_count = Invoice::count();
                 $invoice_number = $organization_invoice_prefix . '-' . ($organization_invoice_number + $total_invoice_count);
 
@@ -75,6 +98,7 @@ class InvoiceController extends Controller
                 $invoice->others = $request->others;
                 $invoice->invoice_total_usd = $request->invoice_total_usd;
                 $invoice->invoice_exchange_rate = $request->invoice_exchange_rate;
+
                 $invoice->invoice_receivable_amount_bdt = $request->invoice_receivable_amount_bdt;
                 $invoice->invoice_received_amount = $request->invoice_received_amount;
 
@@ -85,18 +109,12 @@ class InvoiceController extends Controller
                 // $invoice->currency = $request->currency;
                 $invoice->customer_id = $request->customer_id;
                 $invoice->chart_of_account_id = $request->chart_of_account_id;
-                if(
-                    $request->invoice_payment_method == 'bank' && !$request->invoice_bank_account_id
-                    ) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Bank Account Required for bank transactions',
-                    ], 400);
-                } else if(
+                if (
                     $request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id
-                    ) {
-                        $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
-                    }
+                ) {
+                    $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
+                }
+
                 $invoice->save();
 
                 $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
@@ -106,17 +124,17 @@ class InvoiceController extends Controller
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
-                    'invoice_number' => $request->invoice_number,
+                    'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $accounts_receivable_chart_of_account->id,
                     'invoice_id' => $invoice->id,
                 ];
 
                 $invoice_credit_transaction = [
-                    'amount' => $request->invoice_due_balance,
+                    'amount' => $invoice->invoice_due_balance,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
-                    'invoice_number' => $request->invoice_number,
+                    'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $request->chart_of_account_id,
                     'invoice_id' => $invoice->id,
                 ];
@@ -153,15 +171,23 @@ class InvoiceController extends Controller
                 $bill->bill_itt = $request->bill_itt;
                 $bill->bill_total_usd = $request->bill_total_usd;
                 $bill->bill_ait = $request->bill_ait;
-                $bill->bill_vat = $request->bill_vat;            
+                $bill->bill_vat = $request->bill_vat;
                 $bill->bill_exchange_rate = $request->bill_exchange_rate;
 
-                $bill->bill_payable_bdt = ($bill->bill_total_usd + $bill->bill_ait + $bill->bill_vat) * $bill->bill_exchange_rate;
 
+                // if($request->bill_total_usd && $request->bill_exchange_rate) {
+                //     $bill->bill_payable_bdt = ($bill->bill_total_usd + $bill->bill_ait + $bill->bill_vat) * $bill->bill_exchange_rate;    
+                // } else if(
+                //     !$request->bill_total_usd && !$request->bill_exchange_rate
+                //     ) {
+                //     $bill->bill_payable_bdt = $request->bill_payable_bdt;
+                // }
+
+                $bill->bill_payable_bdt = $request->bill_payable_bdt;
                 $bill->bill_paid_amount = $request->bill_paid_amount;
 
                 $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
-                
+
                 $bill->bill_notes = $request->bill_notes;
                 // $bill->currency = $request->currency;
                 $bill->bill_payment_method = $request->bill_payment_method;
@@ -169,18 +195,11 @@ class InvoiceController extends Controller
                 $bill->vendor_id = $request->vendor_id;
                 $bill->chart_of_account_id = $request->chart_of_account_id;
 
-                if(
-                    $request->bill_payment_method == 'bank' && !$request->bill_bank_account_id
-                    ) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Bank Account Required for bank transactions',
-                    ], 400);
-                } else if(
+                if (
                     $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
-                    ) {
-                        $bill->bill_bank_account_id = $request->bill_bank_account_id;
-                    }
+                ) {
+                    $bill->bill_bank_account_id = $request->bill_bank_account_id;
+                }
                 $bill->save();
 
                 $accounts_payable_chart_of_account = ChartOfAccount::where('slug', 'accounts-payable')->first();
@@ -190,17 +209,17 @@ class InvoiceController extends Controller
                     'transaction_type' => 'bill',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
-                    'invoice_number' => $request->invoice_number,
+                    'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $accounts_payable_chart_of_account->id,
                     'bill_id' => $bill->id,
                 ];
 
                 $bill_debit_transaction = [
-                    'amount' => $request->bill_due_balance,
+                    'amount' => $bill->bill_due_balance,
                     'transaction_type' => 'bill',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
-                    'invoice_number' => $request->invoice_number,
+                    'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $request->chart_of_account_id,
                     'bill_id' => $bill->id,
                 ];
@@ -212,18 +231,18 @@ class InvoiceController extends Controller
                 $debit = new Transactions();
                 $debit->fill($bill_debit_transaction);
                 $debit->save();
-
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Invoice created successfully',
-                    'result' => InvoiceResource::make($invoice)
-                ], 201);
             });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Invoice created successfully',
+                'result' => InvoiceResource::make($request)
+            ], 201);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
-            ], 500); 
+            ], 500);
         }
     }
 
