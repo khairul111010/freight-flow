@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->float('amount');
             $table->string('transaction_type');
-            $table->bigInteger('transaction_date');
+            $table->date('transaction_date');
             $table->boolean('is_debit')->default(false);
             $table->boolean('record_payment')->default(false);
             $table->string('invoice_number');
