@@ -53,6 +53,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/', [InvoiceController::class, 'index']);
         Route::post('/', [InvoiceController::class, 'store']);
         Route::get('/{id}', [InvoiceController::class, 'show']);
+        Route::get('/search/{invoice_number}', [InvoiceController::class, 'search']);
+        Route::get('/customer/{id}', [InvoiceController::class, 'getInvoiceByCustomer']);
         Route::put('/{id}', [InvoiceController::class, 'update']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
     });

@@ -251,10 +251,39 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
+
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',
             'result' => InvoiceResource::make(Invoice::findOrFail($id))
+        ], 200);
+    }
+    
+    public function search($invoice_number)
+    {
+        $invoice = Invoice::where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice retrieved successfully',
+            'result' => InvoiceResource::collection($invoice)
+        ], 200);
+    }
+    
+    public function getInvoiceByCustomer($id)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice retrieved successfully',
+            'result' => InvoiceResource::collection(Invoice::where('customer_id', $id)->get())
+        ], 200);
+    }
+
+    public function getInvoiceByInvoiceNumber($invoice_number)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice retrieved successfully',
+            'result' => InvoiceResource::make(Invoice::where('invoice_number', $invoice_number)->first())
         ], 200);
     }
 
