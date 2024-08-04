@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('destination');
             $table->string('master_air_way_bill')->nullable();
             $table->float('master_air_way_bill_fee')->nullable();
+            $table->integer('unit')->nullable();
             $table->integer('cartoon_amount');
             $table->float('gross_weight')->nullable();
             $table->float('chargeable_weight')->nullable();
