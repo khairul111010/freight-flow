@@ -37,6 +37,24 @@ class VendorController extends Controller
             ], 500);
         }
     }
+    public function all(Request $request)
+    {
+
+        try {
+            $query = Vendor::all();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vendors retrieved successfully',
+                'result' => $query
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
 
     /**
      * Show the form for creating a new resource.

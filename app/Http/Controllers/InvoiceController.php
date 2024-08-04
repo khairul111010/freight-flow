@@ -20,10 +20,20 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
+        $query = Invoice::query();
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('destination', 'LIKE', '%' . $search . '%')
+                    ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
+            });
+
+        }
         return response()->json([
             'success' => true,
             'message' => 'Invoices retrieved successfully',
-            'result' => InvoiceResource::collection(Invoice::paginate($request->limit ?? 10))
+            'result' => $query->paginate(10)
         ], 200);
     }
 
@@ -71,11 +81,7 @@ class InvoiceController extends Controller
                 ], 400);
             }
 
-            DB::transaction(function () use (
-                $organization_invoice_prefix,
-                $organization_invoice_number,
-                $request
-            ) {
+            DB::transaction(function () use ($organization_invoice_prefix, $organization_invoice_number, $request) {
                 $total_invoice_count = Invoice::count();
                 $invoice_number = $organization_invoice_prefix . '-' . ($organization_invoice_number + $total_invoice_count);
 
@@ -269,7 +275,7 @@ class InvoiceController extends Controller
             'result' => InvoiceResource::collection($invoice)
         ], 200);
     }
-    
+
     public function getInvoiceByCustomer($id)
     {
         return response()->json([

@@ -36,6 +36,22 @@ class CustomerController extends Controller
             ], 500);
         }
     }
+    public function all(Request $request)
+    {
+        try {
+            $query = Customer::all();
+            return response()->json([
+                'success' => true,
+                'message' => 'Customers retrieved successfully',
+                'result' => $query
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

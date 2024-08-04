@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('customers')->group(function () {
         Route::get('/', [CustomerController::class, 'index']);
+        Route::get('/all', [CustomerController::class, 'all']);
         Route::post('/', [CustomerController::class, 'store']);
         Route::get('/{id}', [CustomerController::class, 'show']);
         Route::patch('/{id}', [CustomerController::class, 'update']);
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::prefix('vendors')->group(function () {
         Route::get('/', [VendorController::class, 'index']);
+        Route::get('/all', [VendorController::class, 'all']);
         Route::post('/', [VendorController::class, 'store']);
         Route::get('/{id}', [VendorController::class, 'show']);
         Route::patch('/{id}', [VendorController::class, 'update']);

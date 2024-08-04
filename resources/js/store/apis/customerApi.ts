@@ -4,6 +4,11 @@ const customerApi = baseApi
     .enhanceEndpoints({ addTagTypes: ["Customers"] })
     .injectEndpoints({
         endpoints: (builder) => ({
+            getAllCustomers: builder.query<any, void>({
+                query: () => `/customers/all`,
+                providesTags: ["Customers"],
+                transformResponse: (response: any) => response.result,
+            }),
             getCustomers: builder.query<any, any>({
                 query: (pagination) => `/customers?page=${pagination.page || 1}&search=${pagination.search || ""}`,
                 providesTags: ["Customers"],
@@ -33,4 +38,4 @@ const customerApi = baseApi
         }),
     });
 
-export const { useCreateCustomerMutation, useLazyGetCustomersQuery, useGetCustomerQuery, useLazyGetCustomerQuery, useUpdateCustomerMutation } = customerApi;
+export const { useGetAllCustomersQuery, useGetCustomersQuery, useLazyGetAllCustomersQuery, useCreateCustomerMutation, useLazyGetCustomersQuery, useGetCustomerQuery, useLazyGetCustomerQuery, useUpdateCustomerMutation } = customerApi;

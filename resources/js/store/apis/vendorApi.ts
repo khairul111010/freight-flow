@@ -4,6 +4,11 @@ const vendorApi = baseApi
     .enhanceEndpoints({ addTagTypes: ["Vendors"] })
     .injectEndpoints({
         endpoints: (builder) => ({
+            getAllVendors: builder.query<any, void>({
+                query: () => `/vendors/all`,
+                providesTags: ["Vendors"],
+                transformResponse: (response: any) => response.result,
+            }),
             getVendors: builder.query<any, any>({
                 query: (pagination) => `/vendors?page=${pagination.page || 1}&search=${pagination.search || ""}`,
                 providesTags: ["Vendors"],
@@ -33,4 +38,4 @@ const vendorApi = baseApi
         }),
     });
 
-export const { useCreateVendorMutation, useGetVendorQuery, useGetVendorsQuery, useLazyGetVendorQuery, useLazyGetVendorsQuery, useUpdateVendorMutation } = vendorApi;
+export const { useGetAllVendorsQuery, useLazyGetAllVendorsQuery, useCreateVendorMutation, useGetVendorQuery, useGetVendorsQuery, useLazyGetVendorQuery, useLazyGetVendorsQuery, useUpdateVendorMutation } = vendorApi;
