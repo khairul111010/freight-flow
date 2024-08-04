@@ -31,7 +31,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, "login"]);
 
-
 // Protected routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
@@ -55,6 +54,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/', [InvoiceController::class, 'store']);
         Route::get('/bill', [InvoiceController::class, 'getBill']);
         Route::get('/{id}', [InvoiceController::class, 'show']);
+        Route::get('/generate-pdf/{id}', [InvoiceController::class, 'pdf']);
         Route::get('/search/{invoice_number}', [InvoiceController::class, 'search']);
         Route::get('/customer/{id}', [InvoiceController::class, 'getInvoiceByCustomer']);
         Route::get('/bill/{id}', [InvoiceController::class, 'getBillByBillId']);

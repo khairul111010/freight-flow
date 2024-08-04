@@ -9,6 +9,7 @@ use App\Models\ChartOfAccount;
 use App\Models\Invoice;
 use App\Models\Organization;
 use App\Models\Transactions;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -258,12 +259,22 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',
-            'result' => InvoiceResource::make(Invoice::findOrFail($id))
+            'result' => Invoice::findOrFail($id)
         ], 200);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function pdf($id)
+    {
+        $organization = Organization::find(1);
+        $data = ['logo' => asset($organization->logo)];
+        $pdf = Pdf::loadView('invoice', $data);
+        return $pdf->download('invoice.pdf');
     }
 
     public function search($invoice_number)

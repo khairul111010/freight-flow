@@ -6,10 +6,13 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Spinner from "../../../components/preloader/Spinner";
 import { classNames } from "primereact/utils";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconFileDownload, IconPencil, IconTrash } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import Pagination from "../../../components/pagination";
-import { useLazyGetInvoicesQuery } from "../../../store/apis/invoiceApi";
+import {
+    useLazyGetInvoicePDFQuery,
+    useLazyGetInvoicesQuery,
+} from "../../../store/apis/invoiceApi";
 import SearchInput from "../../../components/form/search-input/SearchInput";
 import useDebounce from "../../../hooks/useDebounce";
 
@@ -20,9 +23,14 @@ const Invoice = () => {
         setSearch(e.target.value);
     };
     const [getInvoices, { data, isLoading }] = useLazyGetInvoicesQuery();
+    const [getInvoicePDF] = useLazyGetInvoicePDFQuery();
     useEffect(() => {
         getInvoices({ page: 1, search: debouncedValue });
     }, [debouncedValue]);
+
+    const handleDownload = (id: any) => {
+        getInvoicePDF(id);
+    };
 
     return (
         <div>
@@ -127,12 +135,12 @@ const Invoice = () => {
                                 header="TTL BDT"
                             ></Column>
 
-                            {/* <Column
+                            <Column
                                 header="Action"
                                 body={(rowData) => {
                                     return (
                                         <div className="flex items-center gap-2">
-                                            <Link
+                                            {/* <Link
                                                 to={AppRoutesEnum.CUSTOMERS_EDIT.replace(
                                                     ":id",
                                                     rowData.id
@@ -143,11 +151,20 @@ const Invoice = () => {
                                             </Link>
                                             <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
                                                 <IconTrash />
+                                            </div> */}
+                                            <div
+                                                title="Download"
+                                                onClick={() =>
+                                                    handleDownload(rowData.id)
+                                                }
+                                                className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
+                                            >
+                                                <IconFileDownload />
                                             </div>
                                         </div>
                                     );
                                 }}
-                            /> */}
+                            />
                         </DataTable>
                         {data && (
                             <Pagination
