@@ -258,7 +258,7 @@ class InvoiceController extends Controller
             'result' => InvoiceResource::make(Invoice::findOrFail($id))
         ], 200);
     }
-    
+
     public function search($invoice_number)
     {
         $invoice = Invoice::where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
@@ -309,5 +309,46 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice)
     {
         //
+    }
+
+
+    // Bill API
+
+    // paginate bill
+    public function getBill(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Bill retrieved successfully',
+            'result' => InvoiceResource::collection(Bill::paginate($request->limit ?? 10))
+        ], 200);
+    }
+
+    public function getBillByVendor($id)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Bill retrieved successfully',
+            'result' => InvoiceResource::collection(Bill::where('vendor_id', $id)->get())
+        ], 200);
+    }
+
+    public function searchBill($invoice_number)
+    {
+        $bill = Bill::where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Bill retrieved successfully',
+            'result' => InvoiceResource::collection($bill)
+        ], 200);
+    }
+
+    public function getBillByBillId($id)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'Bill retrieved successfully',
+            'result' => InvoiceResource::make(Bill::findOrFail($id))
+        ], 200);
     }
 }

@@ -52,9 +52,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('invoices')->group(function () {
         Route::get('/', [InvoiceController::class, 'index']);
         Route::post('/', [InvoiceController::class, 'store']);
+        Route::get('/bill', [InvoiceController::class, 'getBill']);
         Route::get('/{id}', [InvoiceController::class, 'show']);
         Route::get('/search/{invoice_number}', [InvoiceController::class, 'search']);
         Route::get('/customer/{id}', [InvoiceController::class, 'getInvoiceByCustomer']);
+        Route::get('/bill/{id}', [InvoiceController::class, 'getBillByBillId']);
+        Route::get('/bill/search/{invoice_number}', [InvoiceController::class, 'searchBill']);
+        Route::get('/bill/vendor/{id}', [InvoiceController::class, 'getBillByVendor']);
         Route::put('/{id}', [InvoiceController::class, 'update']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
     });
