@@ -10,6 +10,7 @@ use App\Models\Invoice;
 use App\Models\Organization;
 use App\Models\Transactions;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -272,9 +273,10 @@ class InvoiceController extends Controller
     public function pdf($id)
     {
         $organization = Organization::find(1);
-        $data = ['logo' => asset($organization->logo)];
+        $invoice = Invoice::with('customer')->findOrFail($id);
+        $data = ['logo' => asset($organization->logo), 'name' => $organization->name, 'description' => $organization->description, 'address' => $organization->address, 'invoice' => $invoice];
         $pdf = Pdf::loadView('invoice', $data);
-        return $pdf->download('invoice.pdf');
+        return $pdf->download($invoice->invoice_number . "-" . Carbon::today() . '.pdf');
     }
 
     public function search($invoice_number)

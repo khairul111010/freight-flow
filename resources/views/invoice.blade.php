@@ -4,202 +4,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+    <title>{{$invoice->invoice_number}}</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
-    <div>
-        <div class="py-4">
-            <div class="px-14 py-6">
-                <table class="w-full border-collapse border-spacing-0">
-                    <tbody>
-                        <tr>
-                            <td class="w-full align-top">
-                                <div>
-                                    <img src="{{$logo}}" class="h-12">
-                                    <!-- <img src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png"
-                                        class="h-12" /> -->
-                                </div>
-                            </td>
+    <div
+        style="margin: auto; padding: 16px; border: 1px solid #eee; font-size: 16px; line-height: 24px; font-family: 'Inter', sans-serif; color: #555; background-color: #F9FAFC;">
+        <table style="font-size: 12px; line-height: 20px;">
+            <thead>
+                <tr>
+                    <td style="padding: 0 16px 18px 16px;">
+                        <!-- <img src="https://raw.githubusercontent.com/khairul111010/freight-flow/master/public/logo.png"
+                            alt="" width="200" height="48"> -->
+                        <h1
+                            style="color: #1A1C21; font-size: 18px; font-style: normal; font-weight: 600; line-height: normal;">
+                            {{$name}}
+                        </h1>
+                        <p>{{$description}}</p>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="">
+                        <table
+                            style="background-color: #FFF; padding: 20px 16px; border: 1px solid #D7DAE0;width: 100%; border-radius: 12px;font-size: 12px; line-height: 20px; table-layout: fixed;">
+                            <tbody>
+                                <tr>
+                                    <td
+                                        style="vertical-align: top; width: 30%; padding-right: 20px;padding-bottom: 35px;">
+                                        <p style="font-weight: 700; color: #1A1C21;">{{$invoice->customer->name}}</p>
+                                        <p style="color: #5E6470;">{{$invoice->customer->address}}</p>
+                                        <p style="color: #5E6470;">{{$invoice->customer->email}}</p>
+                                    </td>
+                                    <td
+                                        style="vertical-align: top; width: 35%; padding-right: 20px;padding-bottom: 35px;">
+                                        <p style="font-weight: 700; color: #1A1C21;">Pick-up</p>
+                                        <p style="color: #5E6470;">1 Hight street, London, E1 7QL Uk</p>
 
-                            <td class="align-top">
-                                <div class="text-sm">
-                                    <table class="border-collapse border-spacing-0">
-                                        <tbody>
+                                        <p style="font-weight: 700; color: #1A1C21;">Drop-off</p>
+                                        <p style="color: #5E6470;">1 Hight street, London, E1 7QL Uk</p>
+                                    </td>
+                                    <td style="vertical-align: top;padding-bottom: 35px;">
+                                        <table style="table-layout: fixed;width:-webkit-fill-available;">
                                             <tr>
-                                                <td class="border-r pr-4">
-                                                    <div>
-                                                        <p class="whitespace-nowrap text-slate-400 text-right">{{$logo}}
-                                                        </p>
-                                                        <p class="whitespace-nowrap font-bold text-main text-right">
-                                                            April 26, 2023</p>
-                                                    </div>
-                                                </td>
-                                                <td class="pl-4">
-                                                    <div>
-                                                        <p class="whitespace-nowrap text-slate-400 text-right">Invoice #
-                                                        </p>
-                                                        <p class="whitespace-nowrap font-bold text-main text-right">
-                                                            BRA-00335</p>
-                                                    </div>
-                                                </td>
+                                                <th style="text-align: left; color: #1A1C21;">Job ID</th>
+                                                <td style="text-align: right;">123567</td>
                                             </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                            <tr>
+                                                <th style="text-align: left; color: #1A1C21;">Job date</th>
+                                                <td style="text-align: right;">14/12/2020</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; color: #1A1C21;">Distance</th>
+                                                <td style="text-align: right;">1.568 miles</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; color: #1A1C21;">Pick-up time</th>
+                                                <td style="text-align: right;">19:58</td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; color: #1A1C21;">Time delivered</th>
+                                                <td style="text-align: right;">20:58</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 13px;">
+                                        <p style="color: #5E6470;">Service </p>
+                                        <p style="font-weight: 700; color: #1A1C21;">Shipping</p>
+                                    </td>
+                                    <td style="text-align: center; padding-bottom: 13px;">
+                                        <p style="color: #5E6470;">Invoice number</p>
+                                        <p style="font-weight: 700; color: #1A1C21;">#{{$invoice->invoice_number}}</p>
+                                    </td>
+                                    <td style="text-align: end; padding-bottom: 13px;">
+                                        <p style="color: #5E6470;">Invoice date</p>
+                                        <p style="font-weight: 700; color: #1A1C21;">{{$invoice->invoice_issue_date}}
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <table style="width: 100%;border-spacing: 0;">
+                                            <thead>
+                                                <tr style="text-transform: uppercase;">
+                                                    <td
+                                                        style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0;">
+                                                        Item
+                                                        Detail</td>
+                                                    <td
+                                                        style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0;">
+                                                        Qty
+                                                    </td>
+                                                    <td
+                                                        style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0; text-align: end;">
+                                                        Rate</td>
+                                                    <td
+                                                        style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0; text-align: end;">
+                                                        Amount</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">Drops</p>
+                                                        <p style="color: #5E6470;">On-demand delivery</p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">1</p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">£5.00</p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">£5.00</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">Hours</p>
+                                                        <p style="color: #5E6470;">Shift delivery service</p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">0</p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">£0.00</p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">£0.00</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td style="padding: 12px 0; border-top:1px solid #D7DAE0;"></td>
+                                                    <td style="border-top:1px solid #D7DAE0;" colspan="3">
+                                                        <table style="width: 100%;border-spacing: 0;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th
+                                                                        style="padding-top: 12px;text-align: start; color: #1A1C21;">
+                                                                        Subtotal</th>
+                                                                    <td
+                                                                        style="padding-top: 12px;text-align: end; color: #1A1C21;">
+                                                                        £5.00</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th
+                                                                        style="padding: 12px 0;text-align: start; color: #1A1C21;">
+                                                                        VAT in items (0%) (1)</th>
+                                                                    <td
+                                                                        style="padding: 12px 0;text-align: end; color: #1A1C21;">
+                                                                        £5.00</td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th
+                                                                        style="padding: 12px 0 30px 0;text-align: start; color: #1A1C21;border-top:1px solid #D7DAE0;">
+                                                                        Total Price (2)</th>
+                                                                    <th
+                                                                        style="padding: 12px 0 30px 0;text-align: end; color: #1A1C21;border-top:1px solid #D7DAE0;">
+                                                                        £5.00</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
 
-            <div class="bg-slate-100 px-14 py-6 text-sm">
-                <table class="w-full border-collapse border-spacing-0">
-                    <tbody>
-                        <tr>
-                            <td class="w-1/2 align-top">
-                                <div class="text-sm text-neutral-600">
-                                    <p class="font-bold">Supplier Company INC</p>
-                                    <p>Number: 23456789</p>
-                                    <p>VAT: 23456789</p>
-                                    <p>6622 Abshire Mills</p>
-                                    <p>Port Orlofurt, 05820</p>
-                                    <p>United States</p>
-                                </div>
-                            </td>
-                            <td class="w-1/2 align-top text-right">
-                                <div class="text-sm text-neutral-600">
-                                    <p class="font-bold">Customer Company</p>
-                                    <p>Number: 123456789</p>
-                                    <p>VAT: 23456789</p>
-                                    <p>9552 Vandervort Spurs</p>
-                                    <p>Paradise, 43325</p>
-                                    <p>United States</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="px-14 py-10 text-sm text-neutral-700">
-                <table class="w-full border-collapse border-spacing-0">
-                    <thead>
-                        <tr>
-                            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main">#</td>
-                            <td class="border-b-2 border-main pb-3 pl-2 font-bold text-main">Product details</td>
-                            <td class="border-b-2 border-main pb-3 pl-2 text-right font-bold text-main">Price</td>
-                            <td class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main">Qty.</td>
-                            <td class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main">VAT</td>
-                            <td class="border-b-2 border-main pb-3 pl-2 text-right font-bold text-main">Subtotal</td>
-                            <td class="border-b-2 border-main pb-3 pl-2 pr-3 text-right font-bold text-main">Subtotal +
-                                VAT</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border-b py-3 pl-3">1.</td>
-                            <td class="border-b py-3 pl-2">Montly accountinc services</td>
-                            <td class="border-b py-3 pl-2 text-right">$150.00</td>
-                            <td class="border-b py-3 pl-2 text-center">1</td>
-                            <td class="border-b py-3 pl-2 text-center">20%</td>
-                            <td class="border-b py-3 pl-2 text-right">$150.00</td>
-                            <td class="border-b py-3 pl-2 pr-3 text-right">$180.00</td>
-                        </tr>
-                        <tr>
-                            <td class="border-b py-3 pl-3">2.</td>
-                            <td class="border-b py-3 pl-2">Taxation consulting (hour)</td>
-                            <td class="border-b py-3 pl-2 text-right">$60.00</td>
-                            <td class="border-b py-3 pl-2 text-center">2</td>
-                            <td class="border-b py-3 pl-2 text-center">20%</td>
-                            <td class="border-b py-3 pl-2 text-right">$120.00</td>
-                            <td class="border-b py-3 pl-2 pr-3 text-right">$144.00</td>
-                        </tr>
-                        <tr>
-                            <td class="border-b py-3 pl-3">3.</td>
-                            <td class="border-b py-3 pl-2">Bookkeeping services</td>
-                            <td class="border-b py-3 pl-2 text-right">$50.00</td>
-                            <td class="border-b py-3 pl-2 text-center">1</td>
-                            <td class="border-b py-3 pl-2 text-center">20%</td>
-                            <td class="border-b py-3 pl-2 text-right">$50.00</td>
-                            <td class="border-b py-3 pl-2 pr-3 text-right">$60.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="7">
-                                <table class="w-full border-collapse border-spacing-0">
-                                    <tbody>
-                                        <tr>
-                                            <td class="w-full"></td>
-                                            <td>
-                                                <table class="w-full border-collapse border-spacing-0">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="border-b p-3">
-                                                                <div class="whitespace-nowrap text-slate-400">Net total:
-                                                                </div>
-                                                            </td>
-                                                            <td class="border-b p-3 text-right">
-                                                                <div class="whitespace-nowrap font-bold text-main">
-                                                                    $320.00</div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="p-3">
-                                                                <div class="whitespace-nowrap text-slate-400">VAT total:
-                                                                </div>
-                                                            </td>
-                                                            <td class="p-3 text-right">
-                                                                <div class="whitespace-nowrap font-bold text-main">
-                                                                    $64.00</div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td class="bg-main p-3">
-                                                                <div class="whitespace-nowrap font-bold text-white">
-                                                                    Total:</div>
-                                                            </td>
-                                                            <td class="bg-main p-3 text-right">
-                                                                <div class="whitespace-nowrap font-bold text-white">
-                                                                    $384.00</div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="px-14 text-sm text-neutral-700">
-                <p class="text-main font-bold">PAYMENT DETAILS</p>
-                <p>Banks of Banks</p>
-                <p>Bank/Sort Code: 1234567</p>
-                <p>Account Number: 123456678</p>
-                <p>Payment Reference: BRA-00335</p>
-            </div>
-
-            <div class="px-14 py-10 text-sm text-neutral-700">
-                <p class="text-main font-bold">Notes</p>
-                <p class="italic">Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing
-                    industries
-                    for previewing layouts and visual mockups.</p>
-                </dvi>
-
-                <footer class="fixed bottom-0 left-0 bg-slate-100 w-full text-neutral-600 text-center text-xs py-3">
-                    Supplier Company
-                    <span class="text-slate-300 px-2">|</span>
-                    info@company.com
-                    <span class="text-slate-300 px-2">|</span>
-                    +1-202-555-0106
-                </footer>
-            </div>
-        </div>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="padding-top: 30px;">
+                        <p style="display: flex; gap: 0 13px;"><span
+                                style="color: #1A1C21;font-weight: 700;">{{$name}}</span><span> {{$address}}</span></p>
+                        <p style="color: #1A1C21;">Any questions, contact customer service at <a
+                                href="mailto:sonikabd@gmail.com" style="color: #000;">sonikabd@gmail.com</a>.
+                        </p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </body>
 
 </html>
