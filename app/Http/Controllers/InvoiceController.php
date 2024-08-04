@@ -86,6 +86,7 @@ class InvoiceController extends Controller
                 $invoice->destination = $request->destination;
                 $invoice->master_air_way_bill = $request->master_air_way_bill;
                 $invoice->master_air_way_bill_fee = $request->master_air_way_bill_fee;
+                $invoice->unit = $request->unit;
                 $invoice->cartoon_amount = $request->cartoon_amount;
                 $invoice->gross_weight = $request->gross_weight;
                 $invoice->chargeable_weight = $request->chargeable_weight;
