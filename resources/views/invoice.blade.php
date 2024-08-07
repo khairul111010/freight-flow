@@ -58,49 +58,49 @@
                                     </td>
                                     <td
                                         style="vertical-align: top; width: 35%; padding-right: 20px;padding-bottom: 35px;">
-                                        <p style="font-weight: 700; color: #1A1C21;">Pick-up</p>
+                                        <!-- <p style="font-weight: 700; color: #1A1C21;">Pick-up</p>
                                         <p style="color: #5E6470;">1 Hight street, London, E1 7QL Uk</p>
 
                                         <p style="font-weight: 700; color: #1A1C21;">Drop-off</p>
-                                        <p style="color: #5E6470;">1 Hight street, London, E1 7QL Uk</p>
+                                        <p style="color: #5E6470;">1 Hight street, London, E1 7QL Uk</p> -->
                                     </td>
                                     <td style="vertical-align: top;padding-bottom: 35px;">
                                         <table style="table-layout: fixed;width:-webkit-fill-available;">
                                             <tr>
-                                                <th style="text-align: left; color: #1A1C21;">Job ID</th>
-                                                <td style="text-align: right;">123567</td>
+                                                <th style="text-align: left; color: #1A1C21;">MAWB</th>
+                                                <td style="text-align: right;">{{$invoice->master_air_way_bill}}</td>
                                             </tr>
                                             <tr>
-                                                <th style="text-align: left; color: #1A1C21;">Job date</th>
-                                                <td style="text-align: right;">14/12/2020</td>
+                                                <th style="text-align: left; color: #1A1C21;">Destination</th>
+                                                <td style="text-align: right;">{{$invoice->destination}}</td>
                                             </tr>
                                             <tr>
-                                                <th style="text-align: left; color: #1A1C21;">Distance</th>
-                                                <td style="text-align: right;">1.568 miles</td>
+                                                <th style="text-align: left; color: #1A1C21;">Cartoon Amount</th>
+                                                <td style="text-align: right;">{{$invoice->cartoon_amount}}</td>
                                             </tr>
                                             <tr>
-                                                <th style="text-align: left; color: #1A1C21;">Pick-up time</th>
-                                                <td style="text-align: right;">19:58</td>
+                                                <th style="text-align: left; color: #1A1C21;">Total Weight</th>
+                                                <td style="text-align: right;">{{$invoice->chargeable_weight}}</td>
                                             </tr>
                                             <tr>
-                                                <th style="text-align: left; color: #1A1C21;">Time delivered</th>
-                                                <td style="text-align: right;">20:58</td>
+                                                <th style="text-align: left; color: #1A1C21;">Invoice Date</th>
+                                                <td style="text-align: right;">{{$invoice->invoice_issue_date}}</td>
                                             </tr>
                                         </table>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="padding-bottom: 13px;">
-                                        <p style="color: #5E6470;">Service </p>
-                                        <p style="font-weight: 700; color: #1A1C21;">Shipping</p>
-                                    </td>
-                                    <td style="text-align: center; padding-bottom: 13px;">
-                                        <p style="color: #5E6470;">Invoice number</p>
+                                        <p style="color: #5E6470;">Invoice Number</p>
                                         <p style="font-weight: 700; color: #1A1C21;">#{{$invoice->invoice_number}}</p>
                                     </td>
+                                    <td style="text-align: center; padding-bottom: 13px;">
+                                        <!-- <p style="color: #5E6470;">Invoice number</p>
+                                        <p style="font-weight: 700; color: #1A1C21;">#{{$invoice->invoice_number}}</p> -->
+                                    </td>
                                     <td style="text-align: end; padding-bottom: 13px;">
-                                        <p style="color: #5E6470;">Invoice date</p>
-                                        <p style="font-weight: 700; color: #1A1C21;">{{$invoice->invoice_issue_date}}
+                                        <p style="color: #5E6470;">Due date</p>
+                                        <p style="font-weight: 700; color: #1A1C21;">{{$invoice->invoice_due_date}}
                                         </p>
                                     </td>
                                 </tr>
@@ -115,11 +115,10 @@
                                                         Detail</td>
                                                     <td
                                                         style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0;">
-                                                        Qty
                                                     </td>
                                                     <td
                                                         style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0; text-align: end;">
-                                                        Rate</td>
+                                                    </td>
                                                     <td
                                                         style="padding: 8px 0; border-top:1px solid #D7DAE0; border-bottom:1px solid #D7DAE0; text-align: end;">
                                                         Amount</td>
@@ -128,32 +127,121 @@
                                             <tbody>
                                                 <tr>
                                                     <td style="padding-block: 12px;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">Drops</p>
-                                                        <p style="color: #5E6470;">On-demand delivery</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            MAWB Fee
+                                                        </p>
                                                     </td>
                                                     <td style="padding-block: 12px;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">1</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
                                                     </td>
                                                     <td style="padding-block: 12px; text-align: end;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">£5.00</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
                                                     </td>
                                                     <td style="padding-block: 12px; text-align: end;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">£5.00</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->master_air_way_bill_fee}}</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td style="padding-block: 12px;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">Hours</p>
-                                                        <p style="color: #5E6470;">Shift delivery service</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            Invoice Rate
+                                                        </p>
                                                     </td>
                                                     <td style="padding-block: 12px;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">0</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
                                                     </td>
                                                     <td style="padding-block: 12px; text-align: end;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">£0.00</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
                                                     </td>
                                                     <td style="padding-block: 12px; text-align: end;">
-                                                        <p style="font-weight: 700; color: #1A1C21;">£0.00</p>
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->invoice_rate}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            CGC
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->invoice_cgc}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            DTC
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->invoice_dtc}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            AIT
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->invoice_ait}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            Others
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->others}}</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            Vat
+                                                        </p>
+                                                    </td>
+                                                    <td style="padding-block: 12px;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;"></p>
+                                                    </td>
+                                                    <td style="padding-block: 12px; text-align: end;">
+                                                        <p style="font-weight: 700; color: #1A1C21;">
+                                                            ${{$invoice->invoice_vat}}</p>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -166,30 +254,31 @@
                                                                 <tr>
                                                                     <th
                                                                         style="padding-top: 12px;text-align: start; color: #1A1C21;">
-                                                                        Subtotal</th>
+                                                                        Total USD</th>
                                                                     <td
                                                                         style="padding-top: 12px;text-align: end; color: #1A1C21;">
-                                                                        £5.00</td>
+                                                                        ${{$invoice->invoice_total_usd}}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th
                                                                         style="padding: 12px 0;text-align: start; color: #1A1C21;">
-                                                                        VAT in items (0%) (1)</th>
+                                                                        Exchange Rate</th>
                                                                     <td
                                                                         style="padding: 12px 0;text-align: end; color: #1A1C21;">
-                                                                        £5.00</td>
+                                                                        BDT {{$invoice->invoice_exchange_rate}}
+                                                                    </td>
                                                                 </tr>
-                                                            </tbody>
-                                                            <tfoot>
                                                                 <tr>
                                                                     <th
-                                                                        style="padding: 12px 0 30px 0;text-align: start; color: #1A1C21;border-top:1px solid #D7DAE0;">
-                                                                        Total Price (2)</th>
-                                                                    <th
-                                                                        style="padding: 12px 0 30px 0;text-align: end; color: #1A1C21;border-top:1px solid #D7DAE0;">
-                                                                        £5.00</th>
+                                                                        style="padding: 12px 0;text-align: start; color: #1A1C21;border-top:1px solid #D7DAE0;">
+                                                                        Total Price BDT</th>
+                                                                    <td
+                                                                        style="padding: 12px 0;text-align: end; color: #1A1C21;border-top:1px solid #D7DAE0;">
+                                                                        BDT {{$invoice->invoice_receivable_amount_bdt}}
+                                                                    </td>
                                                                 </tr>
-                                                            </tfoot>
+                                                            </tbody>
+
                                                         </table>
                                                     </td>
                                                 </tr>
