@@ -127,7 +127,7 @@ class InvoiceController extends Controller
                 $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
 
                 $invoice_debit_transaction = [
-                    'amount' => $request->invoice_received_amount,
+                    'amount' => $request->invoice_receivable_amount_bdt,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
@@ -137,7 +137,7 @@ class InvoiceController extends Controller
                 ];
 
                 $invoice_credit_transaction = [
-                    'amount' => $invoice->invoice_due_balance,
+                    'amount' => $invoice->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
@@ -212,7 +212,7 @@ class InvoiceController extends Controller
                 $accounts_payable_chart_of_account = ChartOfAccount::where('slug', 'accounts-payable')->first();
 
                 $bill_credit_transaction = [
-                    'amount' => $request->bill_paid_amount,
+                    'amount' => $request->bill_payable_bdt,
                     'transaction_type' => 'bill',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => false,
@@ -222,7 +222,7 @@ class InvoiceController extends Controller
                 ];
 
                 $bill_debit_transaction = [
-                    'amount' => $bill->bill_due_balance,
+                    'amount' => $bill->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
@@ -231,13 +231,15 @@ class InvoiceController extends Controller
                     'bill_id' => $bill->id,
                 ];
 
-                $credit = new Transactions();
-                $credit->fill($bill_credit_transaction);
-                $credit->save();
 
                 $debit = new Transactions();
                 $debit->fill($bill_debit_transaction);
                 $debit->save();
+
+                $credit = new Transactions();
+                $credit->fill($bill_credit_transaction);
+                $credit->save();
+
             });
 
             return response()->json([
