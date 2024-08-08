@@ -209,27 +209,38 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
         }
     }, [editData]);
 
-    const calculateTotal = () => {
+    const calculateTotal = (e: any) => {
+        const { value, name } = e.target;
         const formik = formikRef.current;
         if (formik) {
-            const chargeableWeight = formik.values.chargeable_weight;
-            const rate = formik.values.invoice_rate;
-            const invoice_cgc = formik.values.invoice_cgc;
-            const invoice_vat = formik.values.invoice_vat;
-            const invoice_dtc = formik.values.invoice_dtc;
-            const others = formik.values.others;
+            const updatedValues = {
+                ...formik.values,
+                [name]: value,
+            };
+
+            const {
+                chargeable_weight: chargeableWeight,
+                invoice_rate: rate,
+                invoice_cgc: cgc,
+                invoice_vat: vat,
+                invoice_dtc: dtc,
+                others: other,
+                invoice_exchange_rate: exchangeRate,
+                master_air_way_bill_fee: masterAirWayBillFee,
+            } = updatedValues;
+
             const totalUsd =
                 Number(chargeableWeight) * Number(rate) +
-                Number(invoice_cgc) +
-                Number(invoice_vat) +
-                Number(invoice_dtc) +
-                Number(others);
-            const invoice_exchange_rate = formik.values.invoice_exchange_rate;
+                Number(cgc) +
+                Number(vat) +
+                Number(dtc) +
+                Number(other) +
+                Number(masterAirWayBillFee);
 
             formik.setFieldValue("invoice_total_usd", Number(totalUsd));
             formik.setFieldValue(
                 "invoice_receivable_amount_bdt",
-                Number(totalUsd) * Number(invoice_exchange_rate)
+                Number(totalUsd) * Number(exchangeRate)
             );
         }
     };
@@ -261,6 +272,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     type="number"
                                     name="master_air_way_bill_fee"
                                     label="MAWB Fee"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
@@ -276,6 +288,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     type="number"
                                     name="chargeable_weight"
                                     label="Chargeable Weight"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
@@ -304,33 +317,39 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     type="number"
                                     name="invoice_rate"
                                     label="Invoice Rate"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
                                     name="invoice_cgc"
                                     label="Invoice CGC"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
                                     name="invoice_ait"
                                     label="Invoice AIT"
+                                    onChange={calculateTotal}
                                 />
 
                                 <TextInput
                                     type="number"
                                     name="invoice_vat"
                                     label="Invoice VAT"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
                                     name="invoice_dtc"
                                     label="Invoice DTC"
+                                    onChange={calculateTotal}
                                 />
 
                                 <TextInput
                                     type="number"
                                     name="others"
                                     label="Others"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
@@ -341,6 +360,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     type="number"
                                     name="invoice_exchange_rate"
                                     label="Invoice Exchange Rate"
+                                    onChange={calculateTotal}
                                 />
                                 <TextInput
                                     type="number"
