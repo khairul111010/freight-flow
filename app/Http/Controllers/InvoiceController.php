@@ -28,7 +28,6 @@ class InvoiceController extends Controller
                     ->orWhere('destination', 'LIKE', '%' . $search . '%')
                     ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
             });
-
         }
         return response()->json([
             'success' => true,
@@ -127,7 +126,7 @@ class InvoiceController extends Controller
                 $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
 
                 $invoice_debit_transaction = [
-                    'amount' => $request->invoice_receivable_amount_bdt,
+                    'amount' => $request->invoice_due_balance,
                     'transaction_type' => 'invoice',
                     'transaction_date' => $request->invoice_issue_date,
                     'is_debit' => true,
@@ -239,7 +238,6 @@ class InvoiceController extends Controller
                 $credit = new Transactions();
                 $credit->fill($bill_credit_transaction);
                 $credit->save();
-
             });
 
             return response()->json([
@@ -260,17 +258,18 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-
+        $invoice = Invoice::with('transactions')->findOrFail($id);
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',
-            'result' => InvoiceResource::make(Invoice::findOrFail($id))
+            'result' => InvoiceResource::make($invoice)
         ], 200);
     }
 
     public function search($invoice_number)
     {
-        $invoice = Invoice::where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
+        $invoice = Invoice::with('transactions')->where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
+        
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',
@@ -289,10 +288,12 @@ class InvoiceController extends Controller
 
     public function getInvoiceByInvoiceNumber($invoice_number)
     {
+        $invoice = Invoice::with('transactions')->where('invoice_number', $invoice_number)->firstOrFail();
+
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',
-            'result' => InvoiceResource::make(Invoice::where('invoice_number', $invoice_number)->first())
+            'result' => InvoiceResource::make($invoice)
         ], 200);
     }
 
@@ -307,9 +308,136 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Invoice $invoice)
+    public function updateInvoiceAmount(Request $request, $invoiceId)
     {
-        //
+        $invoice = Invoice::findOrFail($invoiceId);
+
+        if (!$invoice) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invoice not found!',
+            ], 404);
+        }
+
+        DB::transaction(function () use ($request, $invoice) {
+            // Update the received amount
+            $invoice->invoice_received_amount = $request->invoice_received_amount;
+
+            // Recalculate the due balance
+            $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
+
+            // Save the updated invoice
+            $invoice->save();
+
+            $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
+
+            $invoice_debit_transaction = [
+                'amount' => $invoice->invoice_due_balance,
+                'transaction_type' => 'invoice',
+                'transaction_date' => $request->invoice_issue_date,
+                'is_debit' => true,
+                'invoice_number' => $invoice->invoice_number,
+                'chart_of_account_id' => $accounts_receivable_chart_of_account->id,
+                'invoice_id' => $invoice->id,
+            ];
+
+            $invoice_credit_transaction = [
+                'amount' => $invoice->invoice_received_amount,
+                'transaction_type' => 'invoice',
+                'transaction_date' => $request->invoice_issue_date,
+                'is_debit' => false,
+                'invoice_number' => $invoice->invoice_number,
+                'chart_of_account_id' => $request->chart_of_account_id,
+                'invoice_id' => $invoice->id,
+            ];
+
+            $debit = new Transactions();
+            $debit->fill($invoice_debit_transaction);
+            $debit->save();
+
+            $credit = new Transactions();
+            $credit->fill($invoice_credit_transaction);
+            $credit->save();
+
+            // // Insert a new transaction record
+            // $transaction = new Transactions();
+            // $transaction->amount = $request->invoice_received_amount;
+            // $transaction->transaction_type = 'invoice';
+            // $transaction->transaction_date = now(); // or use $request->transaction_date if provided
+            // $transaction->is_debit = false; // Assuming this is a credit transaction
+            // $transaction->invoice_number = $invoice->invoice_number;
+            // $transaction->chart_of_account_id = $request->chart_of_account_id; // Ensure this is provided in the request
+            // $transaction->invoice_id = $invoice->id;
+            // $transaction->save();
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice updated successfully',
+        ], 200);
+    }
+
+    public function updateBillAmount(Request $request, $billId)
+    {
+        $bill = Bill::findOrFail($billId);
+
+        if (!$bill) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bill not found!',
+            ], 404);
+        }
+
+
+        DB::transaction(function () use ($request, $bill) {
+            // Update the received amount
+            $bill->bill_paid_amount = $request->bill_paid_amount;
+
+            // Recalculate the due balance
+            $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
+
+            // Save the updated bill
+            $bill->save();
+
+            $accounts_payable_chart_of_account = ChartOfAccount::where('slug', 'accounts-payable')->first();
+
+            $bill_credit_transaction = [
+                'amount' => $bill->bill_due_balance,
+                'transaction_type' => 'bill',
+                'transaction_date' => $request->bill_issue_date,
+                'is_debit' => false,
+                'invoice_number' => $bill->invoice_number,
+                'chart_of_account_id' => $accounts_payable_chart_of_account->id,
+                'bill_id' => $bill->id,
+            ];
+
+            $bill_debit_transaction = [
+                'amount' => $bill->bill_paid_amount,
+                'transaction_type' => 'bill',
+                'transaction_date' => $request->bill_issue_date,
+                'is_debit' => true,
+                'invoice_number' => $bill->invoice_number,
+                'chart_of_account_id' => $request->chart_of_account_id,
+                'bill_id' => $bill->id,
+            ];
+
+            $debit = new Transactions();
+            $debit->fill($bill_debit_transaction);
+            $debit->save();
+
+            $credit = new Transactions();
+            $credit->fill($bill_credit_transaction);
+            $credit->save();
+
+            // // Insert a new transaction record
+            // $transaction = new Transactions();
+            // $transaction->amount = $request->bill_paid_amount;
+            // $transaction->transaction_type = 'bill';
+            // $transaction->transaction_date = now(); // or use $request->transaction_date if provided
+            // $transaction->is_debit = true; // Assuming this is a debit transaction
+            // $transaction->invoice_number = $bill->invoice_number;
+            // $transaction->chart_of_account_id = $
+        });
     }
 
     /**
@@ -344,7 +472,10 @@ class InvoiceController extends Controller
 
     public function searchBill($invoice_number)
     {
-        $bill = Bill::where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
+        $bill = Bill::with('transactions')
+            ->where('invoice_number', 'like', '%' . $invoice_number . '%')
+            ->get();
+
         return response()->json([
             'success' => true,
             'message' => 'Bill retrieved successfully',
@@ -354,10 +485,12 @@ class InvoiceController extends Controller
 
     public function getBillByBillId($id)
     {
+        $bill = Bill::with('transactions')->findOrFail($id);
+
         return response()->json([
             'success' => true,
             'message' => 'Bill retrieved successfully',
-            'result' => InvoiceResource::make(Bill::findOrFail($id))
+            'result' => InvoiceResource::make($bill)
         ], 200);
     }
 }
