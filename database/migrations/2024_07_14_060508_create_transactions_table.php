@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('is_debit')->default(false);
             $table->boolean('record_payment')->default(false);
             $table->string('invoice_number');
-            $table->foreignId('chart_of_account_id')->nullable()->constrained('chart_of_accounts')->onUpdate('cascade')->onDelete('cascade');
+        $table->foreignId('chart_of_account_id')->nullable()->constrained('chart_of_accounts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('bill_id')->nullable()->constrained('bills')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('invoice_id')->nullable()->constrained('invoices')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('expense_id')->nullable()->constrained('expenses')->onUpdate('cascade')->onDelete('cascade');
