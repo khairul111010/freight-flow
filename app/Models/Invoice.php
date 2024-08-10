@@ -34,7 +34,7 @@ class Invoice extends Model
 
     public function transactions()
     {
-        return $this->hasMany(Transactions::class);
+        return $this->hasMany(Transactions::class, 'invoice_number', 'invoice_number');
     }
 
 }

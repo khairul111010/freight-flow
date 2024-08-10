@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\VendorResource;
-use App\Models\vendor;
+use App\Models\Vendor;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -84,6 +84,7 @@ class VendorController extends Controller
                 'result' => VendorResource::make($vendor)
             ], 201);
         } catch (Exception $e) {
+            dd($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
