@@ -283,7 +283,7 @@ class InvoiceController extends Controller
     public function search($invoice_number)
     {
         $invoice = Invoice::with('transactions')->where('invoice_number', 'like', '%' . $invoice_number . '%')->get();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',

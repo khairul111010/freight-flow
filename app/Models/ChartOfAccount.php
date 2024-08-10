@@ -21,11 +21,16 @@ class ChartOfAccount extends Model
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->hasMany(Invoice::class, 'chart_of_account_id');
+    }
+
+    public function bills()
+    {
+        return $this->hasMany(Bill::class, 'chart_of_account_id');
     }
 
     public function transactions()
     {
-        return $this->hasMany(Transactions::class);
+        return $this->hasMany(Transactions::class, 'chart_of_account_id');
     }
 }

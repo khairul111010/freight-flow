@@ -24,7 +24,7 @@ class Invoice extends Model
 
     public function chart_of_account()
     {
-        return $this->belongsTo(BankAccounts::class);
+        return $this->belongsTo(ChartOfAccount::class, 'chart_of_account_id');
     }
 
     public function bank_account()
@@ -34,7 +34,6 @@ class Invoice extends Model
 
     public function transactions()
     {
-        return $this->hasMany(Transactions::class, 'invoice_number', 'invoice_number');
+        return $this->hasMany(Transactions::class, 'invoice_id');
     }
-
 }

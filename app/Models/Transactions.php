@@ -25,26 +25,26 @@ class Transactions extends Model
 
     public function chartOfAccount()
     {
-        return $this->belongsTo(ChartOfAccount::class);
+        return $this->belongsTo(ChartOfAccount::class, 'chart_of_account_id');
     }
 
     public function bill()
     {
-        return $this->belongsTo(Bill::class);
+        return $this->belongsTo(Bill::class, 'bill_id');
     }
 
     public function invoice()
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Invoice::class, 'invoice_id');
     }
 
     public function expense()
     {
-        return $this->belongsTo(Expense::class);
+        return $this->belongsTo(Expense::class, 'expense_id');
     }
 
     public function manualJournal()
     {
-        return $this->belongsTo(ManualJournal::class);
+        return $this->belongsTo(ManualJournal::class, 'manual_journal_id');
     }
 }
