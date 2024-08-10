@@ -20,6 +20,9 @@ export enum  AppRoutesEnum {
     INVOICE = '/invoice',
     INVOICE_ADD = '/invoice/add',
     INVOICE_EDIT = '/invoice/edit/:id',
+    BILL = '/bill',
+    BILL_ADD = '/bill/add',
+    BILL_EDIT = '/bill/edit/:id',
     SETTINGS = '/settings',
 }
 

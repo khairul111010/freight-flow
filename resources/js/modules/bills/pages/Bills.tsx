@@ -1,27 +1,26 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
-
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import Spinner from "../../../components/preloader/Spinner";
-import { classNames } from "primereact/utils";
-import { IconFileDownload, IconPencil, IconTrash } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import SearchInput from "../../../components/form/search-input/SearchInput";
+import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/pagination";
+import { IconFileDownload } from "@tabler/icons-react";
+import Spinner from "../../../components/preloader/Spinner";
+import { DataTable } from "primereact/datatable";
+import { classNames } from "primereact/utils";
+import { Column } from "primereact/column";
 import {
     useLazyGetInvoicePDFQuery,
     useLazyGetInvoicesQuery,
 } from "../../../store/apis/invoiceApi";
-import SearchInput from "../../../components/form/search-input/SearchInput";
-import useDebounce from "../../../hooks/useDebounce";
 
-const Invoice = () => {
+const Bills = () => {
     const [search, setSearch] = useState("");
     const debouncedValue = useDebounce(search, 500);
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
     };
+
     const [getInvoices, { data, isLoading }] = useLazyGetInvoicesQuery();
     const [getInvoicePDF] = useLazyGetInvoicePDFQuery();
     useEffect(() => {
@@ -31,7 +30,6 @@ const Invoice = () => {
     const handleDownload = (id: any) => {
         getInvoicePDF(id);
     };
-
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -39,7 +37,7 @@ const Invoice = () => {
                     className="w-fit rounded-md"
                     to={AppRoutesEnum.INVOICE_ADD}
                 >
-                    Add Invoice
+                    Add Bill
                 </Button>
                 <SearchInput
                     name="search"
@@ -187,4 +185,4 @@ const Invoice = () => {
     );
 };
 
-export default Invoice;
+export default Bills;

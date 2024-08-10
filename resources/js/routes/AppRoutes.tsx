@@ -15,6 +15,7 @@ import BankEdit from "../modules/bank_and_accounts/pages/BankEdit";
 import BankAccountAdd from "../modules/bank_and_accounts/pages/BankAccountAdd";
 import BankAccountEdit from "../modules/bank_and_accounts/pages/BankAccountEdit";
 import InvoiceAdd from "../modules/invoice/pages/InvoiceAdd";
+import Bills from "../modules/bills/pages/Bills";
 
 const appRoutes: RouteObject[] = [
     {
@@ -35,6 +36,10 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.INVOICE_EDIT,
                 element: <CustomersEdit />,
+            },
+            {
+                path: AppRoutesEnum.BILL,
+                element: <Bills />,
             },
             {
                 path: AppRoutesEnum.CUSTOMERS,
