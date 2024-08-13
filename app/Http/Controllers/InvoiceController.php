@@ -131,7 +131,7 @@ class InvoiceController extends Controller
                 $invoice_debit_transaction = [
                     'amount' => $invoice->invoice_due_balance,
                     'transaction_type' => 'invoice',
-                    'transaction_date' => $request->invoice_issue_date,
+                    'transaction_date' => Now(),
                     'is_debit' => true,
                     'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $accounts_receivable_chart_of_account->id,
@@ -141,7 +141,7 @@ class InvoiceController extends Controller
                 $invoice_credit_transaction = [
                     'amount' => $invoice->invoice_received_amount,
                     'transaction_type' => 'invoice',
-                    'transaction_date' => $request->invoice_issue_date,
+                    'transaction_date' => Now(),
                     'is_debit' => false,
                     'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $request->chart_of_account_id,
@@ -216,7 +216,7 @@ class InvoiceController extends Controller
                 $bill_credit_transaction = [
                     'amount' => $bill->bill_payable_bdt,
                     'transaction_type' => 'bill',
-                    'transaction_date' => $request->invoice_issue_date,
+                    'transaction_date' => Now(),
                     'is_debit' => false,
                     'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $accounts_payable_chart_of_account->id,
@@ -226,7 +226,7 @@ class InvoiceController extends Controller
                 $bill_debit_transaction = [
                     'amount' => $bill->bill_paid_amount,
                     'transaction_type' => 'bill',
-                    'transaction_date' => $request->invoice_issue_date,
+                    'transaction_date' => Now(),
                     'is_debit' => true,
                     'invoice_number' => $invoice_number,
                     'chart_of_account_id' => $request->chart_of_account_id,
