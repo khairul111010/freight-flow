@@ -60,8 +60,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/bill/{id}', [InvoiceController::class, 'getBillByBillId']);
         Route::get('/bill/search/{invoice_number}', [InvoiceController::class, 'searchBill']);
         Route::get('/bill/vendor/{id}', [InvoiceController::class, 'getBillByVendor']);
-        Route::put('/{invoiceId}', [InvoiceController::class, 'updateInvoiceAmount']);
-        Route::put('/bill/{billId}', [InvoiceController::class, 'updateBillAmount']);
+        Route::post('/{invoiceId}', [InvoiceController::class, 'updateInvoiceAmount']);
+        Route::post('/bill/{billId}', [InvoiceController::class, 'updateBillAmount']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
     });
 
