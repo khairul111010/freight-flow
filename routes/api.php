@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManualJournalController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\ProfitAndLossController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Models\Bank;
@@ -121,6 +122,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{id}', [ChartOfAccountController::class, 'show']);
         Route::put('/{id}', [ChartOfAccountController::class, 'update']);
         Route::delete('/{id}', [ChartOfAccountController::class, 'destroy']);
+    });
+
+    Route::prefix(('profit-and-lost'))->group(function () {
+        Route::post('/', [ProfitAndLossController::class, 'index']);
     });
 });
 
