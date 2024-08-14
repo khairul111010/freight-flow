@@ -16,6 +16,8 @@ import BankAccountAdd from "../modules/bank_and_accounts/pages/BankAccountAdd";
 import BankAccountEdit from "../modules/bank_and_accounts/pages/BankAccountEdit";
 import InvoiceAdd from "../modules/invoice/pages/InvoiceAdd";
 import Bills from "../modules/bills/pages/Bills";
+import Dashboard from "../modules/dashboard/pages/Dashboard";
+import ProfitAndLoss from "../modules/profitandloss/pages/ProfitAndLoss";
 
 const appRoutes: RouteObject[] = [
     {
@@ -23,7 +25,11 @@ const appRoutes: RouteObject[] = [
         children: [
             {
                 path: AppRoutesEnum.DASHBOARD,
-                element: <>Dashboard</>,
+                element: <Dashboard />,
+            },
+            {
+                path: AppRoutesEnum.PROFITANDLOSS,
+                element: <ProfitAndLoss />,
             },
             {
                 path: AppRoutesEnum.INVOICE,

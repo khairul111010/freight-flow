@@ -1,4 +1,4 @@
-import { IconBuildingBank, IconClipboardText, IconHome2, IconPlane, IconSettings, IconUsers } from "@tabler/icons-react"
+import { IconBuildingBank, IconClipboardText, IconCoins, IconHome2, IconPlane, IconSettings, IconUsers } from "@tabler/icons-react"
 import { MenuItemType } from "../components/sidebar/MenuItem"
 import { AppRoutesEnum, AuthRoutesEnum } from "../enums/routeEnums"
 
@@ -8,6 +8,12 @@ const sidebarMenuConfig: MenuItemType[] = [
         name: 'Dashboard',
         path: AppRoutesEnum.DASHBOARD,
         icon: IconHome2,
+        requiredPermissions: []
+    },       
+    {
+        name: 'Profit and Loss',
+        path: AppRoutesEnum.PROFITANDLOSS,
+        icon: IconCoins,
         requiredPermissions: []
     },       
     {
