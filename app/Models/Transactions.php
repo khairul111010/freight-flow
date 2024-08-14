@@ -14,9 +14,10 @@ class Transactions extends Model
         'transaction_type',
         'transaction_date',
         'is_debit',
-        'record_payment',
         'invoice_number',
+        'payment_method',
         'chart_of_account_id',
+        'bank_account_id',
         'bill_id',
         'invoice_id',
         'expense_id',
@@ -26,6 +27,11 @@ class Transactions extends Model
     public function chartOfAccount()
     {
         return $this->belongsTo(ChartOfAccount::class, 'chart_of_account_id');
+    }
+
+    public function bank_account()
+    {
+        return $this->belongsTo(BankAccounts::class, 'bank_account_id');
     }
 
     public function bill()

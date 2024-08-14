@@ -38,12 +38,10 @@ return new class extends Migration
             $table->float('bill_payable_bdt')->default(0);
             $table->float('bill_paid_amount')->default(0);
             $table->float('bill_due_balance')->default(0);
-            $table->text('bill_notes')->nullable();
+            $table->text('bill_note')->nullable();
             // $table->string('currency')->default('bdt');
-            $table->string('bill_payment_method')->nullable();
             $table->foreignId('vendor_id')->constrained('vendors')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('chart_of_account_id')->nullable()->constrained('chart_of_accounts')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('bill_bank_account_id')->nullable()->constrained('bank_accounts')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

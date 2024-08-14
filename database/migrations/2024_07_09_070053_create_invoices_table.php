@@ -28,19 +28,18 @@ return new class extends Migration
             $table->float('invoice_cgc')->nullable();
             $table->float('invoice_dtc')->nullable();
             $table->float('invoice_ait')->nullable();
-            $table->float('invoice_vat')->default(0);
+            $table->float('invoice_vat')->nullable();
             $table->float('others')->nullable();
             $table->float('invoice_total_usd')->nullable();
             $table->float('invoice_exchange_rate')->default(0);
             $table->float('invoice_receivable_amount_bdt')->default(0);
             $table->float('invoice_received_amount')->default(0);
             $table->float('invoice_due_balance')->default(0);
-            $table->text('invoice_notes')->nullable();
+            $table->text('invoice_note')->nullable();
             // $table->string('currency')->default('bdt');
-            $table->string('invoice_payment_method')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('chart_of_account_id')->nullable()->constrained('chart_of_accounts')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('invoice_bank_account_id')->nullable()->constrained('bank_accounts')->onUpdate('cascade')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

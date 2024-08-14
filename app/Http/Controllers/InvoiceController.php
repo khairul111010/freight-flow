@@ -69,7 +69,7 @@ class InvoiceController extends Controller
             ) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Bank Account Required for bank transactions',
+                    'message' => 'Bank Account Required for invoice - bank transactions',
                 ], 400);
             }
 
@@ -78,7 +78,7 @@ class InvoiceController extends Controller
             ) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Bank Account Required for bank transactions',
+                    'message' => 'Bank Account Required for bill - bank transactions',
                 ], 400);
             }
 
@@ -112,16 +112,15 @@ class InvoiceController extends Controller
 
                 $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
 
-                $invoice->invoice_notes = $request->invoice_notes;
-                $invoice->invoice_payment_method = $request->invoice_payment_method;
+                $invoice->invoice_note = $request->invoice_note;
                 // $invoice->currency = $request->currency;
                 $invoice->customer_id = $request->customer_id;
-                $invoice->chart_of_account_id = $request->chart_of_account_id;
-                if (
-                    $request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id
-                ) {
-                    $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
-                }
+                $invoice->chart_of_account_id = $request->invoice_chart_of_account_id;
+                // if (
+                //     $request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id
+                // ) {
+                //     $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
+                // }
 
                 $invoice->save();
 
@@ -132,9 +131,12 @@ class InvoiceController extends Controller
                     'amount' => $invoice->invoice_due_balance,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->invoice_payment_method,
                     'is_debit' => true,
                     'invoice_number' => $invoice_number,
+                    'transaction_note' => $request->invoice_transaction_note,
                     'chart_of_account_id' => $accounts_receivable_chart_of_account->id,
+                    'bank_account_id' => $request->invoice_bank_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -142,9 +144,12 @@ class InvoiceController extends Controller
                     'amount' => $invoice->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->invoice_payment_method,
                     'is_debit' => false,
                     'invoice_number' => $invoice_number,
-                    'chart_of_account_id' => $request->chart_of_account_id,
+                    'transaction_note' => $request->invoice_transaction_note,
+                    'chart_of_account_id' => $invoice->chart_of_account_id,
+                    'bank_account_id' => $request->invoice_bank_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -197,18 +202,17 @@ class InvoiceController extends Controller
 
                 $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
 
-                $bill->bill_notes = $request->bill_notes;
-                // $bill->currency = $request->currency;
-                $bill->bill_payment_method = $request->bill_payment_method;
-                // $bill->isPaid = $request->isPaid;
-                $bill->vendor_id = $request->vendor_id;
-                $bill->chart_of_account_id = $request->chart_of_account_id;
+                $bill->bill_note = $request->bill_note;
 
-                if (
-                    $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
-                ) {
-                    $bill->bill_bank_account_id = $request->bill_bank_account_id;
-                }
+                $bill->vendor_id = $request->vendor_id;
+                $bill->chart_of_account_id = $request->bill_chart_of_account_id;
+
+                // if (
+                //     $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
+                // ) {
+                //     $bill->bill_bank_account_id = $request->bill_bank_account_id;
+                // }
+
                 $bill->save();
 
                 $accounts_payable_chart_of_account = ChartOfAccount::where('slug', 'accounts-payable')->first();
@@ -217,9 +221,12 @@ class InvoiceController extends Controller
                     'amount' => $bill->bill_payable_bdt,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->bill_payment_method,
                     'is_debit' => false,
                     'invoice_number' => $invoice_number,
+                    'transaction_note' => $request->bill_transaction_note,
                     'chart_of_account_id' => $accounts_payable_chart_of_account->id,
+                    'bank_account_id' => $request->bill_bank_account_id,
                     'bill_id' => $bill->id,
                 ];
 
@@ -227,9 +234,12 @@ class InvoiceController extends Controller
                     'amount' => $bill->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->bill_payment_method,
                     'is_debit' => true,
                     'invoice_number' => $invoice_number,
-                    'chart_of_account_id' => $request->chart_of_account_id,
+                    'transaction_note' => $request->bill_transaction_note,
+                    'chart_of_account_id' => $bill->chart_of_account_id,
+                    'bank_account_id' => $request->bill_bank_account_id,
                     'bill_id' => $bill->id,
                 ];
 
@@ -249,6 +259,7 @@ class InvoiceController extends Controller
                 'result' => InvoiceResource::make($request)
             ], 201);
         } catch (Exception $e) {
+            dd($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
@@ -335,14 +346,22 @@ class InvoiceController extends Controller
                 ], 404);
             }
 
+            // Update the received amount
+            $invoice->invoice_received_amount += $request->invoice_received_amount;
+
+            // Recalculate the due balance
+            $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
+
+            if ($invoice->invoice_due_balance < $invoice->invoice_received_amount) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Received amount cannot be greater than due balance!',
+                ], 400);
+            }
+
             DB::transaction(function () use ($request, $invoice) {
-                // Update the received amount
-                $invoice->invoice_received_amount = $request->invoice_received_amount;
 
-                // Recalculate the due balance
-                $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
 
-                $invoice->invoice_payment_method = $request->invoice_payment_method;
                 $invoice->chart_of_account_id = $request->chart_of_account_id;
 
 
@@ -355,7 +374,6 @@ class InvoiceController extends Controller
                     $request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id
                 ) {
                     $bank_transfer_chart_of_account = ChartOfAccount::where('slug', 'bank-transfers')->first();
-                    $invoice->invoice_bank_account_id = $request->invoice_bank_account_id;
                     $invoice->chart_of_account_id = $bank_transfer_chart_of_account->id;
                 }
 
@@ -363,13 +381,17 @@ class InvoiceController extends Controller
                 $invoice->save();
 
                 $accounts_receivable_chart_of_account = ChartOfAccount::where('slug', 'accounts-receivable')->first();
+
                 $invoice_debit_transaction = [
                     'amount' => $invoice->invoice_due_balance,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->invoice_payment_method,
                     'is_debit' => true,
                     'invoice_number' => $invoice->invoice_number,
+                    'transaction_note' => $request->invoice_transaction_note,
                     'chart_of_account_id' => $accounts_receivable_chart_of_account->id,
+                    'bank_account_id' => $invoice->invoice_bank_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -377,9 +399,12 @@ class InvoiceController extends Controller
                     'amount' => $invoice->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->invoice_payment_method,
                     'is_debit' => false,
                     'invoice_number' => $invoice->invoice_number,
+                    'transaction_note' => $request->invoice_transaction_note,
                     'chart_of_account_id' => $invoice->chart_of_account_id,
+                    'bank_account_id' => $invoice->invoice_bank_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -428,15 +453,22 @@ class InvoiceController extends Controller
                 ], 404);
             }
 
+            // Update the received amount
+            $bill->bill_paid_amount += $request->bill_paid_amount;
+
+            // Recalculate the due balance
+            $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
+
+            if ($bill->bill_due_balance < $bill->bill_paid_amount) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Paid amount cannot be greater than due balance!',
+                ], 400);
+            }
+
 
             DB::transaction(function () use ($request, $bill) {
-                // Update the received amount
-                $bill->bill_paid_amount = $request->bill_paid_amount;
 
-                // Recalculate the due balance
-                $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
-
-                $bill->bill_payment_method = $request->bill_payment_method;
                 $bill->chart_of_account_id = $request->chart_of_account_id;
 
                 if (!$bill->chart_of_account_id && $request->bill_payment_method == 'cash') {
@@ -462,9 +494,12 @@ class InvoiceController extends Controller
                     'amount' => $bill->bill_due_balance,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->bill_payment_method,
                     'is_debit' => false,
                     'invoice_number' => $bill->invoice_number,
+                    'transaction_note' => $request->bill_transaction_note,
                     'chart_of_account_id' => $accounts_payable_chart_of_account->id,
+                    'bank_account_id' => $bill->bill_bank_account_id,
                     'bill_id' => $bill->id,
                 ];
 
@@ -472,9 +507,12 @@ class InvoiceController extends Controller
                     'amount' => $bill->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
+                    'payment_method' => $request->bill_payment_method,
                     'is_debit' => true,
                     'invoice_number' => $bill->invoice_number,
+                    'transaction_note' => $request->bill_transaction_note,
                     'chart_of_account_id' => $bill->chart_of_account_id,
+                    'bank_account_id' => $bill->bill_bank_account_id,
                     'bill_id' => $bill->id,
                 ];
 
