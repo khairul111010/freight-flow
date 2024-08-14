@@ -37,7 +37,7 @@ class ProfitAndLossController extends Controller
                         'bill_total_usd' => $bill->bill_total_usd,
                         'bill_exchange_rate' => $bill->bill_exchange_rate,
                         'bill_paid_amount' => $bill->bill_paid_amount,
-                        'profit' => $invoice->invoice_received_amount - $bill->bill_paid_amount
+                        'profit' => $invoice->invoice_receivable_amount_bdt - $bill->bill_payable_bdt
                     ]);
                 }
             }
