@@ -5,6 +5,7 @@ export enum AuthRoutesEnum {
 
 export enum  AppRoutesEnum {
     DASHBOARD = '/',
+    PROFITANDLOSS = '/profit-loss',
     CUSTOMERS = '/customers',
     CUSTOMERS_ADD = '/customers/add',
     CUSTOMERS_EDIT = '/customers/edit/:id',
