@@ -10,22 +10,43 @@ class ProfitAndLossController extends Controller
 {
 
     public function index(Request $request) {
-        $invoices = Invoice::whereBetween('created_at', [$request->start_date, $request->end_date])->get();
-        $bills = Bill::whereBetween('created_at', [$request->start_date, $request->end_date])->get();
+        $invoices = Invoice::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('customer')->get();
         
-        $profit = 0;
-        $loss = 0;
+        $bills = Bill::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('vendor')->get();
+        
+        $pnl = [];
+
         foreach ($invoices as $invoice) {
             foreach ($bills as $bill) {
                 if ($invoice->invoice_number == $bill->invoice_number) {
-                    $profit += $invoice->amount - $bill->amount;
+                    array_push($pnl, [
+                        'invoice_number' => $invoice->invoice_number,
+                        'invoice_issue_date' => $invoice->invoice_issue_date,
+                        'master_air_way_bill' => $invoice->master_air_way_bill,
+                        'destination' => $invoice->destination,
+                        'cartoon_amount' => $invoice->cartoon_amount,
+                        'chargeable_weight' => $invoice->chargeable_weight,
+                        'gross_weight' => $invoice->gross_weight,
+                        'customer' => $invoice->customer->name,
+                        'invoice_total_usd' => $invoice->invoice_total_usd,
+                        'invoice_exchange_rate' => $invoice->invoice_exchange_rate,
+                        'invoice_rate' => $invoice->invoice_rate,
+                        'invoice_received_amount' => $invoice->invoice_received_amount,
+                        'vendor' => $bill->vendor->name,
+                        'bill_rate' => $bill->bill_rate,
+                        'bill_total_usd' => $bill->bill_total_usd,
+                        'bill_exchange_rate' => $bill->bill_exchange_rate,
+                        'bill_paid_amount' => $bill->bill_paid_amount,
+                        'profit' => $invoice->invoice_received_amount - $bill->bill_paid_amount
+                    ]);
                 }
             }
         }
 
         return response()->json([
-            'profit' => $profit,
-            'loss' => $loss
+            'success' => true,
+            'message' => 'Profit and Loss retrieved successfully',
+            'result' => $pnl
         ]);
 
 
