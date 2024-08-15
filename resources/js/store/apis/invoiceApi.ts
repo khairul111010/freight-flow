@@ -1,7 +1,7 @@
 import { baseApi } from ".";
 
 const invoiceApi = baseApi
-    .enhanceEndpoints({ addTagTypes: ["Invoice"] })
+    .enhanceEndpoints({ addTagTypes: ["Invoice", "Bill"] })
     .injectEndpoints({
         endpoints: (builder) => ({
             // getAllInvoice: builder.query<any, void>({
@@ -10,8 +10,19 @@ const invoiceApi = baseApi
             //     transformResponse: (response: any) => response.result,
             // }),
             getInvoices: builder.query<any, any>({
-                query: (pagination) => `/invoices?page=${pagination.page || 1}&search=${pagination.search || ""}`,
+                query: (pagination) =>
+                    `/invoices?page=${pagination.page || 1}&search=${
+                        pagination.search || ""
+                    }`,
                 providesTags: ["Invoice"],
+                transformResponse: (response: any) => response.result,
+            }),
+            getBills: builder.query<any, any>({
+                query: (pagination) =>
+                    `/invoices/bill?page=${pagination.page || 1}&search=${
+                        pagination.search || ""
+                    }`,
+                providesTags: ["Bill"],
                 transformResponse: (response: any) => response.result,
             }),
             // getVendor: builder.query<any, any>({
@@ -42,4 +53,12 @@ const invoiceApi = baseApi
         }),
     });
 
-export const { useGetInvoicePDFQuery, useLazyGetInvoicePDFQuery, useCreateInvoiceMutation , useGetInvoicesQuery, useLazyGetInvoicesQuery } = invoiceApi;
+export const {
+    useGetBillsQuery,
+    useLazyGetBillsQuery,
+    useGetInvoicePDFQuery,
+    useLazyGetInvoicePDFQuery,
+    useCreateInvoiceMutation,
+    useGetInvoicesQuery,
+    useLazyGetInvoicesQuery,
+} = invoiceApi;

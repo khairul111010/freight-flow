@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 class ProfitAndLossController extends Controller
 {
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $invoices = Invoice::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('customer')->get();
-        
         $bills = Bill::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('vendor')->get();
-        
+
         $pnl = [];
 
         foreach ($invoices as $invoice) {
@@ -50,7 +50,7 @@ class ProfitAndLossController extends Controller
         ]);
 
 
-        
+
 
     }
 

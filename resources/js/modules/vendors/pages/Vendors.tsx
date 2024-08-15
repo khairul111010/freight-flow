@@ -98,9 +98,6 @@ const Vendors = () => {
                                             >
                                                 <IconPencil />
                                             </Link>
-                                            <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
-                                                <IconTrash />
-                                            </div>
                                         </div>
                                     );
                                 }}

@@ -10,6 +10,7 @@ import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
 import { Column } from "primereact/column";
 import {
+    useLazyGetBillsQuery,
     useLazyGetInvoicePDFQuery,
     useLazyGetInvoicesQuery,
 } from "../../../store/apis/invoiceApi";
@@ -21,10 +22,10 @@ const Bills = () => {
         setSearch(e.target.value);
     };
 
-    const [getInvoices, { data, isLoading }] = useLazyGetInvoicesQuery();
+    const [getBills, { data, isLoading }] = useLazyGetBillsQuery();
     const [getInvoicePDF] = useLazyGetInvoicePDFQuery();
     useEffect(() => {
-        getInvoices({ page: 1, search: debouncedValue });
+        getBills({ page: 1, search: debouncedValue });
     }, [debouncedValue]);
 
     const handleDownload = (id: any) => {
@@ -90,47 +91,115 @@ const Bills = () => {
                                 header="Invoice Number"
                             ></Column>
                             <Column
-                                field="invoice_issue_date"
+                                field="bill_issue_date"
                                 header="Issued"
                             ></Column>
-                            <Column
-                                field="invoice_due_date"
-                                header="Due"
-                            ></Column>
-                            <Column
-                                field="master_air_way_bill"
-                                header="MAWB"
-                            ></Column>
+                            <Column field="bill_due_date" header="Due"></Column>
+                            <Column field="master_air_way_bill" header="MAWB" />
                             <Column
                                 field="master_air_way_bill_fee"
                                 header="MAWB Fee"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.master_air_way_bill_fee.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column field="destination" header="Dest."></Column>
                             <Column
                                 field="cartoon_amount"
                                 header="CTN"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.cartoon_amount.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column
                                 field="chargeable_weight"
                                 header="CHW"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.chargeable_weight.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
-                            <Column field="invoice_rate" header="Rate"></Column>
-                            <Column field="invoice_ait" header="AIT"></Column>
-                            <Column field="invoice_cgc" header="CGC"></Column>
-                            <Column field="invoice_dtc" header="DTC"></Column>
-                            <Column field="invoice_vat" header="VAT"></Column>
-                            <Column field="others" header="Others"></Column>
                             <Column
-                                field="invoice_total_usd"
+                                field="bill_rate"
+                                header="Rate"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.bill_rate.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="bill_ait"
+                                header="AIT"
+                                body={(rowData) => {
+                                    return (
+                                        <>{rowData.bill_ait.toLocaleString()}</>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="bill_cgc"
+                                header="CGC"
+                                body={(rowData) => {
+                                    return (
+                                        <>{rowData.bill_cgc.toLocaleString()}</>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="bill_vat"
+                                header="VAT"
+                                body={(rowData) => {
+                                    return (
+                                        <>{rowData.bill_vat.toLocaleString()}</>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="bill_total_usd"
                                 header="TTL USD"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.bill_total_usd.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column
-                                field="invoice_exchange_rate"
+                                field="bill_exchange_rate"
                                 header="Ex. Rate"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.bill_exchange_rate.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column
-                                field="invoice_receivable_amount_bdt"
+                                field="bill_payable_bdt"
                                 header="TTL BDT"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.bill_payable_bdt.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
 
                             <Column
@@ -171,7 +240,7 @@ const Bills = () => {
                                 currentPage={data.current_page || 1}
                                 perPage={data.per_page || 1}
                                 onPageChange={({ currentPage }) =>
-                                    getInvoices({
+                                    getBills({
                                         page: currentPage,
                                         search: debouncedValue,
                                     })

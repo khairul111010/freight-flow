@@ -125,7 +125,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     });
 
     Route::prefix(('profit-and-lost'))->group(function () {
-        Route::post('/', [ProfitAndLossController::class, 'index']);
+        Route::get('/', [ProfitAndLossController::class, 'index']);
     });
 });
 

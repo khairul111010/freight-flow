@@ -17,93 +17,99 @@ import { useGetAllVendorsQuery } from "../../../store/apis/vendorApi";
 import { useCreateInvoiceMutation } from "../../../store/apis/invoiceApi";
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
+    master_air_way_bill: "",
+    destination: "",
+    master_air_way_bill_fee: 0,
+    cartoon_amount: 0,
+    gross_weight: 0,
+    chargeable_weight: 0,
+    unit: 0,
+    kg: 0,
     invoice_issue_date: "",
     bill_issue_date: "",
     invoice_due_date: "",
     bill_due_date: "",
-    destination: "",
-    master_air_way_bill: "",
-    master_air_way_bill_fee: 0,
-    unit: 0,
-    cartoon_amount: 0,
-    gross_weight: 0,
-    chargeable_weight: 0,
-    kg: 0,
     invoice_rate: 0,
     bill_rate: 0,
-    bill_thc: 0,
-    bill_ssc: 0,
-    bill_cd: 0,
+    invoice_cgc: 0,
     bill_cgc: 0,
-    bill_ams: 0,
-    bill_itt: 0,
-    bill_total_usd: 0,
+    invoice_ait: 0,
     bill_ait: 0,
+    invoice_vat: 0,
     bill_vat: 0,
+    invoice_dtc: 0,
+    bill_thc: 0,
+    others: 0,
+    bill_ssc: 0,
+    invoice_total_usd: 0,
+    bill_cd: 0,
+    invoice_exchange_rate: 0,
+    bill_ams: 0,
+    invoice_receivable_amount_bdt: 0,
+    bill_itt: 0,
+    invoice_received_amount: 0,
+    bill_total_usd: 0,
+    invoice_note: "",
     bill_exchange_rate: 0,
+    customer_id: null,
     bill_payable_bdt: 0,
     bill_paid_amount: 0,
-    bill_notes: "",
-    invoice_cgc: 0,
-    invoice_dtc: 0,
-    invoice_ait: 0,
-    invoice_vat: 0,
-    others: 0,
-    invoice_total_usd: 0,
-    invoice_exchange_rate: 0,
-    invoice_receivable_amount_bdt: 0,
-    invoice_received_amount: 0,
-    invoice_notes: "",
-    customer_id: null,
+    bill_note: "",
     vendor_id: null,
+
+    // invoice_payment_method: "",
+    // invoice_transaction_note: "",
+    // bill_payment_method: "",
+    // bill_transaction_note: "",
+    // bill_chart_of_account_id: null,
+    // invoice_chart_of_account_id: null,
 };
 
 const validationSchema = object().shape({
+    master_air_way_bill: string().required("MAWB is required"),
+    destination: string().required("Description is required"),
+    master_air_way_bill_fee: number().required("MAWB Fee is required"),
+    cartoon_amount: number().required("Cartoon Amount is required"),
+    gross_weight: number().required("Gross Weight is required"),
+    chargeable_weight: number().required("Chargeable Weight is required"),
+    unit: number().required("Unit is required"),
+    kg: number().required("Kg is required"),
     invoice_issue_date: string().required("Issue Date is required"),
     bill_issue_date: string().required("Bill Date is required"),
     invoice_due_date: string().required("Due Date is required"),
     bill_due_date: string().required("Due Date is required"),
-    destination: string().required("Description is required"),
-    master_air_way_bill: string().required("MAWB is required"),
-    master_air_way_bill_fee: number().required("MAWB Fee is required"),
-    unit: number().required("Unit is required"),
-    cartoon_amount: number().required("Cartoon Amount is required"),
-    gross_weight: number().required("Gross Weight is required"),
-    chargeable_weight: number().required("Chargeable Weight is required"),
-    kg: number().required("Kg is required"),
     invoice_rate: number().required("Invoice Rate is required"),
     bill_rate: number().required("Bill Rate is required"),
-    bill_thc: number().required("Bill THC is required"),
-    bill_ssc: number().required("Bill SSC is required"),
-    bill_cd: number().required("Bill CD is required"),
-    bill_cgc: number().required("Bill CGC is required"),
-    bill_ams: number().required("Bill AMS is required"),
-    bill_itt: number().required("Bill ITT is required"),
-    bill_total_usd: number().required("Bill Total USD is required"),
-    bill_ait: number().required("Bill AIT is required"),
-    bill_vat: number().required("Bill VAT is required"),
-    bill_exchange_rate: number().required("Bill Exchange Rate is required"),
-    bill_payable_bdt: number().required("Bill Payable BDT is required"),
-    bill_paid_amount: number().required("Bill Paid Amount is required"),
-    bill_notes: string().required("Bill Notes is required"),
     invoice_cgc: number().required("Invoice CGC is required"),
-    invoice_dtc: number().required("Invoice DTC is required"),
+    bill_cgc: number().required("Bill CGC is required"),
     invoice_ait: number().required("Invoice AIT is required"),
+    bill_ait: number().required("Bill AIT is required"),
     invoice_vat: number().required("Invoice VAT is required"),
+    bill_vat: number().required("Bill VAT is required"),
+    invoice_dtc: number().required("Invoice DTC is required"),
+    bill_thc: number().required("Bill THC is required"),
     others: number().required("Others is required"),
+    bill_ssc: number().required("Bill SSC is required"),
     invoice_total_usd: number().required("Invoice Total USD is required"),
+    bill_cd: number().required("Bill CD is required"),
     invoice_exchange_rate: number().required(
         "Invoice Exchange Rate is required"
     ),
+    bill_ams: number().required("Bill AMS is required"),
     invoice_receivable_amount_bdt: number().required(
         "Invoice Receivable Amount BDT is required"
     ),
+    bill_itt: number().required("Bill ITT is required"),
     invoice_received_amount: number().required(
         "Invoice Receivable Amount is required"
     ),
-
-    invoice_notes: string().required("Invoice Notes is required"),
+    bill_total_usd: number().required("Bill Total USD is required"),
+    invoice_note: string().required("Invoice Notes is required"),
+    bill_exchange_rate: number().required("Bill Exchange Rate is required"),
     customer_id: number().required("Select a Customer"),
+    bill_payable_bdt: number().required("Bill Payable BDT is required"),
+    bill_paid_amount: number().required("Bill Paid Amount is required"),
+    bill_note: string().required("Bill Notes is required"),
     vendor_id: number().required("Select a Vendor"),
 });
 const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
@@ -373,8 +379,8 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     label="Invoice Received Amount"
                                 />
                                 <TextInput
-                                    name="invoice_notes"
-                                    label="Invoice Notes"
+                                    name="invoice_note"
+                                    label="Invoice Note"
                                 />
                                 <SelectInput
                                     name="customer_id"
@@ -474,8 +480,8 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     />
 
                                     <TextInput
-                                        name="bill_notes"
-                                        label="Bill Notes"
+                                        name="bill_note"
+                                        label="Bill Note"
                                     />
 
                                     <SelectInput

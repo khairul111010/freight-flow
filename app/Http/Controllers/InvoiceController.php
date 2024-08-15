@@ -560,10 +560,19 @@ class InvoiceController extends Controller
     // paginate bill
     public function getBill(Request $request)
     {
+        $query = Bill::query();
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('destination', 'LIKE', '%' . $search . '%')
+                    ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
+            });
+        }
         return response()->json([
             'success' => true,
-            'message' => 'Bill retrieved successfully',
-            'result' => InvoiceResource::collection(Bill::paginate($request->limit ?? 10))
+            'message' => 'Bills retrieved successfully',
+            'result' => $query->paginate(10)
         ], 200);
     }
 

@@ -106,33 +106,133 @@ const Invoice = () => {
                             <Column
                                 field="master_air_way_bill_fee"
                                 header="MAWB Fee"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.master_air_way_bill_fee.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column field="destination" header="Dest."></Column>
                             <Column
                                 field="cartoon_amount"
                                 header="CTN"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.cartoon_amount.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column
                                 field="chargeable_weight"
                                 header="CHW"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.chargeable_weight.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
-                            <Column field="invoice_rate" header="Rate"></Column>
-                            <Column field="invoice_ait" header="AIT"></Column>
-                            <Column field="invoice_cgc" header="CGC"></Column>
-                            <Column field="invoice_dtc" header="DTC"></Column>
-                            <Column field="invoice_vat" header="VAT"></Column>
-                            <Column field="others" header="Others"></Column>
+                            <Column
+                                field="invoice_rate"
+                                header="Rate"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_rate.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="invoice_ait"
+                                header="AIT"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_ait.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="invoice_cgc"
+                                header="CGC"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_cgc.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="invoice_dtc"
+                                header="DTC"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_dtc.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="invoice_vat"
+                                header="VAT"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_vat.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="others"
+                                header="Others"
+                                body={(rowData) => {
+                                    return (
+                                        <>{rowData.others.toLocaleString()}</>
+                                    );
+                                }}
+                            ></Column>
                             <Column
                                 field="invoice_total_usd"
                                 header="TTL USD"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_total_usd.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column
                                 field="invoice_exchange_rate"
                                 header="Ex. Rate"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_exchange_rate.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
                             <Column
                                 field="invoice_receivable_amount_bdt"
                                 header="TTL BDT"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_receivable_amount_bdt.toLocaleString()}
+                                        </>
+                                    );
+                                }}
                             ></Column>
 
                             <Column
