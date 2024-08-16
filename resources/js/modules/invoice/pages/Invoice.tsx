@@ -6,7 +6,12 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Spinner from "../../../components/preloader/Spinner";
 import { classNames } from "primereact/utils";
-import { IconFileDownload, IconPencil, IconTrash } from "@tabler/icons-react";
+import {
+    IconEye,
+    IconFileDownload,
+    IconPencil,
+    IconTrash,
+} from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import Pagination from "../../../components/pagination";
 import {
@@ -240,16 +245,16 @@ const Invoice = () => {
                                 body={(rowData) => {
                                     return (
                                         <div className="flex items-center gap-2">
-                                            {/* <Link
-                                                to={AppRoutesEnum.CUSTOMERS_EDIT.replace(
+                                            <Link
+                                                to={AppRoutesEnum.INVOICE_EDIT.replace(
                                                     ":id",
                                                     rowData.id
                                                 )}
                                                 className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
                                             >
-                                                <IconPencil />
+                                                <IconEye />
                                             </Link>
-                                            <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
+                                            {/* <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
                                                 <IconTrash />
                                             </div> */}
                                             <div

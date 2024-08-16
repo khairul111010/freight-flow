@@ -25,11 +25,11 @@ const invoiceApi = baseApi
                 providesTags: ["Bill"],
                 transformResponse: (response: any) => response.result,
             }),
-            // getVendor: builder.query<any, any>({
-            //     query: (id) => `/Invoice/${id}`,
-            //     providesTags: ["Invoice"],
-            //     transformResponse: (response: any) => response.result,
-            // }),
+            getInvoice: builder.query<any, any>({
+                query: (id) => `/invoices/${id}`,
+                providesTags: ["Invoice"],
+                transformResponse: (response: any) => response.result,
+            }),
             getInvoicePDF: builder.query<any, any>({
                 query: (id) => `/invoices/generate-pdf/${id}`,
                 providesTags: ["Invoice"],
@@ -61,4 +61,6 @@ export const {
     useCreateInvoiceMutation,
     useGetInvoicesQuery,
     useLazyGetInvoicesQuery,
+    useGetInvoiceQuery,
+    useLazyGetInvoiceQuery
 } = invoiceApi;
