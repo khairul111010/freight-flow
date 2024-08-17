@@ -352,7 +352,7 @@ class InvoiceController extends Controller
             // Recalculate the due balance
             $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
 
-            if ($invoice->invoice_due_balance < $invoice->invoice_received_amount) {
+            if ($invoice->invoice_receivable_amount_bdt < $invoice->invoice_received_amount) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Received amount cannot be greater than due balance!',
@@ -391,7 +391,7 @@ class InvoiceController extends Controller
                     'invoice_number' => $invoice->invoice_number,
                     'transaction_note' => $request->invoice_transaction_note,
                     'chart_of_account_id' => $accounts_receivable_chart_of_account->id,
-                    'bank_account_id' => $invoice->invoice_bank_account_id,
+                    'bank_account_id' => $request->invoice_bank_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -404,7 +404,7 @@ class InvoiceController extends Controller
                     'invoice_number' => $invoice->invoice_number,
                     'transaction_note' => $request->invoice_transaction_note,
                     'chart_of_account_id' => $invoice->chart_of_account_id,
-                    'bank_account_id' => $invoice->invoice_bank_account_id,
+                    'bank_account_id' => $request->invoice_bank_account_id,
                     'invoice_id' => $invoice->id,
                 ];
 
@@ -459,7 +459,7 @@ class InvoiceController extends Controller
             // Recalculate the due balance
             $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
 
-            if ($bill->bill_due_balance < $bill->bill_paid_amount) {
+            if ($bill->bill_payable_bdt < $bill->bill_paid_amount) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Paid amount cannot be greater than due balance!',
@@ -499,7 +499,7 @@ class InvoiceController extends Controller
                     'invoice_number' => $bill->invoice_number,
                     'transaction_note' => $request->bill_transaction_note,
                     'chart_of_account_id' => $accounts_payable_chart_of_account->id,
-                    'bank_account_id' => $bill->bill_bank_account_id,
+                    'bank_account_id' => $request->bill_bank_account_id,
                     'bill_id' => $bill->id,
                 ];
 
@@ -512,7 +512,7 @@ class InvoiceController extends Controller
                     'invoice_number' => $bill->invoice_number,
                     'transaction_note' => $request->bill_transaction_note,
                     'chart_of_account_id' => $bill->chart_of_account_id,
-                    'bank_account_id' => $bill->bill_bank_account_id,
+                    'bank_account_id' => $request->bill_bank_account_id,
                     'bill_id' => $bill->id,
                 ];
 
