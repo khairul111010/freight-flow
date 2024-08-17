@@ -169,7 +169,7 @@ const InvoiceEdit = () => {
                 </div>
                 <div className="grid grid-cols-2 text-base font-normal italic border-t border-l border-r divide-x">
                     <div className="p-2">Due</div>
-                    <div className="p-2">Paid</div>
+                    <div className="p-2">Received</div>
                 </div>
                 <div className="grid grid-cols-2 border-t border-r">
                     {data?.transactions.map(
