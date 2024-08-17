@@ -592,7 +592,7 @@ class InvoiceController extends Controller
         ], 200);
     }
 
-    public function getBillByVendor($id)
+    public function getBillByVendor($id, Request $request)
     {
         // get all paginated with search bills by vendor id
         $query = Bill::query();
