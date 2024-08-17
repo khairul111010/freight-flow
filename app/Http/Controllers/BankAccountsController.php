@@ -99,11 +99,11 @@ class BankAccountsController extends Controller
      */
     public function show($id)
     {
-        try {
+        try {        
             return response()->json([
                 'success' => true,
                 'message' => 'Bank Account retrieved successfully',
-                'result' => BankAccounts::find($id)
+                'result' => BankAccounts::with('transactions', 'bank')->find($id)
             ], 200);
         } catch (Exception $e) {
             return response()->json([
