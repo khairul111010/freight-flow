@@ -42,18 +42,19 @@ const invoiceApi = baseApi
                 }),
                 invalidatesTags: ["Invoice"],
             }),
-            // updateVendor: builder.mutation({
-            //     query: (body) => ({
-            //         url: `Invoice/${body.id}`,
-            //         method: "PATCH",
-            //         body: body.body,
-            //     }),
-            //     invalidatesTags: ["Invoice"],
-            // }),
+            updateInvoice: builder.mutation({
+                query: ({id, ...body}) => ({
+                    url: `invoices/${id}`,
+                    method: "POST",
+                    body,
+                }),
+                invalidatesTags: ["Invoice"],
+            }),
         }),
     });
 
 export const {
+    useUpdateInvoiceMutation,
     useGetBillsQuery,
     useLazyGetBillsQuery,
     useGetInvoicePDFQuery,

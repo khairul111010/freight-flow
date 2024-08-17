@@ -30,7 +30,12 @@ const bankApi = baseApi
                 }),
                 invalidatesTags: ["Bank"],
             }),
-
+            getAllBankAccounts: builder.query<any, void>({
+                query: () =>
+                    `/bank-account/all`,
+                providesTags: ["Bank"],
+                transformResponse: (response: any) => response.result,
+            }),
             getBankAccounts: builder.query<any, any>({
                 query: (pagination) =>
                     `/bank-account?page=${pagination.page || 1}&search=${
@@ -64,6 +69,8 @@ const bankApi = baseApi
     });
 
 export const {
+    useGetAllBankAccountsQuery,
+    useLazyGetAllBankAccountsQuery,
     useCreateBankMutation,
     useGetBankQuery,
     useGetBanksQuery,

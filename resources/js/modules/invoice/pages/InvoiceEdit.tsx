@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetInvoiceQuery } from "../../../store/apis/invoiceApi";
 import Spinner from "../../../components/preloader/Spinner";
+import Modal from "../../../components/model/Modal";
+import InvoicePayForm from "../components/InvoicePayForm";
+import Button from "../../../components/button";
 
 const InvoiceEdit = () => {
+    const [open, setOpen] = useState(false);
     const { id } = useParams();
     const { data, isLoading } = useGetInvoiceQuery(id);
 
@@ -154,28 +158,51 @@ const InvoiceEdit = () => {
             </div>
 
             <div className="bg-white p-8 rounded-md h-full mt-4">
-                <h1 className="text-base font-medium mb-4 border-b font-semibold">
-                    Transactions
-                </h1>
-                <div className="grid grid-cols-2 text-base font-normal">
-                    <div>Due</div>
-                    <div>Paid</div>
+                <div className="flex items-center justify-between mb-4">
+                    <h1 className="text-base font-semibold">Transactions</h1>
+                    <button
+                        className="w-fit bg-primary text-white px-8 py-2 rounded-md"
+                        onClick={() => setOpen(true)}
+                    >
+                        Payment
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 text-base font-normal italic border-t border-l border-r divide-x">
+                    <div className="p-2">Due</div>
+                    <div className="p-2">Paid</div>
                 </div>
                 <div className="grid grid-cols-2 border-t border-r">
-                    {data?.transactions.map((transaction: any) => {
-                        return (
-                            <div className="flex items-center gap-4 border-b border-l divide-x">
-                                <div className="p-2">
-                                    {transaction.transaction_date}
+                    {data?.transactions.map(
+                        (transaction: any, index: number) => {
+                            return (
+                                <div
+                                    key={index}
+                                    className="grid grid-cols-4 items-center gap-4 border-b border-l divide-x"
+                                >
+                                    <div>{transaction.transaction_date}</div>
+                                    <div>
+                                        {transaction.is_debit === 0 && index > 3
+                                            ? data?.transactions[index].amount -
+                                              data?.transactions[index - 2]
+                                                  .amount
+                                            : transaction.amount.toLocaleString()}
+                                    </div>
+                                    <div>{transaction.payment_method}</div>
+                                    <div>{transaction.transaction_note}</div>
                                 </div>
-                                <div className="p-2">
-                                    {transaction.amount.toLocaleString()}
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        }
+                    )}
                 </div>
             </div>
+
+            <Modal
+                onClose={() => setOpen(false)}
+                open={open}
+                title="Invoice Payment"
+            >
+                <InvoicePayForm />
+            </Modal>
         </>
     );
 };

@@ -39,6 +39,28 @@ class BankAccountsController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     */
+    public function all(Request $request)
+    {
+        try {
+            $query = BankAccounts::all();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Customers retrieved successfully',
+                'result' => $query
+            ], 200);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
