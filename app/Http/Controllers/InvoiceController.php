@@ -303,13 +303,30 @@ class InvoiceController extends Controller
         ], 200);
     }
 
-    public function getInvoiceByCustomer($id)
+    public function getInvoiceByCustomer($id, Request $request)
     {
+        
+        $query = Invoice::query();
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('destination', 'LIKE', '%' . $search . '%')
+                    ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
+            });
+        }
+        $query->where('customer_id', $id);
         return response()->json([
             'success' => true,
-            'message' => 'Invoice retrieved successfully',
-            'result' => InvoiceResource::collection(Invoice::where('customer_id', $id)->get())
+            'message' => 'Invoices retrieved successfully',
+            'result' => $query->paginate(10)
         ], 200);
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Invoice retrieved successfully',
+        //     'result' => InvoiceResource::collection(Invoice::where('customer_id', $id)->get())
+        // ], 200);
     }
 
     public function getInvoiceByInvoiceNumber($invoice_number)
@@ -480,7 +497,6 @@ class InvoiceController extends Controller
                     $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
                 ) {
                     $bank_transfer_chart_of_account = ChartOfAccount::where('slug', 'bank-transfers')->first();
-                    $bill->bill_bank_account_id = $request->bill_bank_account_id;
                     $bill->chart_of_account_id = $bank_transfer_chart_of_account->id;
                 }
 
@@ -577,13 +593,30 @@ class InvoiceController extends Controller
         ], 200);
     }
 
-    public function getBillByVendor($id)
+    public function getBillByVendor($id, Request $request)
     {
+        // get all paginated with search bills by vendor id
+        $query = Bill::query();
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('invoice_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('destination', 'LIKE', '%' . $search . '%')
+                    ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
+            });
+        }
+        $query->where('vendor_id', $id);
         return response()->json([
             'success' => true,
-            'message' => 'Bill retrieved successfully',
-            'result' => InvoiceResource::collection(Bill::where('vendor_id', $id)->get())
+            'message' => 'Bills retrieved successfully',
+            'result' => $query->paginate(10)
         ], 200);
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Bill retrieved successfully',
+        //     'result' => InvoiceResource::collection(Bill::where('vendor_id', $id)->get())
+        // ], 200);
     }
 
     public function searchBill($invoice_number)
