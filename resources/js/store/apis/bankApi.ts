@@ -49,6 +49,11 @@ const bankApi = baseApi
                 providesTags: ["Bank"],
                 transformResponse: (response: any) => response.result,
             }),
+            getBankAccountTransactions: builder.query<any, any>({
+                query: (id) => `/bank-account/transactions/${id}`,
+                providesTags: ["Bank"],
+                transformResponse: (response: any) => response.result,
+            }),
             createBankAccount: builder.mutation({
                 query: (body) => ({
                     url: `bank-account`,
@@ -69,6 +74,8 @@ const bankApi = baseApi
     });
 
 export const {
+    useGetBankAccountTransactionsQuery,
+    useLazyGetBankAccountTransactionsQuery,
     useGetAllBankAccountsQuery,
     useLazyGetAllBankAccountsQuery,
     useCreateBankMutation,

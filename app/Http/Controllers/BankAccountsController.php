@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankAccounts;
+use DB;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class BankAccountsController extends Controller
@@ -99,11 +101,31 @@ class BankAccountsController extends Controller
      */
     public function show($id)
     {
-        try {        
+        try {
             return response()->json([
                 'success' => true,
                 'message' => 'Bank Account retrieved successfully',
-                'result' => BankAccounts::with('transactions', 'bank')->find($id)
+                'result' => BankAccounts::with('bank')->find($id)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function showTransactions($id)
+    {
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Bank Account retrieved successfully',
+                'result' => BankAccounts::with('transactions.invoice.transactions', 'bank')->find($id)
             ], 200);
         } catch (Exception $e) {
             return response()->json([

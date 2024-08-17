@@ -1,11 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetBankAccountQuery } from "../../../store/apis/bankApi";
+import {
+    useGetBankAccountQuery,
+    useGetBankAccountTransactionsQuery,
+} from "../../../store/apis/bankApi";
 import Spinner from "../../../components/preloader/Spinner";
 
 const BankTransactions = () => {
     const { id } = useParams();
-    const { data, isLoading } = useGetBankAccountQuery(id);
+    const { data, isLoading } = useGetBankAccountTransactionsQuery(id);
     console.log(data);
     if (isLoading) {
         return (

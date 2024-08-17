@@ -105,6 +105,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/all', [BankAccountsController::class, 'all']);
         Route::post('/', [BankAccountsController::class, 'store']);
         Route::get('/{id}', [BankAccountsController::class, 'show']);
+        Route::get('/transactions/{id}', [BankAccountsController::class, 'showTransactions']);
         Route::patch('/{id}', [BankAccountsController::class, 'update']);
         Route::delete('/{id}', [BankAccountsController::class, 'destroy']);
     });
