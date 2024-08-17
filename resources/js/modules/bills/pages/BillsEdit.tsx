@@ -10,8 +10,6 @@ const BillsEdit = () => {
     const { id } = useParams();
     const { data, isLoading } = useGetBillQuery(id);
 
-    console.log(data);
-
     if (isLoading) {
         return (
             <div className="flex items-center justify-center py-10">
@@ -30,7 +28,7 @@ const BillsEdit = () => {
                 <div className="flex items-center justify-between mt-8">
                     <div>
                         <div className="italic">INVOICE TO</div>
-                        <div className="font-bold">{data?.vendor_id}</div>
+                        <div className="font-bold">{data?.vendor.name}</div>
                     </div>
                     <div className="flex items-center gap-8">
                         <div>
@@ -197,7 +195,7 @@ const BillsEdit = () => {
                             return (
                                 <div
                                     key={index}
-                                    className="grid grid-cols-4 items-center gap-4 border-b border-l divide-x"
+                                    className="grid grid-cols-4 items-center gap-4 border-b border-l"
                                 >
                                     <div>{transaction.transaction_date}</div>
                                     <div>
@@ -207,7 +205,11 @@ const BillsEdit = () => {
                                                   .amount
                                             : transaction.amount.toLocaleString()}
                                     </div>
-                                    <div>{transaction.payment_method}</div>
+                                    <div>
+                                        {transaction.payment_method === "bank"
+                                            ? `${transaction.bank_account.account_name} - ${transaction.bank_account.account_number}`
+                                            : transaction.payment_method}
+                                    </div>
                                     <div>{transaction.transaction_note}</div>
                                 </div>
                             );

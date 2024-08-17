@@ -305,7 +305,7 @@ class InvoiceController extends Controller
 
     public function getInvoiceByCustomer($id, Request $request)
     {
-        
+
         $query = Invoice::query();
         if ($request->has('search')) {
             $search = $request->search;
@@ -634,7 +634,7 @@ class InvoiceController extends Controller
 
     public function getBillByBillId($id)
     {
-        $bill = Bill::with('transactions')->findOrFail($id);
+        $bill = Bill::with(['transactions.bank_account', 'vendor'])->findOrFail($id);
 
         return response()->json([
             'success' => true,

@@ -20,6 +20,9 @@ import Dashboard from "../modules/dashboard/pages/Dashboard";
 import ProfitAndLoss from "../modules/profitandloss/pages/ProfitAndLoss";
 import InvoiceEdit from "../modules/invoice/pages/InvoiceEdit";
 import BillsEdit from "../modules/bills/pages/BillsEdit";
+import VendorBills from "../modules/vendors/pages/VendorBills";
+import CustomerInvoices from "../modules/customers/pages/CustomerInvoices";
+import BankTransactions from "../modules/bank_and_accounts/pages/BankTransactions";
 
 const appRoutes: RouteObject[] = [
     {
@@ -66,6 +69,10 @@ const appRoutes: RouteObject[] = [
                 element: <CustomersEdit />,
             },
             {
+                path: AppRoutesEnum.CUSTOMERS_INVOICE_VIEW,
+                element: <CustomerInvoices />,
+            },
+            {
                 path: AppRoutesEnum.VENDORS,
                 element: <Vendors />,
             },
@@ -76,6 +83,10 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.VENDORS_EDIT,
                 element: <VendorsEdit />,
+            },
+            {
+                path: AppRoutesEnum.VENDORS_BILLS_VIEW,
+                element: <VendorBills />,
             },
             {
                 path: AppRoutesEnum.BANK,
@@ -96,6 +107,10 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.BANK_ACCOUNT_EDIT,
                 element: <BankAccountEdit />,
+            },
+            {
+                path: AppRoutesEnum.BANK_ACCOUNT_TRANSACTION,
+                element: <BankTransactions />,
             },
             {
                 path: AppRoutesEnum.SETTINGS,

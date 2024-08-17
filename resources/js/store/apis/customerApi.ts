@@ -10,7 +10,18 @@ const customerApi = baseApi
                 transformResponse: (response: any) => response.result,
             }),
             getCustomers: builder.query<any, any>({
-                query: (pagination) => `/customers?page=${pagination.page || 1}&search=${pagination.search || ""}`,
+                query: (pagination) =>
+                    `/customers?page=${pagination.page || 1}&search=${
+                        pagination.search || ""
+                    }`,
+                providesTags: ["Customers"],
+                transformResponse: (response: any) => response.result,
+            }),
+            getInvoicesByCustomer: builder.query<any, any>({
+                query: (pagination) =>
+                    `invoices/customer/${pagination.id}?page=${
+                        pagination.page || 1
+                    }&search=${pagination.search || ""}`,
                 providesTags: ["Customers"],
                 transformResponse: (response: any) => response.result,
             }),
@@ -38,4 +49,15 @@ const customerApi = baseApi
         }),
     });
 
-export const { useGetAllCustomersQuery, useGetCustomersQuery, useLazyGetAllCustomersQuery, useCreateCustomerMutation, useLazyGetCustomersQuery, useGetCustomerQuery, useLazyGetCustomerQuery, useUpdateCustomerMutation } = customerApi;
+export const {
+    useGetInvoicesByCustomerQuery,
+    useLazyGetInvoicesByCustomerQuery,
+    useGetAllCustomersQuery,
+    useGetCustomersQuery,
+    useLazyGetAllCustomersQuery,
+    useCreateCustomerMutation,
+    useLazyGetCustomersQuery,
+    useGetCustomerQuery,
+    useLazyGetCustomerQuery,
+    useUpdateCustomerMutation,
+} = customerApi;

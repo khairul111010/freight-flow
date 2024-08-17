@@ -33,8 +33,8 @@
             <thead>
                 <tr>
                     <td style="padding: 0 16px 18px 16px;">
-                        <!-- <img src="https://raw.githubusercontent.com/khairul111010/freight-flow/master/public/logo.png"
-                            alt="" width="200" height="48"> -->
+                        <img src="https://raw.githubusercontent.com/khairul111010/freight-flow/master/public/logo.png"
+                            alt="" width="200" height="48">
                         <h1
                             style="color: #1A1C21; font-size: 18px; font-style: normal; font-weight: 600; line-height: normal;">
                             {{$name}}

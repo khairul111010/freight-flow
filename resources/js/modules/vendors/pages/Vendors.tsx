@@ -6,7 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import Spinner from "../../../components/preloader/Spinner";
 import { classNames } from "primereact/utils";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import Pagination from "../../../components/pagination";
 import { useLazyGetVendorsQuery } from "../../../store/apis/vendorApi";
@@ -89,6 +89,15 @@ const Vendors = () => {
                                 body={(rowData) => {
                                     return (
                                         <div className="flex items-center gap-2">
+                                            <Link
+                                                to={AppRoutesEnum.VENDORS_BILLS_VIEW.replace(
+                                                    ":id",
+                                                    rowData.id
+                                                )}
+                                                className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
+                                            >
+                                                <IconEye />
+                                            </Link>
                                             <Link
                                                 to={AppRoutesEnum.VENDORS_EDIT.replace(
                                                     ":id",
