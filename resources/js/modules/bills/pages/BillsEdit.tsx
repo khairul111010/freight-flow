@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetInvoiceQuery } from "../../../store/apis/invoiceApi";
+import { useGetBillQuery } from "../../../store/apis/invoiceApi";
 import Spinner from "../../../components/preloader/Spinner";
 import Modal from "../../../components/model/Modal";
-import InvoicePayForm from "../components/InvoicePayForm";
-import Button from "../../../components/button";
+import BillPayForm from "../components/BillPayForm";
 
-const InvoiceEdit = () => {
+const BillsEdit = () => {
     const [open, setOpen] = useState(false);
     const { id } = useParams();
-    const { data, isLoading } = useGetInvoiceQuery(id);
+    const { data, isLoading } = useGetBillQuery(id);
+
+    console.log(data);
 
     if (isLoading) {
         return (
@@ -22,26 +23,26 @@ const InvoiceEdit = () => {
         <>
             <div className="bg-white p-8 rounded-md h-full">
                 <div className="flex items-center justify-between font-semibold text-lg border-b pb-4">
-                    <div>Invoice</div>
+                    <div>Bill</div>
                     <div>#{data?.invoice_number}</div>
                 </div>
 
                 <div className="flex items-center justify-between mt-8">
                     <div>
-                        <div className="italic">BILL TO</div>
-                        <div className="font-bold">{data?.customer.name}</div>
+                        <div className="italic">INVOICE TO</div>
+                        <div className="font-bold">{data?.vendor_id}</div>
                     </div>
                     <div className="flex items-center gap-8">
                         <div>
                             <div className="italic">Issued Date</div>
                             <div className="font-bold">
-                                {data?.invoice_issue_date}
+                                {data?.bill_issue_date}
                             </div>
                         </div>
                         <div>
                             <div className="italic">Due Date</div>
                             <div className="font-bold">
-                                {data?.invoice_due_date}
+                                {data?.bill_due_date}
                             </div>
                         </div>
                     </div>
@@ -96,60 +97,79 @@ const InvoiceEdit = () => {
                                 </th>
                             </tr>
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice Rate</th>
+                                <th className="p-2 text-left">Bill Rate</th>
                                 <th className="p-2 text-right">
-                                    {data?.invoice_rate}
+                                    {data?.bill_rate}
                                 </th>
                             </tr>
 
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice AIT</th>
+                                <th className="p-2 text-left">Bill AIT</th>
                                 <th className="p-2 text-right">
-                                    {data?.invoice_ait}
+                                    {data?.bill_ait}
                                 </th>
                             </tr>
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice CGC</th>
+                                <th className="p-2 text-left">Bill AMS</th>
                                 <th className="p-2 text-right">
-                                    {data?.invoice_cgc}
+                                    {data?.bill_ams}
                                 </th>
                             </tr>
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice DTC</th>
+                                <th className="p-2 text-left">Bill CD</th>
                                 <th className="p-2 text-right">
-                                    {data?.invoice_dtc}
+                                    {data?.bill_cd}
                                 </th>
                             </tr>
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Others</th>
+                                <th className="p-2 text-left">Bill CGC</th>
                                 <th className="p-2 text-right">
-                                    {data?.others}
+                                    {data?.bill_cgc}
                                 </th>
                             </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-left">Bill IIT</th>
+                                <th className="p-2 text-right">
+                                    {data?.bill_itt}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-left">Bill SSC</th>
+                                <th className="p-2 text-right">
+                                    {data?.bill_ssc}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-left">Bill THC</th>
+                                <th className="p-2 text-right">
+                                    {data?.bill_thc}
+                                </th>
+                            </tr>
+
                             <tr className="divide-x">
                                 <th className="p-2 text-left">VAT</th>
                                 <th className="p-2 text-right">
-                                    {data?.invoice_vat}
+                                    {data?.bill_vat}
                                 </th>
                             </tr>
                             <tr>
                                 <th className="p-2 text-left">TOTAL (USD)</th>
                                 <th className="p-2 text-right">
-                                    = {data?.invoice_total_usd}
+                                    = {data?.bill_total_usd}
                                 </th>
                             </tr>
                             <tr>
                                 <th className="p-2 text-left">Exchange Rate</th>
                                 <th className="p-2 text-right">
-                                    = {data?.invoice_exchange_rate}
+                                    = {data?.bill_exchange_rate}
                                 </th>
                             </tr>
                             <tr>
                                 <th className="p-2 text-left">TOTAL (BDT)</th>
                                 <th className="p-2 text-right">
-                                    {data?.invoice_total_usd} x{" "}
-                                    {data?.invoice_exchange_rate} ={" "}
-                                    {data?.invoice_receivable_amount_bdt}
+                                    {data?.bill_total_usd} x{" "}
+                                    {data?.bill_exchange_rate} ={" "}
+                                    {data?.bill_payable_bdt}
                                 </th>
                             </tr>
                         </tbody>
@@ -168,8 +188,8 @@ const InvoiceEdit = () => {
                     </button>
                 </div>
                 <div className="grid grid-cols-2 text-base font-normal italic border-t border-l border-r divide-x">
+                    <div className="p-2">Paid</div>
                     <div className="p-2">Due</div>
-                    <div className="p-2">Received</div>
                 </div>
                 <div className="grid grid-cols-2 border-t border-r">
                     {data?.transactions.map(
@@ -177,21 +197,17 @@ const InvoiceEdit = () => {
                             return (
                                 <div
                                     key={index}
-                                    className="grid grid-cols-4 items-center gap-4 border-b border-l"
+                                    className="grid grid-cols-4 items-center gap-4 border-b border-l divide-x"
                                 >
                                     <div>{transaction.transaction_date}</div>
                                     <div>
-                                        {transaction.is_debit === 0 && index > 3
+                                        {transaction.is_debit === 1 && index > 3
                                             ? data?.transactions[index].amount -
                                               data?.transactions[index - 2]
                                                   .amount
                                             : transaction.amount.toLocaleString()}
                                     </div>
-                                    <div>
-                                        {transaction.payment_method === "bank"
-                                            ? `${transaction.bank_account.account_name} - ${transaction.bank_account.account_number}`
-                                            : transaction.payment_method}
-                                    </div>
+                                    <div>{transaction.payment_method}</div>
                                     <div>{transaction.transaction_note}</div>
                                 </div>
                             );
@@ -203,12 +219,12 @@ const InvoiceEdit = () => {
             <Modal
                 onClose={() => setOpen(false)}
                 open={open}
-                title="Invoice Payment"
+                title="Bill Payment"
             >
-                <InvoicePayForm />
+                <BillPayForm />
             </Modal>
         </>
     );
 };
 
-export default InvoiceEdit;
+export default BillsEdit;

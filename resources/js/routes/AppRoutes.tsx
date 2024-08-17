@@ -19,6 +19,7 @@ import Bills from "../modules/bills/pages/Bills";
 import Dashboard from "../modules/dashboard/pages/Dashboard";
 import ProfitAndLoss from "../modules/profitandloss/pages/ProfitAndLoss";
 import InvoiceEdit from "../modules/invoice/pages/InvoiceEdit";
+import BillsEdit from "../modules/bills/pages/BillsEdit";
 
 const appRoutes: RouteObject[] = [
     {
@@ -47,6 +48,10 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.BILL,
                 element: <Bills />,
+            },
+            {
+                path: AppRoutesEnum.BILL_EDIT,
+                element: <BillsEdit />,
             },
             {
                 path: AppRoutesEnum.CUSTOMERS,

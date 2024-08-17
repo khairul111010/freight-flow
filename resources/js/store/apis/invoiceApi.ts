@@ -30,6 +30,11 @@ const invoiceApi = baseApi
                 providesTags: ["Invoice"],
                 transformResponse: (response: any) => response.result,
             }),
+            getBill: builder.query<any, any>({
+                query: (id) => `/invoices/bill/${id}`,
+                providesTags: ["Bill"],
+                transformResponse: (response: any) => response.result,
+            }),
             getInvoicePDF: builder.query<any, any>({
                 query: (id) => `/invoices/generate-pdf/${id}`,
                 providesTags: ["Invoice"],
@@ -50,10 +55,21 @@ const invoiceApi = baseApi
                 }),
                 invalidatesTags: ["Invoice"],
             }),
+            updateBill: builder.mutation({
+                query: ({id, ...body}) => ({
+                    url: `invoices/bill/${id}`,
+                    method: "POST",
+                    body,
+                }),
+                invalidatesTags: ["Bill"],
+            }),
         }),
     });
 
 export const {
+    useUpdateBillMutation,
+    useGetBillQuery,
+    useLazyGetBillQuery,
     useUpdateInvoiceMutation,
     useGetBillsQuery,
     useLazyGetBillsQuery,

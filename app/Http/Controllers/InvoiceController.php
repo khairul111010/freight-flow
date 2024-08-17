@@ -272,7 +272,7 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        $invoice = Invoice::with(['transactions', 'customer'])->findOrFail($id);
+        $invoice = Invoice::with(['transactions.bank_account', 'customer'])->findOrFail($id);
         return response()->json([
             'success' => true,
             'message' => 'Invoice retrieved successfully',
@@ -542,6 +542,7 @@ class InvoiceController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
+                'error' => $e->getMessage()
             ], 500);
         }
     }

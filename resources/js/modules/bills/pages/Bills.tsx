@@ -4,7 +4,7 @@ import { AppRoutesEnum } from "../../../enums/routeEnums";
 import SearchInput from "../../../components/form/search-input/SearchInput";
 import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/pagination";
-import { IconFileDownload } from "@tabler/icons-react";
+import { IconEye, IconFileDownload, IconPencil } from "@tabler/icons-react";
 import Spinner from "../../../components/preloader/Spinner";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
@@ -14,6 +14,7 @@ import {
     useLazyGetInvoicePDFQuery,
     useLazyGetInvoicesQuery,
 } from "../../../store/apis/invoiceApi";
+import { Link } from "react-router-dom";
 
 const Bills = () => {
     const [search, setSearch] = useState("");
@@ -207,19 +208,19 @@ const Bills = () => {
                                 body={(rowData) => {
                                     return (
                                         <div className="flex items-center gap-2">
-                                            {/* <Link
-                                                to={AppRoutesEnum.CUSTOMERS_EDIT.replace(
+                                            <Link
+                                                to={AppRoutesEnum.BILL_EDIT.replace(
                                                     ":id",
                                                     rowData.id
                                                 )}
                                                 className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
                                             >
-                                                <IconPencil />
+                                                <IconEye />
                                             </Link>
-                                            <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
+                                            {/* <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
                                                 <IconTrash />
                                             </div> */}
-                                            <div
+                                            {/* <div
                                                 title="Download"
                                                 onClick={() =>
                                                     handleDownload(rowData.id)
@@ -227,7 +228,7 @@ const Bills = () => {
                                                 className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
                                             >
                                                 <IconFileDownload />
-                                            </div>
+                                            </div> */}
                                         </div>
                                     );
                                 }}
