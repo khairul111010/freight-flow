@@ -11,6 +11,7 @@ class Transactions extends Model
 
     protected $fillable = [
         'amount',
+        'current_amount',
         'transaction_type',
         'transaction_date',
         'is_debit',

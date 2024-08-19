@@ -22,6 +22,8 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
+        // order by desc
+
         $query = Invoice::query();
         if ($request->has('search')) {
             $search = $request->search;
@@ -31,6 +33,8 @@ class InvoiceController extends Controller
                     ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
             });
         }
+        $query->orderBy('created_at', 'desc');
+
         return response()->json([
             'success' => true,
             'message' => 'Invoices retrieved successfully',
@@ -129,6 +133,7 @@ class InvoiceController extends Controller
 
                 $invoice_debit_transaction = [
                     'amount' => $invoice->invoice_due_balance,
+                    'current_amount' => $request->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
                     'payment_method' => $request->invoice_payment_method,
@@ -142,6 +147,7 @@ class InvoiceController extends Controller
 
                 $invoice_credit_transaction = [
                     'amount' => $invoice->invoice_received_amount,
+                    'current_amount' => $request->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
                     'payment_method' => $request->invoice_payment_method,
@@ -219,6 +225,7 @@ class InvoiceController extends Controller
 
                 $bill_credit_transaction = [
                     'amount' => $bill->bill_payable_bdt,
+                    'current_amount' => $request->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
                     'payment_method' => $request->bill_payment_method,
@@ -232,6 +239,7 @@ class InvoiceController extends Controller
 
                 $bill_debit_transaction = [
                     'amount' => $bill->bill_paid_amount,
+                    'current_amount' => $request->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
                     'payment_method' => $request->bill_payment_method,
@@ -366,6 +374,8 @@ class InvoiceController extends Controller
             // Update the received amount
             $invoice->invoice_received_amount += $request->invoice_received_amount;
 
+            
+
             // Recalculate the due balance
             $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
 
@@ -401,6 +411,7 @@ class InvoiceController extends Controller
 
                 $invoice_debit_transaction = [
                     'amount' => $invoice->invoice_due_balance,
+                    'current_amount' => $request->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
                     'payment_method' => $request->invoice_payment_method,
@@ -414,6 +425,7 @@ class InvoiceController extends Controller
 
                 $invoice_credit_transaction = [
                     'amount' => $invoice->invoice_received_amount,
+                    'current_amount' => $request->invoice_received_amount,
                     'transaction_type' => 'invoice',
                     'transaction_date' => Now(),
                     'payment_method' => $request->invoice_payment_method,
@@ -508,6 +520,7 @@ class InvoiceController extends Controller
 
                 $bill_credit_transaction = [
                     'amount' => $bill->bill_due_balance,
+                    'current_amount' => $request->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
                     'payment_method' => $request->bill_payment_method,
@@ -521,6 +534,7 @@ class InvoiceController extends Controller
 
                 $bill_debit_transaction = [
                     'amount' => $bill->bill_paid_amount,
+                    'current_amount' => $request->bill_paid_amount,
                     'transaction_type' => 'bill',
                     'transaction_date' => Now(),
                     'payment_method' => $request->bill_payment_method,
@@ -586,6 +600,8 @@ class InvoiceController extends Controller
                     ->orWhere('master_air_way_bill', 'LIKE', '%' . $search . '%');
             });
         }
+        $query->orderBy('created_at', 'desc');
+        
         return response()->json([
             'success' => true,
             'message' => 'Bills retrieved successfully',
