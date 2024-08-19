@@ -1,13 +1,13 @@
 import { Form, Formik, FormikProps } from "formik";
-import React, { useRef } from "react";
+import { FC, useRef } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { number, object, string } from "yup";
-import TextInput from "../../../components/form/text-input";
-import SelectInput from "../../../components/form/select-input";
 import Button from "../../../components/button";
+import SelectInput from "../../../components/form/select-input";
+import TextInput from "../../../components/form/text-input";
 import { useGetAllBankAccountsQuery } from "../../../store/apis/bankApi";
 import { useUpdateInvoiceMutation } from "../../../store/apis/invoiceApi";
-import toast from "react-hot-toast";
 const initialValues = {
     invoice_received_amount: "",
     invoice_payment_method: "",
@@ -28,7 +28,11 @@ const validationSchema = object().shape({
     }),
 });
 
-const InvoicePayForm = () => {
+type Props = {
+    onSuccess: () => any;
+};
+
+const InvoicePayForm: FC<Props> = ({ onSuccess }) => {
     const { id } = useParams();
     const formikRef = useRef<FormikProps<any>>(null);
     const [updateInvoice, { isLoading }] = useUpdateInvoiceMutation();
@@ -43,6 +47,7 @@ const InvoicePayForm = () => {
         };
         updateInvoice({ id, ...val }).then(() => {
             toast.success("Paid Successfully");
+            onSuccess && onSuccess();
         });
     };
 

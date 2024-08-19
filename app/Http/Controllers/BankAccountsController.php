@@ -53,7 +53,6 @@ class BankAccountsController extends Controller
                 'message' => 'Customers retrieved successfully',
                 'result' => $query
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -125,7 +124,7 @@ class BankAccountsController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Bank Account retrieved successfully',
-                'result' => BankAccounts::with('transactions.invoice', 'bank')->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->find($id)
+                'result' => BankAccounts::with('transactions.invoice', 'transactions.bill', 'bank')->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->find($id)
             ], 200);
         } catch (Exception $e) {
             return response()->json([

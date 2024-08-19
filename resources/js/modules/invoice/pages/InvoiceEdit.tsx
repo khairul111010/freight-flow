@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetInvoiceQuery } from "../../../store/apis/invoiceApi";
-import Spinner from "../../../components/preloader/Spinner";
 import Modal from "../../../components/model/Modal";
+import Spinner from "../../../components/preloader/Spinner";
+import { useGetInvoiceQuery } from "../../../store/apis/invoiceApi";
 import InvoicePayForm from "../components/InvoicePayForm";
-import Button from "../../../components/button";
 
 const InvoiceEdit = () => {
     const [open, setOpen] = useState(false);
@@ -181,10 +180,8 @@ const InvoiceEdit = () => {
                                 >
                                     <div>{transaction.transaction_date}</div>
                                     <div>
-                                        {transaction.is_debit === 0 && index > 3
-                                            ? data?.transactions[index].amount -
-                                              data?.transactions[index - 2]
-                                                  .amount
+                                        {transaction.is_debit === 0
+                                            ? transaction.current_amount.toLocaleString()
                                             : transaction.amount.toLocaleString()}
                                     </div>
                                     <div>
@@ -205,7 +202,7 @@ const InvoiceEdit = () => {
                 open={open}
                 title="Invoice Payment"
             >
-                <InvoicePayForm />
+                <InvoicePayForm onSuccess={() => setOpen(false)} />
             </Modal>
         </>
     );

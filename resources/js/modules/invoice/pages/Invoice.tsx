@@ -1,25 +1,20 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
 
-import { DataTable } from "primereact/datatable";
+import { IconEye, IconFileDownload } from "@tabler/icons-react";
 import { Column } from "primereact/column";
-import Spinner from "../../../components/preloader/Spinner";
+import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
-import {
-    IconEye,
-    IconFileDownload,
-    IconPencil,
-    IconTrash,
-} from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import SearchInput from "../../../components/form/search-input/SearchInput";
 import Pagination from "../../../components/pagination";
+import Spinner from "../../../components/preloader/Spinner";
+import useDebounce from "../../../hooks/useDebounce";
 import {
     useLazyGetInvoicePDFQuery,
     useLazyGetInvoicesQuery,
 } from "../../../store/apis/invoiceApi";
-import SearchInput from "../../../components/form/search-input/SearchInput";
-import useDebounce from "../../../hooks/useDebounce";
 
 const Invoice = () => {
     const [search, setSearch] = useState("");
@@ -202,7 +197,10 @@ const Invoice = () => {
                                 header="Others"
                                 body={(rowData) => {
                                     return (
-                                        <>{rowData.others.toLocaleString()}</>
+                                        <>
+                                            {rowData.others?.toLocaleString() ??
+                                                0}
+                                        </>
                                     );
                                 }}
                             ></Column>

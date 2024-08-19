@@ -50,7 +50,9 @@ const bankApi = baseApi
                 transformResponse: (response: any) => response.result,
             }),
             getBankAccountTransactions: builder.query<any, any>({
-                query: (id) => `/bank-account/transactions/${id}`,
+                query: (pagination) => `/bank-account/transactions/${pagination.id}?month=${
+                        pagination.month || new Date().getMonth() + 1
+                    }&year=${pagination.year || new Date().getFullYear()}`,
                 providesTags: ["Bank"],
                 transformResponse: (response: any) => response.result,
             }),

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetBillQuery } from "../../../store/apis/invoiceApi";
-import Spinner from "../../../components/preloader/Spinner";
 import Modal from "../../../components/model/Modal";
+import Spinner from "../../../components/preloader/Spinner";
+import { useGetBillQuery } from "../../../store/apis/invoiceApi";
 import BillPayForm from "../components/BillPayForm";
 
 const BillsEdit = () => {
@@ -199,10 +199,8 @@ const BillsEdit = () => {
                                 >
                                     <div>{transaction.transaction_date}</div>
                                     <div>
-                                        {transaction.is_debit === 1 && index > 3
-                                            ? data?.transactions[index].amount -
-                                              data?.transactions[index - 2]
-                                                  .amount
+                                        {transaction.is_debit === 1
+                                            ? transaction.current_amount.toLocaleString()
                                             : transaction.amount.toLocaleString()}
                                     </div>
                                     <div>
@@ -223,7 +221,7 @@ const BillsEdit = () => {
                 open={open}
                 title="Bill Payment"
             >
-                <BillPayForm />
+                <BillPayForm onSuccess={() => setOpen(false)} />
             </Modal>
         </>
     );
