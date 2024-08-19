@@ -11,8 +11,8 @@ class ProfitAndLossController extends Controller
 
     public function index(Request $request)
     {
-        $invoices = Invoice::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('customer')->get();
-        $bills = Bill::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('vendor')->get();
+        $invoices = Invoice::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('customer')->orderBy('created_at', 'desc')->get();
+        $bills = Bill::whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->with('vendor')->orderBy('created_at', 'desc')->get();
 
         $pnl = [];
 

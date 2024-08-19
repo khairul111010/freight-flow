@@ -119,13 +119,13 @@ class BankAccountsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showTransactions($id)
+    public function showTransactions(Request $request, $id)
     {
         try {
             return response()->json([
                 'success' => true,
                 'message' => 'Bank Account retrieved successfully',
-                'result' => BankAccounts::with('transactions.invoice.transactions', 'bank')->find($id)
+                'result' => BankAccounts::with('transactions.invoice', 'bank')->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->find($id)
             ], 200);
         } catch (Exception $e) {
             return response()->json([

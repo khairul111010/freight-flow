@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->float('amount');
+            $table->float('amount')->default(0);
+            $table->float('current_amount')->default(0);
             $table->string('transaction_type');
             $table->date('transaction_date');
             $table->boolean('is_debit')->default(false);
