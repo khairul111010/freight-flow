@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\ManualJournalResource;
+use App\Models\BankAccounts;
 use App\Models\Bill;
 use App\Models\ChartOfAccount;
+use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\Organization;
 use App\Models\Transactions;
+use App\Models\Vendor;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Exception;
@@ -55,13 +58,17 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        // dd('here');
         try {
             $organization = Organization::find(1);
-            $organization_invoice_prefix = $organization->invoice_prefix;
-            $organization_invoice_number = $organization->invoice_start_number;
 
-            if (is_null($organization_invoice_prefix) || is_null($organization_invoice_number)) {
+            if (!$organization) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Organization not found!',
+                ], 404);
+            }
+
+            if (is_null($organization->invoice_prefix) || is_null($organization->invoice_start_number)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Please update Organization Invoice Prefix or Number first!',
@@ -78,6 +85,15 @@ class InvoiceController extends Controller
             }
 
             if (
+                $request->bill_payment_method == 'cash' && $organization->opening_cash_balance < $request->bill_paid_amount
+            ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient balance in cash account!',
+                ], 400);
+            }
+
+            if (
                 $request->bill_payment_method == 'bank' && !$request->bill_bank_account_id
             ) {
                 return response()->json([
@@ -86,13 +102,48 @@ class InvoiceController extends Controller
                 ], 400);
             }
 
-            DB::transaction(function () use ($organization_invoice_prefix, $organization_invoice_number, $request) {
+            if (
+                $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
+            ) {
+                $bank_account = BankAccounts::find($request->bill_bank_account_id);
+                if (!$bank_account) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bank Account not found!',
+                    ], 404);
+                }
+
+                if($bank_account->opening_bank_balance < $request->bill_paid_amount) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Insufficient balance in bank account!',
+                    ], 400);
+                }
+            }
+
+            $customer = Customer::find($request->customer_id);
+            if (!$customer) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer not found!',
+                ], 404);
+            }
+
+            $vendor = Vendor::find($request->vendor_id);
+            if(!$vendor) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vendor not found!',
+                ], 404);
+            }
+
+            DB::transaction(function () use ($organization, $request) {
                 $total_invoice_count = Invoice::count();
-                $invoice_number = $organization_invoice_prefix . '-' . ($organization_invoice_number + $total_invoice_count);
+                $invoice_number = $organization->invoice_prefix . '-' . ($organization->invoice_start_number + $total_invoice_count);
 
                 $invoice = new Invoice();
                 $invoice->invoice_number = $invoice_number;
-                $invoice->invoice_issue_date = $request->invoice_issue_date;
+                $invoice->issue_date = $request->issue_date;
                 $invoice->invoice_due_date = $request->invoice_due_date;
                 $invoice->destination = $request->destination;
                 $invoice->master_air_way_bill = $request->master_air_way_bill;
@@ -103,23 +154,47 @@ class InvoiceController extends Controller
                 $invoice->chargeable_weight = $request->chargeable_weight;
                 $invoice->kg = $request->kg;
                 $invoice->invoice_rate = $request->invoice_rate;
-                $invoice->invoice_cgc = $request->invoice_cgc;
-                $invoice->invoice_dtc = $request->invoice_dtc;
-                $invoice->invoice_ait = $request->invoice_ait;
-                $invoice->invoice_vat = $request->invoice_vat;
+
+                $invoice->invoice_freight_amount = $invoice->chargeable_weight * $invoice->invoice_rate;
+
+                $invoice->thc = $request->thc;
+                $invoice->ssc = $request->ssc;
+                $invoice->cd = $request->cd;
+                $invoice->cgc = $request->cgc;
+                $invoice->dtc = $request->dtc;
+                $invoice->ait = $request->ait;
+                $invoice->ams = $request->ams;
+                $invoice->itt = $request->itt;
                 $invoice->others = $request->others;
+                $invoice->invoice_vat = $request->invoice_vat;
                 $invoice->invoice_total_usd = $request->invoice_total_usd;
-                $invoice->invoice_exchange_rate = $request->invoice_exchange_rate;
+                $invoice->exchange_rate = $request->exchange_rate;
 
                 $invoice->invoice_receivable_amount_bdt = $request->invoice_receivable_amount_bdt;
                 $invoice->invoice_received_amount = $request->invoice_received_amount;
 
-                $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
+                $invoice->invoice_discounted_amount = $request->invoice_discounted_amount ?? 0;
+                
+                $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount - $invoice->invoice_discounted_amount;
+
+
 
                 $invoice->invoice_note = $request->invoice_note;
                 // $invoice->currency = $request->currency;
                 $invoice->customer_id = $request->customer_id;
                 $invoice->chart_of_account_id = $request->invoice_chart_of_account_id;
+
+                if($request->invoice_payment_method == 'cash') {
+                    $organization->opening_cash_balance += $request->invoice_received_amount;
+
+                    $organization->save();
+                } else if($request->invoice_payment_method == 'bank') {
+                    $bank_account = BankAccounts::find($request->invoice_bank_account_id);
+                    $bank_account->opening_bank_balance += $request->invoice_received_amount;
+
+                    $bank_account->save();
+                }
+
                 // if (
                 //     $request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id
                 // ) {
@@ -169,7 +244,7 @@ class InvoiceController extends Controller
 
                 $bill = new Bill();
                 $bill->invoice_number = $invoice_number;
-                $bill->bill_issue_date = $request->bill_issue_date;
+                $bill->issue_date = $request->issue_date;
                 $bill->bill_due_date = $request->bill_due_date;
                 $bill->destination = $request->destination;
                 $bill->master_air_way_bill = $request->master_air_way_bill;
@@ -180,19 +255,20 @@ class InvoiceController extends Controller
                 $bill->chargeable_weight = $request->chargeable_weight;
                 $bill->bill_rate = $request->bill_rate;
 
-                $freight_amount = $bill->chargeable_weight * $bill->bill_rate;
-                $bill->bill_freight_amount = $freight_amount;
+                $bill->bill_freight_amount = $bill->chargeable_weight * $bill->bill_rate;
 
-                $bill->bill_thc = $request->bill_thc;
-                $bill->bill_ssc = $request->bill_ssc;
-                $bill->bill_cd = $request->bill_cd;
-                $bill->bill_cgc = $request->bill_cgc;
-                $bill->bill_ams = $request->bill_ams;
-                $bill->bill_itt = $request->bill_itt;
-                $bill->bill_total_usd = $request->bill_total_usd;
-                $bill->bill_ait = $request->bill_ait;
+                $bill->thc = $request->thc;
+                $bill->ssc = $request->ssc;
+                $bill->cd = $request->cd;
+                $bill->cgc = $request->cgc;
+                $bill->dtc = $request->dtc;
+                $bill->ait = $request->ait;
+                $bill->ams = $request->ams;
+                $bill->itt = $request->itt;
+                $bill->others = $request->others;
                 $bill->bill_vat = $request->bill_vat;
-                $bill->bill_exchange_rate = $request->bill_exchange_rate;
+                $bill->bill_total_usd = $request->bill_total_usd;
+                $bill->exchange_rate = $request->exchange_rate;
 
 
                 // if($request->bill_total_usd && $request->bill_exchange_rate) {
@@ -206,7 +282,9 @@ class InvoiceController extends Controller
                 $bill->bill_payable_bdt = $request->bill_payable_bdt;
                 $bill->bill_paid_amount = $request->bill_paid_amount;
 
-                $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount;
+                $bill->bill_discounted_amount = $request->bill_discounted_amount ?? 0;
+
+                $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount - $bill->bill_discounted_amount;
 
                 $bill->bill_note = $request->bill_note;
 
@@ -218,6 +296,17 @@ class InvoiceController extends Controller
                 // ) {
                 //     $bill->bill_bank_account_id = $request->bill_bank_account_id;
                 // }
+
+                if($request->bill_payment_method == 'cash') {
+                    $organization->opening_cash_balance -= $request->bill_paid_amount;
+
+                    $organization->save();
+                } else if($request->bill_payment_method == 'bank') {
+                    $bank_account = BankAccounts::find($request->bill_bank_account_id);
+                    $bank_account->opening_bank_balance -= $request->bill_paid_amount;
+
+                    $bank_account->save();
+                }
 
                 $bill->save();
 
@@ -362,6 +451,7 @@ class InvoiceController extends Controller
     public function updateInvoiceAmount(Request $request, $invoiceId)
     {
         try {
+
             $invoice = Invoice::findOrFail($invoiceId);
 
             if (!$invoice) {
@@ -371,9 +461,30 @@ class InvoiceController extends Controller
                 ], 404);
             }
 
+            if($request->invoice_payment_method == 'cash') {
+                $organization = Organization::find(1);
+                
+                $organization->opening_cash_balance += $request->invoice_received_amount;
+                $organization->save();    
+            }
+            else if ($request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id) {
+                $bank_account = BankAccounts::find($request->invoice_bank_account_id);
+
+                if (!$bank_account) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bank Account not found!',
+                    ], 404);
+                }
+
+                $bank_account->opening_bank_balance += $request->invoice_received_amount;
+                $bank_account->save();
+            }
+
+            
+
             // Update the received amount
             $invoice->invoice_received_amount += $request->invoice_received_amount;
-
             
 
             // Recalculate the due balance
@@ -473,13 +584,48 @@ class InvoiceController extends Controller
     public function updateBillAmount(Request $request, $billId)
     {
         try {
+            
             $bill = Bill::findOrFail($billId);
-
+            
             if (!$bill) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Bill not found!',
                 ], 404);
+            }
+            
+            if ($request->bill_payment_method == 'cash') {
+                $organization = Organization::find(1);
+
+                if ($organization->opening_cash_balance < $request->bill_paid_amount) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Insufficient balance in cash account!',
+                    ], 400);
+                }
+                $organization->opening_cash_balance -= $request->bill_paid_amount;
+                $organization->save();
+            } else if (
+                $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
+                ) {
+                $bank_account = BankAccounts::find($request->bill_bank_account_id);
+
+                if (!$bank_account) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Bank Account not found!',
+                    ], 404);
+                }
+
+                if($bank_account->opening_bank_balance < $request->bill_paid_amount) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Insufficient balance in bank account!',
+                    ], 400);
+                }
+
+                $bank_account->opening_bank_balance -= $request->bill_paid_amount;
+                $bank_account->save();
             }
 
             // Update the received amount
