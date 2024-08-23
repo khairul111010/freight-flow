@@ -29,7 +29,7 @@ class BankAccountsController extends Controller
             }
             return response()->json([
                 'success' => true,
-                'message' => 'Customers retrieved successfully',
+                'message' => 'Bank Accounts retrieved successfully',
                 'result' => $query->paginate(10)
             ], 200);
         } catch (Exception $e) {
@@ -50,7 +50,7 @@ class BankAccountsController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Customers retrieved successfully',
+                'message' => 'Bank Accounts retrieved successfully',
                 'result' => $query
             ], 200);
         } catch (Exception $e) {
@@ -75,11 +75,19 @@ class BankAccountsController extends Controller
     public function store(Request $request)
     {
         try {
+            if($request->opening_bank_balance < 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Opening bank balance cannot be negative',
+                ], 400);
+            }
+
             $bank_account = new BankAccounts();
             $bank_account->account_name = $request->account_name;
             $bank_account->account_number = $request->account_number;
             $bank_account->account_routing_number = $request->account_routing_number;
             $bank_account->branch = $request->branch;
+            $bank_account->opening_bank_balance = $request->opening_bank_balance;
             $bank_account->bank_id = $request->bank_id;
             $bank_account->save();
             return response()->json([
