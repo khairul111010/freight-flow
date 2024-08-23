@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('invoice_number');
-            $table->date('invoice_issue_date');
+            $table->date('issue_date');
             $table->date('invoice_due_date');
             $table->string('destination');
             $table->string('master_air_way_bill')->nullable();
@@ -25,16 +25,23 @@ return new class extends Migration
             $table->float('chargeable_weight')->nullable();
             $table->float('kg')->nullable();
             $table->float('invoice_rate')->nullable();
-            $table->float('invoice_cgc')->nullable();
-            $table->float('invoice_dtc')->nullable();
-            $table->float('invoice_ait')->nullable();
-            $table->float('invoice_vat')->nullable();
+            $table->float('invoice_freight_amount')->nullable();
+            $table->float('thc')->nullable();
+            $table->float('ssc')->nullable();
+            $table->float('cd')->nullable();
+            $table->float('cgc')->nullable();
+            $table->float('dtc')->nullable();
+            $table->float('ait')->nullable();
+            $table->float('ams')->nullable();
+            $table->float('itt')->nullable();
             $table->float('others')->nullable();
+            $table->float('invoice_vat')->nullable();
             $table->float('invoice_total_usd')->nullable();
-            $table->float('invoice_exchange_rate')->default(0);
+            $table->float('exchange_rate')->default(0);
             $table->float('invoice_receivable_amount_bdt')->default(0);
             $table->float('invoice_received_amount')->default(0);
             $table->float('invoice_due_balance')->default(0);
+            $table->float('invoice_discounted_amount')->default(0)->nullable();
             $table->text('invoice_note')->nullable();
             // $table->string('currency')->default('bdt');
             $table->foreignId('customer_id')->constrained('customers')->onUpdate('cascade')->onDelete('cascade');

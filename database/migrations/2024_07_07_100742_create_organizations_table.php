@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->string('invoice_prefix')->nullable();
             $table->bigInteger('invoice_start_number')->nullable();
+            $table->bigInteger('opening_cash_balance')->default(0);
             $table->timestamps();
         });
     }

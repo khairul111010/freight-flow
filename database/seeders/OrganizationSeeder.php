@@ -19,6 +19,7 @@ class OrganizationSeeder extends Seeder
             'description' => 'SONIKA BD SHIPPERS LTD',
             'address' => 'Uttara, Dhaka',
             'currency' => 'BDT',
+            'opening_cash_balance' => 0,
         ]);
 
         // DB::table('Organization')->insert([

@@ -113,6 +113,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::prefix('organizations')->group(function () {
         Route::get('/', [OrganizationController::class, 'index']);
         // Route::post('/', [OrganizationController::class, 'store']);
+        Route::get('/transactions/cash', [OrganizationController::class, 'showTransactions']);
         Route::post('/{id}', [OrganizationController::class, 'update']);
         // Route::delete('/{id}', [OrganizationController::class, 'destroy']);
     });
