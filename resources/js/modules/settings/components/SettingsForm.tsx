@@ -17,6 +17,7 @@ const initialValues = {
     currency: "",
     invoice_prefix: "",
     invoice_start_number: null,
+    opening_cash_balance: 0,
 };
 
 const validationSchema = object().shape({
@@ -37,6 +38,7 @@ const validationSchema = object().shape({
     invoice_start_number: number().required(
         "Invoice Start Number is required."
     ),
+    opening_cash_balance: number().required("Balance is required."),
 });
 
 const SettingsForm = () => {
@@ -79,6 +81,7 @@ const SettingsForm = () => {
                 currency: data.currency,
                 invoice_prefix: data.invoice_prefix,
                 invoice_start_number: data.invoice_start_number,
+                opening_cash_balance: data.opening_cash_balance,
             });
         }
     }, [data]);
@@ -121,6 +124,11 @@ const SettingsForm = () => {
                             type="number"
                             name="invoice_start_number"
                             label="Invoice Start Number"
+                        />
+                        <TextInput
+                            type="number"
+                            name="opening_cash_balance"
+                            label="Balance"
                         />
 
                         <div className="flex items-center justify-center">

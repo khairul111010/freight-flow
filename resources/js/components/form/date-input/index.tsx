@@ -100,7 +100,7 @@ const DateInput: FC<Props> = ({
                                     meta &&
                                     meta.error &&
                                     meta.touched &&
-                                    "bg-secondary/5 border-secondary"
+                                    "border-red-500 focus:border-red-500"
                                 } border-2 border-gray-200 rounded-[6px] focus:border-primary`,
                                 {
                                     "px-4 font-medium text-sm": true,

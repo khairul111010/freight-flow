@@ -20,6 +20,7 @@ const initialValues = {
     account_name: "",
     account_number: "",
     account_routing_number: "",
+    opening_bank_balance: 0,
     branch: "",
     bank_id: null,
 };
@@ -28,6 +29,7 @@ const validationSchema = object().shape({
     account_name: string().required("Account Name is required."),
     account_number: string().required("Account Number is required."),
     account_routing_number: string().required("Routing Number is required."),
+    opening_bank_balance: number().required("Opening Balance is required."),
     branch: string().required("Branch is required."),
     bank_id: number().required("Bank is required."),
 });
@@ -39,15 +41,19 @@ const BankAccountForm: FC<Props> = ({ editData, onSuccess }) => {
     const [updateBankAccount, { isLoading: updating }] =
         useUpdateBankAccountMutation();
     const handleSubmit = (values: any) => {
+        const _values = {
+            ...values,
+            opening_bank_balance: Number(values.opening_bank_balance),
+        };
         if (editData) {
-            updateBankAccount({ id: values.id, body: values }).then(
+            updateBankAccount({ id: values.id, body: _values }).then(
                 (res: any) => {
                     toast.success("Updated Successfully");
                     navigate(AppRoutesEnum.BANK);
                 }
             );
         } else {
-            createBankAccount(values).then((res: any) => {
+            createBankAccount(_values).then((res: any) => {
                 toast.success("Created Successfully");
                 navigate(AppRoutesEnum.BANK);
             });
@@ -78,6 +84,10 @@ const BankAccountForm: FC<Props> = ({ editData, onSuccess }) => {
                         <TextInput
                             name="account_routing_number"
                             label="Account Routing Number"
+                        />
+                        <TextInput
+                            name="opening_bank_balance"
+                            label="Opening Balance"
                         />
                         <TextInput name="branch" label="Branch" />
                         <SelectInput

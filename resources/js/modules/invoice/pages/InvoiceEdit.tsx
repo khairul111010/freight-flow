@@ -33,9 +33,7 @@ const InvoiceEdit = () => {
                     <div className="flex items-center gap-8">
                         <div>
                             <div className="italic">Issued Date</div>
-                            <div className="font-bold">
-                                {data?.invoice_issue_date}
-                            </div>
+                            <div className="font-bold">{data?.issue_date}</div>
                         </div>
                         <div>
                             <div className="italic">Due Date</div>
@@ -47,7 +45,7 @@ const InvoiceEdit = () => {
                 </div>
 
                 <div className="mt-10">
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-end justify-between">
                         <div className="font-bold text-base italic">
                             Service Details
                         </div>
@@ -83,72 +81,17 @@ const InvoiceEdit = () => {
                     <table className="border mt-4 w-full">
                         <thead>
                             <tr className="divide-x border-b italic">
+                                <th className="p-2">SL</th>
                                 <th className="p-2">Description</th>
                                 <th className="p-2">Amount</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y">
                             <tr className="divide-x">
+                                <th className="p-2 text-center">1</th>
                                 <th className="p-2 text-left">MAWB Fee</th>
                                 <th className="p-2 text-right">
                                     {data?.master_air_way_bill_fee}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice Rate</th>
-                                <th className="p-2 text-right">
-                                    {data?.invoice_rate}
-                                </th>
-                            </tr>
-
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice AIT</th>
-                                <th className="p-2 text-right">
-                                    {data?.invoice_ait}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice CGC</th>
-                                <th className="p-2 text-right">
-                                    {data?.invoice_cgc}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Invoice DTC</th>
-                                <th className="p-2 text-right">
-                                    {data?.invoice_dtc}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Others</th>
-                                <th className="p-2 text-right">
-                                    {data?.others}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">VAT</th>
-                                <th className="p-2 text-right">
-                                    {data?.invoice_vat}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th className="p-2 text-left">TOTAL (USD)</th>
-                                <th className="p-2 text-right">
-                                    = {data?.invoice_total_usd}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th className="p-2 text-left">Exchange Rate</th>
-                                <th className="p-2 text-right">
-                                    = {data?.invoice_exchange_rate}
-                                </th>
-                            </tr>
-                            <tr>
-                                <th className="p-2 text-left">TOTAL (BDT)</th>
-                                <th className="p-2 text-right">
-                                    {data?.invoice_total_usd} x{" "}
-                                    {data?.invoice_exchange_rate} ={" "}
-                                    {data?.invoice_receivable_amount_bdt}
                                 </th>
                             </tr>
                         </tbody>

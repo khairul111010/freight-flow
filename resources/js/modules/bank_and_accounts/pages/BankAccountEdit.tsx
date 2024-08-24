@@ -7,6 +7,7 @@ import {
     useLazyGetBankQuery,
 } from "../../../store/apis/bankApi";
 import BankAccountForm from "../components/BankAccountForm";
+import BackButton from "../../../components/button/BackButton";
 
 const BankAccountEdit = () => {
     const { id } = useParams();
@@ -29,6 +30,7 @@ const BankAccountEdit = () => {
 
     return (
         <div className="w-[800px] mx-auto">
+            <BackButton />
             <div className="text-center my-3 text-xl font-semibold">
                 Bank Account Edit Form
             </div>

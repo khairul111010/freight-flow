@@ -17,40 +17,36 @@ import { useGetAllVendorsQuery } from "../../../store/apis/vendorApi";
 import { useCreateInvoiceMutation } from "../../../store/apis/invoiceApi";
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
-    master_air_way_bill: "",
+    issue_date: "",
     destination: "",
+    master_air_way_bill: "",
     master_air_way_bill_fee: 0,
+    unit: 0,
     cartoon_amount: 0,
     gross_weight: 0,
     chargeable_weight: 0,
-    unit: 0,
     kg: 0,
-    invoice_issue_date: "",
-    bill_issue_date: "",
     invoice_due_date: "",
     bill_due_date: "",
     invoice_rate: 0,
     bill_rate: 0,
-    invoice_cgc: 0,
-    bill_cgc: 0,
-    invoice_ait: 0,
-    bill_ait: 0,
+    thc: 0,
+    ssc: 0,
+    cd: 0,
+    cgc: 0,
+    dtc: 0,
+    ait: 0,
+    ams: 0,
+    itt: 0,
+    others: 0,
+    exchange_rate: 0,
     invoice_vat: 0,
     bill_vat: 0,
-    invoice_dtc: 0,
-    bill_thc: 0,
-    others: 0,
-    bill_ssc: 0,
     invoice_total_usd: 0,
-    bill_cd: 0,
-    invoice_exchange_rate: 0,
-    bill_ams: 0,
     invoice_receivable_amount_bdt: 0,
-    bill_itt: 0,
     invoice_received_amount: 0,
     bill_total_usd: 0,
     invoice_note: "",
-    bill_exchange_rate: 0,
     customer_id: null,
     bill_payable_bdt: 0,
     bill_paid_amount: 0,
@@ -66,46 +62,40 @@ const initialValues = {
 };
 
 const validationSchema = object().shape({
-    master_air_way_bill: string().required("MAWB is required"),
+    issue_date: string().required("Issue Date is required"),
     destination: string().required("Description is required"),
+    master_air_way_bill: string().required("MAWB is required"),
     master_air_way_bill_fee: number().required("MAWB Fee is required"),
+    unit: number().required("Unit is required"),
     cartoon_amount: number().required("Cartoon Amount is required"),
     gross_weight: number().required("Gross Weight is required"),
     chargeable_weight: number().required("Chargeable Weight is required"),
-    unit: number().required("Unit is required"),
     kg: number().required("Kg is required"),
-    invoice_issue_date: string().required("Issue Date is required"),
-    bill_issue_date: string().required("Bill Date is required"),
     invoice_due_date: string().required("Due Date is required"),
     bill_due_date: string().required("Due Date is required"),
     invoice_rate: number().required("Invoice Rate is required"),
     bill_rate: number().required("Bill Rate is required"),
-    invoice_cgc: number().required("Invoice CGC is required"),
-    bill_cgc: number().required("Bill CGC is required"),
-    invoice_ait: number().required("Invoice AIT is required"),
-    bill_ait: number().required("Bill AIT is required"),
+    thc: number().required("THC is required"),
+    ssc: number().required("SSC is required"),
+    cd: number().required("CD is required"),
+    cgc: number().required("CGC is required"),
+    dtc: number().required("DTC is required"),
+    ait: number().required("AIT is required"),
+    ams: number().required("AMS is required"),
+    itt: number().required("IIT is required"),
+    others: number().required("Others is required"),
+    exchange_rate: number().required("Exchange Rate is required"),
     invoice_vat: number().required("Invoice VAT is required"),
     bill_vat: number().required("Bill VAT is required"),
-    invoice_dtc: number().required("Invoice DTC is required"),
-    bill_thc: number().required("Bill THC is required"),
-    others: number().required("Others is required"),
-    bill_ssc: number().required("Bill SSC is required"),
     invoice_total_usd: number().required("Invoice Total USD is required"),
-    bill_cd: number().required("Bill CD is required"),
-    invoice_exchange_rate: number().required(
-        "Invoice Exchange Rate is required"
-    ),
-    bill_ams: number().required("Bill AMS is required"),
     invoice_receivable_amount_bdt: number().required(
         "Invoice Receivable Amount BDT is required"
     ),
-    bill_itt: number().required("Bill ITT is required"),
     invoice_received_amount: number().required(
         "Invoice Receivable Amount is required"
     ),
     bill_total_usd: number().required("Bill Total USD is required"),
     invoice_note: string().required("Invoice Notes is required"),
-    bill_exchange_rate: number().required("Bill Exchange Rate is required"),
     customer_id: number().required("Select a Customer"),
     bill_payable_bdt: number().required("Bill Payable BDT is required"),
     bill_paid_amount: number().required("Bill Paid Amount is required"),
@@ -127,79 +117,93 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
         const submitData = {
             ...values,
             master_air_way_bill_fee: Number(values.master_air_way_bill_fee),
-            invoice_exchange_rate: Number(values.invoice_exchange_rate),
-            cartoon_amount: Number(values.cartoon_amount),
-            gross_weight: Number(values.gross_weight),
             chargeable_weight: Number(values.chargeable_weight),
-            unit: Number(values.unit),
-            kg: Number(values.kg),
             invoice_rate: Number(values.invoice_rate),
             bill_rate: Number(values.bill_rate),
-            invoice_cgc: Number(values.invoice_cgc),
-            bill_cgc: Number(values.bill_cgc),
-            invoice_ait: Number(values.invoice_ait),
-            bill_ait: Number(values.bill_ait),
+            exchange_rate: Number(values.exchange_rate),
+            cartoon_amount: Number(values.cartoon_amount),
+            gross_weight: Number(values.gross_weight),
+            unit: Number(values.unit),
+            kg: Number(values.kg),
+
+            thc: Number(values.thc),
+            ssc: Number(values.ssc),
+            cd: Number(values.cd),
+            cgc: Number(values.cgc),
+            dtc: Number(values.dtc),
+            ait: Number(values.ait),
+            ams: Number(values.ams),
+            itt: Number(values.itt),
+            others: Number(values.others),
+
             invoice_vat: Number(values.invoice_vat),
             bill_vat: Number(values.bill_vat),
-            invoice_dtc: Number(values.invoice_dtc),
-            others: Number(values.others),
+
             invoice_total_usd:
                 Number(values.chargeable_weight) * Number(values.invoice_rate) +
-                Number(values.invoice_cgc) +
-                Number(values.invoice_ait) +
-                Number(values.invoice_vat) +
-                Number(values.invoice_dtc) +
+                Number(values.thc) +
+                Number(values.ssc) +
+                Number(values.cd) +
+                Number(values.cgc) +
+                Number(values.dtc) +
+                Number(values.ait) +
+                Number(values.ams) +
+                Number(values.itt) +
                 Number(values.others) +
+                Number(values.invoice_vat) +
                 Number(values.master_air_way_bill_fee),
+
             invoice_receivable_amount_bdt:
                 (Number(values.chargeable_weight) *
                     Number(values.invoice_rate) +
-                    Number(values.invoice_cgc) +
-                    Number(values.invoice_ait) +
-                    Number(values.invoice_vat) +
-                    Number(values.invoice_dtc) +
+                    Number(values.thc) +
+                    Number(values.ssc) +
+                    Number(values.cd) +
+                    Number(values.cgc) +
+                    Number(values.dtc) +
+                    Number(values.ait) +
+                    Number(values.ams) +
+                    Number(values.itt) +
                     Number(values.others) +
+                    Number(values.invoice_vat) +
                     Number(values.master_air_way_bill_fee)) *
-                Number(values.invoice_exchange_rate),
+                Number(values.exchange_rate),
+
             invoice_received_amount: Number(values.invoice_received_amount),
-            bill_thc: Number(values.bill_thc),
-            bill_ssc: Number(values.bill_ssc),
-            bill_cd: Number(values.bill_cd),
-            bill_ams: Number(values.bill_ams),
-            bill_itt: Number(values.bill_itt),
+
             bill_total_usd:
                 Number(values.chargeable_weight) * Number(values.bill_rate) +
-                Number(values.bill_cgc) +
-                Number(values.bill_ait) +
+                Number(values.thc) +
+                Number(values.ssc) +
+                Number(values.cd) +
+                Number(values.cgc) +
+                Number(values.dtc) +
+                Number(values.ait) +
+                Number(values.ams) +
+                Number(values.itt) +
+                Number(values.others) +
                 Number(values.bill_vat) +
-                Number(values.bill_thc) +
-                Number(values.bill_ssc) +
-                Number(values.bill_cd) +
-                Number(values.bill_ams) +
-                Number(values.bill_itt) +
                 Number(values.master_air_way_bill_fee),
-            bill_exchange_rate: Number(values.bill_exchange_rate),
+
             bill_payable_bdt:
                 (Number(values.chargeable_weight) * Number(values.bill_rate) +
-                    Number(values.bill_cgc) +
-                    Number(values.bill_ait) +
+                    Number(values.thc) +
+                    Number(values.ssc) +
+                    Number(values.cd) +
+                    Number(values.cgc) +
+                    Number(values.dtc) +
+                    Number(values.ait) +
+                    Number(values.ams) +
+                    Number(values.itt) +
+                    Number(values.others) +
                     Number(values.bill_vat) +
-                    Number(values.bill_thc) +
-                    Number(values.bill_ssc) +
-                    Number(values.bill_cd) +
-                    Number(values.bill_ams) +
-                    Number(values.bill_itt) +
                     Number(values.master_air_way_bill_fee)) *
-                Number(values.bill_exchange_rate),
+                Number(values.exchange_rate),
+
             bill_paid_amount: Number(values.bill_paid_amount),
         };
 
         if (editData) {
-            // updateCustomer({ id: values.id, body: values }).then((res: any) => {
-            //     console.log(res);
-            //     toast.success("Updated Successfully");
-            //     navigate(AppRoutesEnum.CUSTOMERS);
-            // });
         } else {
             createInvoice(submitData).then((res: any) => {
                 console.log(res);
@@ -216,37 +220,70 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
     }, [editData]);
 
     const calculateTotal = (e: any) => {
-        const { value, name } = e.target;
+        const { name } = e.target;
+        const value = e.target.value === "" ? 0 : e.target.value;
+
         const formik = formikRef.current;
+
+        if (value === 0) {
+            formik?.setFieldValue(name, 0);
+        }
+
         if (formik) {
             const updatedValues = {
                 ...formik.values,
-                [name]: value,
+                [name]: isNaN(value) ? 0 : Number(value),
             };
 
             const {
-                chargeable_weight: chargeableWeight,
-                invoice_rate: rate,
-                invoice_cgc: cgc,
-                invoice_vat: vat,
-                invoice_dtc: dtc,
-                others: other,
-                invoice_exchange_rate: exchangeRate,
-                master_air_way_bill_fee: masterAirWayBillFee,
+                master_air_way_bill_fee,
+                chargeable_weight,
+                invoice_rate,
+                bill_rate,
+                thc,
+                ssc,
+                cd,
+                cgc,
+                dtc,
+                ait,
+                ams,
+                itt,
+                others,
+                exchange_rate,
+                invoice_vat,
+                bill_vat,
             } = updatedValues;
 
-            const totalUsd =
-                Number(chargeableWeight) * Number(rate) +
+            const total =
+                Number(master_air_way_bill_fee) +
+                Number(thc) +
+                Number(ssc) +
+                Number(cd) +
                 Number(cgc) +
-                Number(vat) +
                 Number(dtc) +
-                Number(other) +
-                Number(masterAirWayBillFee);
+                Number(ait) +
+                Number(ams) +
+                Number(itt) +
+                Number(others);
 
-            formik.setFieldValue("invoice_total_usd", Number(totalUsd));
+            const invoiceTotal =
+                total +
+                Number(invoice_vat) +
+                Number(chargeable_weight) * Number(invoice_rate);
+            const billTotal =
+                total +
+                Number(bill_vat) +
+                Number(chargeable_weight) * Number(bill_rate);
+
+            formik.setFieldValue("invoice_total_usd", invoiceTotal);
             formik.setFieldValue(
                 "invoice_receivable_amount_bdt",
-                Number(totalUsd) * Number(exchangeRate)
+                Number(invoiceTotal) * Number(exchange_rate)
+            );
+            formik.setFieldValue("bill_total_usd", billTotal);
+            formik.setFieldValue(
+                "bill_payable_bdt",
+                Number(billTotal) * Number(exchange_rate)
             );
         }
     };
@@ -258,7 +295,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
             innerRef={formikRef}
             onSubmit={handleSubmit}
         >
-            {({ values }) => {
+            {() => {
                 return (
                     <Form className="min-w-[600px] bg-gray-50 p-4 border mx-4 rounded-lg text-gray-600">
                         <div>
@@ -266,19 +303,28 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                 General Information
                             </div>
                             <div>
-                                <TextInput
-                                    name="master_air_way_bill"
-                                    label="MAWB"
+                                <DateInput
+                                    name="issue_date"
+                                    label="Issue Date"
                                 />
                                 <TextInput
                                     name="destination"
                                     label="Destination"
                                 />
                                 <TextInput
+                                    name="master_air_way_bill"
+                                    label="MAWB"
+                                />
+                                <TextInput
                                     type="number"
                                     name="master_air_way_bill_fee"
                                     label="MAWB Fee"
                                     onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="unit"
+                                    label="Unit"
                                 />
                                 <TextInput
                                     type="number"
@@ -296,12 +342,68 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     label="Chargeable Weight"
                                     onChange={calculateTotal}
                                 />
+                                <TextInput type="number" name="kg" label="Kg" />
+
                                 <TextInput
                                     type="number"
-                                    name="unit"
-                                    label="Unit"
+                                    name="thc"
+                                    label="THC"
+                                    onChange={calculateTotal}
                                 />
-                                <TextInput type="number" name="kg" label="Kg" />
+                                <TextInput
+                                    type="number"
+                                    name="ssc"
+                                    label="SSC"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="cd"
+                                    label="CD"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="cgc"
+                                    label="CGC"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="dtc"
+                                    label="DTC"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="ait"
+                                    label="AIT"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="ams"
+                                    label="AMS"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="itt"
+                                    label="ITT"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="others"
+                                    label="Others"
+                                    onChange={calculateTotal}
+                                />
+                                <TextInput
+                                    type="number"
+                                    name="exchange_rate"
+                                    label="Exchange Rate"
+                                    onChange={calculateTotal}
+                                />
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
@@ -310,10 +412,6 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     Invoice
                                 </div>
 
-                                <DateInput
-                                    name="invoice_issue_date"
-                                    label="Issue Date"
-                                />
                                 <DateInput
                                     name="invoice_due_date"
                                     label="Due Date"
@@ -325,18 +423,6 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     label="Invoice Rate"
                                     onChange={calculateTotal}
                                 />
-                                <TextInput
-                                    type="number"
-                                    name="invoice_cgc"
-                                    label="Invoice CGC"
-                                    onChange={calculateTotal}
-                                />
-                                <TextInput
-                                    type="number"
-                                    name="invoice_ait"
-                                    label="Invoice AIT"
-                                    onChange={calculateTotal}
-                                />
 
                                 <TextInput
                                     type="number"
@@ -344,34 +430,19 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     label="Invoice VAT"
                                     onChange={calculateTotal}
                                 />
-                                <TextInput
-                                    type="number"
-                                    name="invoice_dtc"
-                                    label="Invoice DTC"
-                                    onChange={calculateTotal}
-                                />
 
-                                <TextInput
-                                    type="number"
-                                    name="others"
-                                    label="Others"
-                                    onChange={calculateTotal}
-                                />
                                 <TextInput
                                     type="number"
                                     name="invoice_total_usd"
                                     label="Invoice Total USD"
+                                    disabled
                                 />
-                                <TextInput
-                                    type="number"
-                                    name="invoice_exchange_rate"
-                                    label="Invoice Exchange Rate"
-                                    onChange={calculateTotal}
-                                />
+
                                 <TextInput
                                     type="number"
                                     name="invoice_receivable_amount_bdt"
                                     label="Invoice Receivable Amount BDT"
+                                    disabled
                                 />
                                 <TextInput
                                     type="number"
@@ -403,10 +474,6 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     </div>
 
                                     <DateInput
-                                        name="bill_issue_date"
-                                        label="Issue Date"
-                                    />
-                                    <DateInput
                                         name="bill_due_date"
                                         label="Due Date"
                                     />
@@ -415,63 +482,28 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                         type="number"
                                         name="bill_rate"
                                         label="Bill Rate"
+                                        onChange={calculateTotal}
                                     />
-                                    <TextInput
-                                        type="number"
-                                        name="bill_cgc"
-                                        label="Bill CGC"
-                                    />
-                                    <TextInput
-                                        type="number"
-                                        name="bill_ait"
-                                        label="Bill AIT"
-                                    />
+
                                     <TextInput
                                         type="number"
                                         name="bill_vat"
                                         label="Bill VAT"
-                                    />
-                                    <TextInput
-                                        type="number"
-                                        name="bill_thc"
-                                        label="Bill THC"
-                                    />
-                                    <TextInput
-                                        type="number"
-                                        name="bill_ssc"
-                                        label="Bill SSC"
-                                    />
-                                    <TextInput
-                                        type="number"
-                                        name="bill_cd"
-                                        label="Bill CD"
+                                        onChange={calculateTotal}
                                     />
 
-                                    <TextInput
-                                        type="number"
-                                        name="bill_ams"
-                                        label="Bill AMS"
-                                    />
-                                    <TextInput
-                                        type="number"
-                                        name="bill_itt"
-                                        label="Bill ITT"
-                                    />
                                     <TextInput
                                         type="number"
                                         name="bill_total_usd"
                                         label="Bill Total USD"
+                                        disabled
                                     />
 
                                     <TextInput
                                         type="number"
-                                        name="bill_exchange_rate"
-                                        label="Bill Exchange Rate"
-                                    />
-                                    <TextInput
-                                        type="number"
                                         name="bill_payable_bdt"
                                         label="Bill Payable BDT"
+                                        disabled
                                     />
                                     <TextInput
                                         type="number"

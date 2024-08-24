@@ -82,19 +82,10 @@ const Invoice = () => {
                             stripedRows
                         >
                             <Column
-                                header="SL"
-                                body={(rowData, { rowIndex }) => {
-                                    return <>{rowIndex + 1}</>;
-                                }}
-                            />
-                            <Column
                                 field="invoice_number"
                                 header="Invoice Number"
                             ></Column>
-                            <Column
-                                field="invoice_issue_date"
-                                header="Issued"
-                            ></Column>
+                            <Column field="issue_date" header="Issued"></Column>
                             <Column
                                 field="invoice_due_date"
                                 header="Due"
@@ -149,47 +140,59 @@ const Invoice = () => {
                                 }}
                             ></Column>
                             <Column
-                                field="invoice_ait"
+                                field="ait"
                                 header="AIT"
                                 body={(rowData) => {
-                                    return (
-                                        <>
-                                            {rowData.invoice_ait.toLocaleString()}
-                                        </>
-                                    );
+                                    return <>{rowData.ait.toLocaleString()}</>;
                                 }}
                             ></Column>
                             <Column
-                                field="invoice_cgc"
+                                field="ams"
+                                header="AMS"
+                                body={(rowData) => {
+                                    return <>{rowData.ams.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="cd"
+                                header="CD"
+                                body={(rowData) => {
+                                    return <>{rowData.cd.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="cgc"
                                 header="CGC"
                                 body={(rowData) => {
-                                    return (
-                                        <>
-                                            {rowData.invoice_cgc.toLocaleString()}
-                                        </>
-                                    );
+                                    return <>{rowData.cgc.toLocaleString()}</>;
                                 }}
                             ></Column>
                             <Column
-                                field="invoice_dtc"
+                                field="dtc"
                                 header="DTC"
                                 body={(rowData) => {
-                                    return (
-                                        <>
-                                            {rowData.invoice_dtc.toLocaleString()}
-                                        </>
-                                    );
+                                    return <>{rowData.dtc.toLocaleString()}</>;
                                 }}
                             ></Column>
                             <Column
-                                field="invoice_vat"
-                                header="VAT"
+                                field="itt"
+                                header="ITT"
                                 body={(rowData) => {
-                                    return (
-                                        <>
-                                            {rowData.invoice_vat.toLocaleString()}
-                                        </>
-                                    );
+                                    return <>{rowData.itt.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="ssc"
+                                header="SSC"
+                                body={(rowData) => {
+                                    return <>{rowData.ssc.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="thc"
+                                header="THC"
+                                body={(rowData) => {
+                                    return <>{rowData.thc.toLocaleString()}</>;
                                 }}
                             ></Column>
                             <Column
@@ -205,6 +208,18 @@ const Invoice = () => {
                                 }}
                             ></Column>
                             <Column
+                                field="invoice_vat"
+                                header="VAT"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.invoice_vat.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+
+                            <Column
                                 field="invoice_total_usd"
                                 header="TTL USD"
                                 body={(rowData) => {
@@ -216,12 +231,12 @@ const Invoice = () => {
                                 }}
                             ></Column>
                             <Column
-                                field="invoice_exchange_rate"
+                                field="exchange_rate"
                                 header="Ex. Rate"
                                 body={(rowData) => {
                                     return (
                                         <>
-                                            {rowData.invoice_exchange_rate.toLocaleString()}
+                                            {rowData.exchange_rate.toLocaleString()}
                                         </>
                                     );
                                 }}

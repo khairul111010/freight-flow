@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,7 +16,7 @@ return new class extends Migration
             $table->string('account_number')->unique();
             $table->string('account_routing_number');
             $table->string('branch')->nullable();
-            $table->bigInteger('opening_bank_balance')->default(0);
+            $table->double('opening_bank_balance')->default(0);
             $table->foreignId('bank_id')->constrained('banks')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

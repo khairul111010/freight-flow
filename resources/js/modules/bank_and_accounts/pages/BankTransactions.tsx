@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
 import Spinner from "../../../components/preloader/Spinner";
 import { useLazyGetBankAccountTransactionsQuery } from "../../../store/apis/bankApi";
+import BackButton from "../../../components/button/BackButton";
 
 const BankTransactions = () => {
     const [tableData, setTableData] = useState([]);
@@ -49,11 +50,14 @@ const BankTransactions = () => {
     return (
         <div>
             <div className="flex items-center justify-between">
-                <div className="w-fit">
-                    <SeparatedDateInput
-                        onChange={(val: any) => setDate(val)}
-                        value={date}
-                    />
+                <div className="flex flex-col gap-2">
+                    <BackButton />
+                    <div className="w-fit">
+                        <SeparatedDateInput
+                            onChange={(val: any) => setDate(val)}
+                            value={date}
+                        />
+                    </div>
                 </div>
                 <div>
                     <div>
@@ -66,6 +70,12 @@ const BankTransactions = () => {
                         Account Number:{" "}
                         <span className="font-extrabold">
                             {data?.account_number}
+                        </span>
+                    </div>
+                    <div>
+                        Balance:{" "}
+                        <span className="font-extrabold">
+                            {data?.opening_bank_balance.toLocaleString()}
                         </span>
                     </div>
                 </div>
