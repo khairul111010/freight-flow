@@ -29,6 +29,7 @@ export enum  AppRoutesEnum {
     BILL_ADD = '/bill/add',
     BILL_EDIT = '/bill/edit/:id',
     SETTINGS = '/settings',
+    CASH = '/cash',
 }
 
 export enum ErrorRoutesEnum {

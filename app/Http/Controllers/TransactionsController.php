@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transactions;
+use Exception;
 use Illuminate\Http\Request;
 
 class TransactionsController extends Controller
@@ -37,6 +38,25 @@ class TransactionsController extends Controller
     public function show(Transactions $transactions)
     {
         //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showCashTransaction(Request $request)
+    {
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Cash transactions retrieved successfully',
+                'result' => Transactions::with('invoice', 'bill')->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->where('payment_method', 'cash')->get()
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
     }
 
     /**

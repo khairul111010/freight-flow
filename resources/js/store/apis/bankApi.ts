@@ -1,7 +1,7 @@
 import { baseApi } from ".";
 
 const bankApi = baseApi
-    .enhanceEndpoints({ addTagTypes: ["Bank"] })
+    .enhanceEndpoints({ addTagTypes: ["Bank","Cash"] })
     .injectEndpoints({
         endpoints: (builder) => ({
             getBanks: builder.query<any, void>({
@@ -56,6 +56,13 @@ const bankApi = baseApi
                 providesTags: ["Bank"],
                 transformResponse: (response: any) => response.result,
             }),
+            getCashTransactions: builder.query<any, any>({
+                query: (pagination) => `/cash/transactions?month=${
+                        pagination.month || new Date().getMonth() + 1
+                    }&year=${pagination.year || new Date().getFullYear()}`,
+                providesTags: ["Cash"],
+                transformResponse: (response: any) => response.result,
+            }),
             createBankAccount: builder.mutation({
                 query: (body) => ({
                     url: `bank-account`,
@@ -76,6 +83,8 @@ const bankApi = baseApi
     });
 
 export const {
+    useGetCashTransactionsQuery,
+    useLazyGetCashTransactionsQuery,
     useGetBankAccountTransactionsQuery,
     useLazyGetBankAccountTransactionsQuery,
     useGetAllBankAccountsQuery,

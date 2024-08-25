@@ -1,4 +1,4 @@
-import { IconBuildingBank, IconClipboardText, IconCoins, IconPlane, IconSettings, IconUsers } from "@tabler/icons-react"
+import { IconBuildingBank, IconClipboardText, IconCoin, IconCoins, IconPlane, IconSettings, IconUsers } from "@tabler/icons-react"
 import { MenuItemType } from "../components/sidebar/MenuItem"
 import { AppRoutesEnum } from "../enums/routeEnums"
 
@@ -44,6 +44,12 @@ const sidebarMenuConfig: MenuItemType[] = [
         name: 'Bank and Accounts',
         path: AppRoutesEnum.BANK,
         icon: IconBuildingBank,
+        requiredPermissions: []
+    },       
+    {
+        name: 'Cash',
+        path: AppRoutesEnum.CASH,
+        icon: IconCoin,
         requiredPermissions: []
     },       
     {

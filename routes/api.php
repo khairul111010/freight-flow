@@ -10,6 +10,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManualJournalController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ProfitAndLossController;
+use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
 use App\Models\Bank;
@@ -108,6 +109,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/transactions/{id}', [BankAccountsController::class, 'showTransactions']);
         Route::patch('/{id}', [BankAccountsController::class, 'update']);
         Route::delete('/{id}', [BankAccountsController::class, 'destroy']);
+    });
+
+    Route::prefix('cash')->group(function () {
+        Route::get('/transactions', [TransactionsController::class, 'showCashTransaction']);
     });
 
     Route::prefix('organizations')->group(function () {
