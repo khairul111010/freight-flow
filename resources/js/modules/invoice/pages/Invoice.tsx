@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
 
-import { IconEye, IconFileDownload } from "@tabler/icons-react";
+import { IconEye } from "@tabler/icons-react";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
@@ -268,17 +268,8 @@ const Invoice = () => {
                                                 <IconEye />
                                             </Link>
                                             {/* <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
-                                                <IconTrash />
-                                            </div> */}
-                                            <div
-                                                title="Download"
-                                                onClick={() =>
-                                                    handleDownload(rowData.id)
-                                                }
-                                                className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
-                                            >
                                                 <IconFileDownload />
-                                            </div>
+                                            </div> */}
                                         </div>
                                     );
                                 }}

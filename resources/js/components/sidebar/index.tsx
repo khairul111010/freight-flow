@@ -1,9 +1,10 @@
 import MetisMenu from "@metismenu/react";
-import { FC } from "react";
-import MenuItem, { MenuItemType } from "./MenuItem";
 import { IconX } from "@tabler/icons-react";
+import { FC } from "react";
 import { sidebarMenuConfig } from "../../config/sidebarMenuConfig";
+import { BASE_API_URL } from "../../env";
 import { useGetOrganizationQuery } from "../../store/apis/organizationApi";
+import MenuItem, { MenuItemType } from "./MenuItem";
 type Props = {
     open?: boolean;
     onClose?: (open: boolean) => void;
@@ -27,8 +28,11 @@ const SideBar: FC<Props> = ({ open, onClose }) => {
                             <img
                                 src={
                                     data && data.logo
-                                        ? data.logo
-                                        : `uploads/logo/logo.png`
+                                        ? BASE_API_URL.replace("api", data.logo)
+                                        : BASE_API_URL.replace(
+                                              "api",
+                                              `uploads/logo/logo.png`
+                                          )
                                 }
                                 alt=""
                                 className="w-40"

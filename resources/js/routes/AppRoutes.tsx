@@ -1,28 +1,28 @@
 import { RouteObject } from "react-router-dom";
 import Layout from "../components/layouts";
 import { AppRoutesEnum } from "../enums/routeEnums";
-import Settings from "../modules/settings/pages/Settings";
-import Customers from "../modules/customers/pages/Customers";
-import Vendors from "../modules/vendors/pages/Vendors";
-import CustomersAdd from "../modules/customers/pages/CustomersAdd";
-import VendorsAdd from "../modules/vendors/pages/VendorsAdd";
-import CustomersEdit from "../modules/customers/pages/CustomersEdit";
-import VendorsEdit from "../modules/vendors/pages/VendorsEdit";
-import Invoice from "../modules/invoice/pages/Invoice";
-import BankAndAccounts from "../modules/bank_and_accounts/pages/BankAndAccounts";
-import BankAdd from "../modules/bank_and_accounts/pages/BankAdd";
-import BankEdit from "../modules/bank_and_accounts/pages/BankEdit";
 import BankAccountAdd from "../modules/bank_and_accounts/pages/BankAccountAdd";
 import BankAccountEdit from "../modules/bank_and_accounts/pages/BankAccountEdit";
-import InvoiceAdd from "../modules/invoice/pages/InvoiceAdd";
-import Bills from "../modules/bills/pages/Bills";
-import Dashboard from "../modules/dashboard/pages/Dashboard";
-import ProfitAndLoss from "../modules/profitandloss/pages/ProfitAndLoss";
-import InvoiceEdit from "../modules/invoice/pages/InvoiceEdit";
-import BillsEdit from "../modules/bills/pages/BillsEdit";
-import VendorBills from "../modules/vendors/pages/VendorBills";
-import CustomerInvoices from "../modules/customers/pages/CustomerInvoices";
+import BankAdd from "../modules/bank_and_accounts/pages/BankAdd";
+import BankAndAccounts from "../modules/bank_and_accounts/pages/BankAndAccounts";
+import BankEdit from "../modules/bank_and_accounts/pages/BankEdit";
 import BankTransactions from "../modules/bank_and_accounts/pages/BankTransactions";
+import Bills from "../modules/bills/pages/Bills";
+import BillsEdit from "../modules/bills/pages/BillsEdit";
+import CustomerInvoices from "../modules/customers/pages/CustomerInvoices";
+import Customers from "../modules/customers/pages/Customers";
+import CustomersAdd from "../modules/customers/pages/CustomersAdd";
+import CustomersEdit from "../modules/customers/pages/CustomersEdit";
+import Dashboard from "../modules/dashboard/pages/Dashboard";
+import Invoice from "../modules/invoice/pages/Invoice";
+import InvoiceAdd from "../modules/invoice/pages/InvoiceAdd";
+import InvoiceEdit from "../modules/invoice/pages/InvoiceEdit";
+import ProfitAndLoss from "../modules/profitandloss/pages/ProfitAndLoss";
+import Settings from "../modules/settings/pages/Settings";
+import VendorBills from "../modules/vendors/pages/VendorBills";
+import Vendors from "../modules/vendors/pages/Vendors";
+import VendorsAdd from "../modules/vendors/pages/VendorsAdd";
+import VendorsEdit from "../modules/vendors/pages/VendorsEdit";
 
 const appRoutes: RouteObject[] = [
     {
@@ -48,6 +48,10 @@ const appRoutes: RouteObject[] = [
                 path: AppRoutesEnum.INVOICE_EDIT,
                 element: <InvoiceEdit />,
             },
+            // {
+            //     path: AppRoutesEnum.INVOICE_PDF,
+            //     element: <InvoicePDF />,
+            // },
             {
                 path: AppRoutesEnum.BILL,
                 element: <Bills />,

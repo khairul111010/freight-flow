@@ -1,14 +1,32 @@
-import { useState } from "react";
+import html2pdf from "html2pdf.js";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Button from "../../../components/button";
 import Modal from "../../../components/model/Modal";
 import Spinner from "../../../components/preloader/Spinner";
+import { BASE_API_URL } from "../../../env";
 import { useGetInvoiceQuery } from "../../../store/apis/invoiceApi";
+import { useGetOrganizationQuery } from "../../../store/apis/organizationApi";
+import { convertImageToBase64 } from "../../../utils/imageConvertion/convertImageToBase64";
 import InvoicePayForm from "../components/InvoicePayForm";
-
+import InvoicePDF from "../components/InvoicePDF";
 const InvoiceEdit = () => {
+    const [imageData, setImageData] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
     const { id } = useParams();
     const { data, isLoading } = useGetInvoiceQuery(id);
+    const { data: organizationData } = useGetOrganizationQuery();
+
+    const handleDownload = () => {
+        const element = document.getElementById("invoice");
+        html2pdf().from(element).save(`#INV-${data.invoice_number}.pdf`);
+    };
+
+    useEffect(() => {
+        const imgUrl =
+            "https://raw.githubusercontent.com/khairul111010/freight-flow/master/public/logo.png";
+        convertImageToBase64(imgUrl).then((res) => setImageData(res));
+    }, []);
 
     if (isLoading) {
         return (
@@ -17,12 +35,61 @@ const InvoiceEdit = () => {
             </div>
         );
     }
+
     return (
         <>
+            <div className="flex items-center justify-end">
+                <Button className="rounded-md mb-2" onClick={handleDownload}>
+                    Download
+                </Button>
+            </div>
+            <div className="hidden">
+                {imageData && (
+                    <InvoicePDF
+                        invoiceData={data}
+                        organizationData={organizationData}
+                        imageData={imageData}
+                    />
+                )}
+            </div>
             <div className="bg-white p-8 rounded-md h-full">
                 <div className="flex items-center justify-between font-semibold text-lg border-b pb-4">
-                    <div>Invoice</div>
-                    <div>#{data?.invoice_number}</div>
+                    <div className="flex items-center gap-2 text-gray-500">
+                        <div>
+                            <img
+                                src={
+                                    organizationData && organizationData.logo
+                                        ? BASE_API_URL.replace(
+                                              "api",
+                                              organizationData.logo
+                                          )
+                                        : BASE_API_URL.replace(
+                                              "api",
+                                              `uploads/logo/logo.png`
+                                          )
+                                }
+                                alt=""
+                                className="w-40"
+                            />
+                        </div>
+                        <div className="text-xs">
+                            <div>{organizationData.address}</div>
+                            <div>{organizationData.description}</div>
+                        </div>
+                    </div>
+                    {/* <div className="flex items-center gap-4"> */}
+                    <div>
+                        <div>Invoice</div>
+                        <div className="text-gray-500">
+                            #{data?.invoice_number}
+                        </div>
+                    </div>
+                    {/* <Link
+                            to={AppRoutesEnum.INVOICE_PDF.replace(":id", id!)}
+                        >
+                            Download
+                        </Link> */}
+                    {/* </div> */}
                 </div>
 
                 <div className="flex items-center justify-between mt-8">
@@ -81,7 +148,7 @@ const InvoiceEdit = () => {
                     <table className="border mt-4 w-full">
                         <thead>
                             <tr className="divide-x border-b italic">
-                                <th className="p-2">SL</th>
+                                <th className="p-2 w-[10%]">SL</th>
                                 <th className="p-2">Description</th>
                                 <th className="p-2">Amount</th>
                             </tr>
@@ -92,6 +159,99 @@ const InvoiceEdit = () => {
                                 <th className="p-2 text-left">MAWB Fee</th>
                                 <th className="p-2 text-right">
                                     {data?.master_air_way_bill_fee}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">2</th>
+                                <th className="p-2 text-left">
+                                    Chargable Weight
+                                </th>
+                                <th className="p-2 text-right">
+                                    {data?.chargeable_weight}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">3</th>
+                                <th className="p-2 text-left">Rate</th>
+                                <th className="p-2 text-right">
+                                    {data?.invoice_rate}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">4</th>
+                                <th className="p-2 text-left">AIT</th>
+                                <th className="p-2 text-right">{data?.ait}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">5</th>
+                                <th className="p-2 text-left">AMS</th>
+                                <th className="p-2 text-right">{data?.ams}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">6</th>
+                                <th className="p-2 text-left">CD</th>
+                                <th className="p-2 text-right">{data?.cd}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">7</th>
+                                <th className="p-2 text-left">CGC</th>
+                                <th className="p-2 text-right">{data?.cgc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">8</th>
+                                <th className="p-2 text-left">DTC</th>
+                                <th className="p-2 text-right">{data?.dtc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">9</th>
+                                <th className="p-2 text-left">IIT</th>
+                                <th className="p-2 text-right">{data?.itt}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">10</th>
+                                <th className="p-2 text-left">SSC</th>
+                                <th className="p-2 text-right">{data?.ssc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">11</th>
+                                <th className="p-2 text-left">THC</th>
+                                <th className="p-2 text-right">{data?.thc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">12</th>
+                                <th className="p-2 text-left">Others</th>
+                                <th className="p-2 text-right">
+                                    {data?.others}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">13</th>
+                                <th className="p-2 text-left">Vat</th>
+                                <th className="p-2 text-right">
+                                    {data?.invoice_vat}
+                                </th>
+                            </tr>
+                            <tr className="">
+                                <th className="p-2 text-center">Total USD</th>
+                                <th className="p-2 text-left"></th>
+                                <th className="p-2 text-right">
+                                    {data?.invoice_total_usd}
+                                </th>
+                            </tr>
+                            <tr className="">
+                                <th className="p-2 text-center">
+                                    Exchange Rate
+                                </th>
+                                <th className="p-2 text-left"></th>
+                                <th className="p-2 text-right">
+                                    {data?.exchange_rate}
+                                </th>
+                            </tr>
+                            <tr className="">
+                                <th className="p-2 text-center">Total BDT</th>
+                                <th className="p-2 text-left"></th>
+                                <th className="p-2 text-right">
+                                    {data?.invoice_receivable_amount_bdt}
                                 </th>
                             </tr>
                         </tbody>

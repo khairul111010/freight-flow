@@ -20,9 +20,11 @@
     },
     "dependencies": {
         "@metismenu/react": "^0.0.3",
+        "@react-pdf/renderer": "^3.4.4",
         "@reduxjs/toolkit": "^2.2.5",
         "@tabler/icons-react": "^3.7.0",
         "formik": "^2.4.6",
+        "html2pdf.js": "0.9.0",
         "primereact": "^10.6.6",
         "react-apexcharts": "^1.4.1",
         "react-hot-toast": "^2.4.1",
