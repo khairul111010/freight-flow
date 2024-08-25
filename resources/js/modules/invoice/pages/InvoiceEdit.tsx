@@ -77,19 +77,12 @@ const InvoiceEdit = () => {
                             <div>{organizationData.description}</div>
                         </div>
                     </div>
-                    {/* <div className="flex items-center gap-4"> */}
                     <div>
                         <div>Invoice</div>
                         <div className="text-gray-500">
                             #{data?.invoice_number}
                         </div>
                     </div>
-                    {/* <Link
-                            to={AppRoutesEnum.INVOICE_PDF.replace(":id", id!)}
-                        >
-                            Download
-                        </Link> */}
-                    {/* </div> */}
                 </div>
 
                 <div className="flex items-center justify-between mt-8">

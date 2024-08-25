@@ -1,20 +1,19 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import Button from "../../../components/button";
-import { AppRoutesEnum } from "../../../enums/routeEnums";
-import SearchInput from "../../../components/form/search-input/SearchInput";
-import useDebounce from "../../../hooks/useDebounce";
-import Pagination from "../../../components/pagination";
-import { IconEye, IconFileDownload, IconPencil } from "@tabler/icons-react";
-import Spinner from "../../../components/preloader/Spinner";
+import { IconEye } from "@tabler/icons-react";
+import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
-import { Column } from "primereact/column";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Button from "../../../components/button";
+import SearchInput from "../../../components/form/search-input/SearchInput";
+import Pagination from "../../../components/pagination";
+import Spinner from "../../../components/preloader/Spinner";
+import { AppRoutesEnum } from "../../../enums/routeEnums";
+import useDebounce from "../../../hooks/useDebounce";
 import {
     useLazyGetBillsQuery,
     useLazyGetInvoicePDFQuery,
-    useLazyGetInvoicesQuery,
 } from "../../../store/apis/invoiceApi";
-import { Link } from "react-router-dom";
 
 const Bills = () => {
     const [search, setSearch] = useState("");
@@ -82,21 +81,15 @@ const Bills = () => {
                             stripedRows
                         >
                             <Column
-                                header="SL"
-                                body={(rowData, { rowIndex }) => {
-                                    return <>{rowIndex + 1}</>;
-                                }}
-                            />
-                            <Column
                                 field="invoice_number"
                                 header="Invoice Number"
                             ></Column>
-                            <Column
-                                field="bill_issue_date"
-                                header="Issued"
-                            ></Column>
+                            <Column field="issue_date" header="Issued"></Column>
                             <Column field="bill_due_date" header="Due"></Column>
-                            <Column field="master_air_way_bill" header="MAWB" />
+                            <Column
+                                field="master_air_way_bill"
+                                header="MAWB"
+                            ></Column>
                             <Column
                                 field="master_air_way_bill_fee"
                                 header="MAWB Fee"
@@ -143,20 +136,70 @@ const Bills = () => {
                                 }}
                             ></Column>
                             <Column
-                                field="bill_ait"
+                                field="ait"
                                 header="AIT"
                                 body={(rowData) => {
-                                    return (
-                                        <>{rowData.bill_ait.toLocaleString()}</>
-                                    );
+                                    return <>{rowData.ait.toLocaleString()}</>;
                                 }}
                             ></Column>
                             <Column
-                                field="bill_cgc"
+                                field="ams"
+                                header="AMS"
+                                body={(rowData) => {
+                                    return <>{rowData.ams.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="cd"
+                                header="CD"
+                                body={(rowData) => {
+                                    return <>{rowData.cd.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="cgc"
                                 header="CGC"
                                 body={(rowData) => {
+                                    return <>{rowData.cgc.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="dtc"
+                                header="DTC"
+                                body={(rowData) => {
+                                    return <>{rowData.dtc.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="itt"
+                                header="ITT"
+                                body={(rowData) => {
+                                    return <>{rowData.itt.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="ssc"
+                                header="SSC"
+                                body={(rowData) => {
+                                    return <>{rowData.ssc.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="thc"
+                                header="THC"
+                                body={(rowData) => {
+                                    return <>{rowData.thc.toLocaleString()}</>;
+                                }}
+                            ></Column>
+                            <Column
+                                field="others"
+                                header="Others"
+                                body={(rowData) => {
                                     return (
-                                        <>{rowData.bill_cgc.toLocaleString()}</>
+                                        <>
+                                            {rowData.others?.toLocaleString() ??
+                                                0}
+                                        </>
                                     );
                                 }}
                             ></Column>
@@ -169,6 +212,7 @@ const Bills = () => {
                                     );
                                 }}
                             ></Column>
+
                             <Column
                                 field="bill_total_usd"
                                 header="TTL USD"
@@ -181,12 +225,12 @@ const Bills = () => {
                                 }}
                             ></Column>
                             <Column
-                                field="bill_exchange_rate"
+                                field="exchange_rate"
                                 header="Ex. Rate"
                                 body={(rowData) => {
                                     return (
                                         <>
-                                            {rowData.bill_exchange_rate.toLocaleString()}
+                                            {rowData.exchange_rate.toLocaleString()}
                                         </>
                                     );
                                 }}
@@ -217,18 +261,6 @@ const Bills = () => {
                                             >
                                                 <IconEye />
                                             </Link>
-                                            {/* <div className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50">
-                                                <IconTrash />
-                                            </div> */}
-                                            {/* <div
-                                                title="Download"
-                                                onClick={() =>
-                                                    handleDownload(rowData.id)
-                                                }
-                                                className="bg-white p-1 rounded-md border cursor-pointer hover:bg-slate-50"
-                                            >
-                                                <IconFileDownload />
-                                            </div> */}
                                         </div>
                                     );
                                 }}

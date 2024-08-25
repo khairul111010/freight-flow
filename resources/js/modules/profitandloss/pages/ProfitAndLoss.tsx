@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
-import { useLazyGetProfitLossQuery } from "../../../store/apis/profitLossApi";
-import Spinner from "../../../components/preloader/Spinner";
+import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
-import { Column } from "primereact/column";
+import { useEffect, useState } from "react";
+import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
+import Spinner from "../../../components/preloader/Spinner";
+import { useLazyGetProfitLossQuery } from "../../../store/apis/profitLossApi";
 
 const ProfitAndLoss = () => {
     const [date, setDate] = useState<Date>(new Date());
@@ -82,10 +82,7 @@ const ProfitAndLoss = () => {
                                 field="invoice_number"
                                 header="Invoice Number"
                             ></Column>
-                            <Column
-                                field="invoice_issue_date"
-                                header="Issued"
-                            ></Column>
+                            <Column field="issue_date" header="Issued"></Column>
                             <Column field="customer" header="Customer"></Column>
                             <Column field="vendor" header="Vendor"></Column>
                             <Column
@@ -138,23 +135,12 @@ const ProfitAndLoss = () => {
                                 }}
                             ></Column>
                             <Column
-                                field="invoice_exchange_rate"
-                                header="Invoice Ex.Rate"
+                                field="exchange_rate"
+                                header="Ex.Rate"
                                 body={(rowData) => {
                                     return (
                                         <>
-                                            {rowData.invoice_exchange_rate.toLocaleString()}
-                                        </>
-                                    );
-                                }}
-                            ></Column>
-                            <Column
-                                field="bill_exchange_rate"
-                                header="Bill Ex.Rate"
-                                body={(rowData) => {
-                                    return (
-                                        <>
-                                            {rowData.bill_exchange_rate.toLocaleString()}
+                                            {rowData.exchange_rate.toLocaleString()}
                                         </>
                                     );
                                 }}
@@ -171,12 +157,23 @@ const ProfitAndLoss = () => {
                                 }}
                             ></Column>
                             <Column
-                                field="bill_total_usd"
-                                header="Bill TTL (USD)"
+                                field="invoice_receivable_amount_bdt"
+                                header="Invoice TTL (BDT)"
                                 body={(rowData) => {
                                     return (
                                         <>
-                                            {rowData.bill_total_usd.toLocaleString()}
+                                            {rowData.invoice_receivable_amount_bdt.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
+                                field="bill_payable_bdt"
+                                header="Bill TTL (BDT)"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.bill_payable_bdt.toLocaleString()}
                                         </>
                                     );
                                 }}

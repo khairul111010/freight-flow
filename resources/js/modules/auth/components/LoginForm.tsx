@@ -1,14 +1,12 @@
-import React from "react";
-
 import { Form, Formik, FormikProps } from "formik";
 import { FC, useRef } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { object, string } from "yup";
-import { useLoginMutation } from "../../../store/apis/authApi";
-import TextInput from "../../../components/form/text-input";
 import Button from "../../../components/button";
+import TextInput from "../../../components/form/text-input";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
-import toast from "react-hot-toast";
+import { useLoginMutation } from "../../../store/apis/authApi";
 
 const initialValues = {
     email: "",
@@ -35,7 +33,7 @@ const LoginForm: FC = () => {
             .unwrap()
             .then(() => {
                 toast.success("Logged in successfully");
-                navigate(AppRoutesEnum.DASHBOARD);
+                navigate(AppRoutesEnum.PROFITANDLOSS);
             })
             .catch((error) => {
                 if (error.data) {

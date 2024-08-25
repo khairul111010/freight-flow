@@ -21,22 +21,21 @@ class ProfitAndLossController extends Controller
                 if ($invoice->invoice_number == $bill->invoice_number) {
                     array_push($pnl, [
                         'invoice_number' => $invoice->invoice_number,
-                        'invoice_issue_date' => $invoice->invoice_issue_date,
+                        'issue_date' => $invoice->issue_date,
                         'master_air_way_bill' => $invoice->master_air_way_bill,
                         'destination' => $invoice->destination,
                         'cartoon_amount' => $invoice->cartoon_amount,
-                        'chargeable_weight' => $invoice->chargeable_weight,
                         'gross_weight' => $invoice->gross_weight,
-                        'customer' => $invoice->customer->name,
-                        'invoice_total_usd' => $invoice->invoice_total_usd,
-                        'invoice_exchange_rate' => $invoice->invoice_exchange_rate,
+                        'chargeable_weight' => $invoice->chargeable_weight,
                         'invoice_rate' => $invoice->invoice_rate,
-                        'invoice_received_amount' => $invoice->invoice_received_amount,
-                        'vendor' => $bill->vendor->name,
                         'bill_rate' => $bill->bill_rate,
+                        'customer' => $invoice->customer->name,
+                        'vendor' => $bill->vendor->name,
+                        'invoice_total_usd' => $invoice->invoice_total_usd,
                         'bill_total_usd' => $bill->bill_total_usd,
-                        'bill_exchange_rate' => $bill->bill_exchange_rate,
-                        'bill_paid_amount' => $bill->bill_paid_amount,
+                        'exchange_rate' => $invoice->exchange_rate,
+                        'invoice_receivable_amount_bdt' => $invoice->invoice_receivable_amount_bdt,
+                        'bill_payable_bdt' => $bill->bill_payable_bdt,
                         'profit' => $invoice->invoice_receivable_amount_bdt - $bill->bill_payable_bdt
                     ]);
                 }
@@ -48,10 +47,5 @@ class ProfitAndLossController extends Controller
             'message' => 'Profit and Loss retrieved successfully',
             'result' => $pnl
         ]);
-
-
-
-
     }
-
 }

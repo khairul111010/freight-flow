@@ -3,10 +3,10 @@ import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import BackButton from "../../../components/button/BackButton";
 import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
 import Spinner from "../../../components/preloader/Spinner";
 import { useLazyGetBankAccountTransactionsQuery } from "../../../store/apis/bankApi";
-import BackButton from "../../../components/button/BackButton";
 
 const BankTransactions = () => {
     const [tableData, setTableData] = useState([]);
@@ -120,6 +120,12 @@ const BankTransactions = () => {
                         <Column
                             field="invoice_number"
                             header="Invoice Number"
+                        ></Column>
+                        <Column
+                            header="Invoice Number"
+                            body={(rowData) => {
+                                return <>{rowData.transaction_note}</>;
+                            }}
                         ></Column>
                         <Column
                             field="current_amount"

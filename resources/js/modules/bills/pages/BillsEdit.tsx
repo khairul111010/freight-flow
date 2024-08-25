@@ -33,9 +33,7 @@ const BillsEdit = () => {
                     <div className="flex items-center gap-8">
                         <div>
                             <div className="italic">Issued Date</div>
-                            <div className="font-bold">
-                                {data?.bill_issue_date}
-                            </div>
+                            <div className="font-bold">{data?.issue_date}</div>
                         </div>
                         <div>
                             <div className="italic">Due Date</div>
@@ -83,91 +81,110 @@ const BillsEdit = () => {
                     <table className="border mt-4 w-full">
                         <thead>
                             <tr className="divide-x border-b italic">
+                                <th className="p-2 w-[10%]">SL</th>
                                 <th className="p-2">Description</th>
                                 <th className="p-2">Amount</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y">
                             <tr className="divide-x">
+                                <th className="p-2 text-center">1</th>
                                 <th className="p-2 text-left">MAWB Fee</th>
                                 <th className="p-2 text-right">
                                     {data?.master_air_way_bill_fee}
                                 </th>
                             </tr>
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Bill Rate</th>
+                                <th className="p-2 text-center">2</th>
+                                <th className="p-2 text-left">
+                                    Chargable Weight
+                                </th>
+                                <th className="p-2 text-right">
+                                    {data?.chargeable_weight}
+                                </th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">3</th>
+                                <th className="p-2 text-left">Rate</th>
                                 <th className="p-2 text-right">
                                     {data?.bill_rate}
                                 </th>
                             </tr>
-
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Bill AIT</th>
+                                <th className="p-2 text-center">4</th>
+                                <th className="p-2 text-left">AIT</th>
+                                <th className="p-2 text-right">{data?.ait}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">5</th>
+                                <th className="p-2 text-left">AMS</th>
+                                <th className="p-2 text-right">{data?.ams}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">6</th>
+                                <th className="p-2 text-left">CD</th>
+                                <th className="p-2 text-right">{data?.cd}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">7</th>
+                                <th className="p-2 text-left">CGC</th>
+                                <th className="p-2 text-right">{data?.cgc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">8</th>
+                                <th className="p-2 text-left">DTC</th>
+                                <th className="p-2 text-right">{data?.dtc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">9</th>
+                                <th className="p-2 text-left">IIT</th>
+                                <th className="p-2 text-right">{data?.itt}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">10</th>
+                                <th className="p-2 text-left">SSC</th>
+                                <th className="p-2 text-right">{data?.ssc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">11</th>
+                                <th className="p-2 text-left">THC</th>
+                                <th className="p-2 text-right">{data?.thc}</th>
+                            </tr>
+                            <tr className="divide-x">
+                                <th className="p-2 text-center">12</th>
+                                <th className="p-2 text-left">Others</th>
                                 <th className="p-2 text-right">
-                                    {data?.bill_ait}
+                                    {data?.others}
                                 </th>
                             </tr>
                             <tr className="divide-x">
-                                <th className="p-2 text-left">Bill AMS</th>
-                                <th className="p-2 text-right">
-                                    {data?.bill_ams}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Bill CD</th>
-                                <th className="p-2 text-right">
-                                    {data?.bill_cd}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Bill CGC</th>
-                                <th className="p-2 text-right">
-                                    {data?.bill_cgc}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Bill IIT</th>
-                                <th className="p-2 text-right">
-                                    {data?.bill_itt}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Bill SSC</th>
-                                <th className="p-2 text-right">
-                                    {data?.bill_ssc}
-                                </th>
-                            </tr>
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">Bill THC</th>
-                                <th className="p-2 text-right">
-                                    {data?.bill_thc}
-                                </th>
-                            </tr>
-
-                            <tr className="divide-x">
-                                <th className="p-2 text-left">VAT</th>
+                                <th className="p-2 text-center">13</th>
+                                <th className="p-2 text-left">Vat</th>
                                 <th className="p-2 text-right">
                                     {data?.bill_vat}
                                 </th>
                             </tr>
-                            <tr>
-                                <th className="p-2 text-left">TOTAL (USD)</th>
+                            <tr className="">
+                                <th className="p-2 text-center">Total USD</th>
+                                <th className="p-2 text-left"></th>
                                 <th className="p-2 text-right">
-                                    = {data?.bill_total_usd}
+                                    {data?.bill_total_usd}
                                 </th>
                             </tr>
-                            <tr>
-                                <th className="p-2 text-left">Exchange Rate</th>
+                            <tr className="">
+                                <th className="p-2 text-center">
+                                    Exchange Rate
+                                </th>
+                                <th className="p-2 text-left"></th>
                                 <th className="p-2 text-right">
-                                    = {data?.bill_exchange_rate}
+                                    {data?.exchange_rate}
                                 </th>
                             </tr>
-                            <tr>
-                                <th className="p-2 text-left">TOTAL (BDT)</th>
+                            <tr className="">
+                                <th className="p-2 text-center">Total BDT</th>
+                                <th className="p-2 text-left"></th>
                                 <th className="p-2 text-right">
-                                    {data?.bill_total_usd} x{" "}
-                                    {data?.bill_exchange_rate} ={" "}
-                                    {data?.bill_payable_bdt}
+                                    {data?.bill_payable_bdt.toLocaleString()}
                                 </th>
                             </tr>
                         </tbody>
