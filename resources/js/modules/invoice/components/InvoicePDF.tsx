@@ -210,7 +210,7 @@ const InvoicePDF: FC<Props> = ({
                             <tr className="">
                                 <th className="p-1 text-center">Total BDT</th>
                                 <th className="p-1 text-left"></th>
-                                <th className="p-1 text-right">
+                                <th className="p-1 text-right text-primary">
                                     {invoiceData?.invoice_receivable_amount_bdt}
                                 </th>
                             </tr>

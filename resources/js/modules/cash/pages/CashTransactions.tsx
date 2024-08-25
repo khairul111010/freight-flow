@@ -1,3 +1,5 @@
+import { IconDownload } from "@tabler/icons-react";
+import html2pdf from "html2pdf.js";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
@@ -7,11 +9,24 @@ import SeparatedDateInput from "../../../components/form/date-input/SeparatedDat
 import Spinner from "../../../components/preloader/Spinner";
 import { useLazyGetCashTransactionsQuery } from "../../../store/apis/bankApi";
 import { useGetOrganizationQuery } from "../../../store/apis/organizationApi";
-
+import { convertImageToBase64 } from "../../../utils/imageConvertion/convertImageToBase64";
+import CashReceiptPDF from "../components/CashReceiptPDF";
 const CashTransactions = () => {
+    const [imageData, setImageData] = useState<string | null>(null);
+    useEffect(() => {
+        const imgUrl =
+            "https://raw.githubusercontent.com/khairul111010/freight-flow/master/public/logo.png";
+        convertImageToBase64(imgUrl).then((res) => setImageData(res));
+    }, []);
+
     const [tableData, setTableData] = useState([]);
     const [date, setDate] = useState<Date>(new Date());
     const { data: orgData, isLoading: orgLoading } = useGetOrganizationQuery();
+
+    const handleDownload = (data: any) => {
+        const element = document.getElementById(`${data.id}-receipt`);
+        html2pdf().from(element).save(`#MR${data.invoice_number}.pdf`);
+    };
 
     const [getCashTransactions, { data, isLoading }] =
         useLazyGetCashTransactionsQuery();
@@ -47,8 +62,6 @@ const CashTransactions = () => {
             </div>
         );
     }
-
-    console.log(tableData);
 
     return (
         <div>
@@ -109,6 +122,21 @@ const CashTransactions = () => {
                         field="invoice_number"
                         header="Invoice Number"
                     ></Column>
+
+                    <Column
+                        header="Customer"
+                        body={(rowData) => {
+                            return <>{rowData?.invoice?.customer?.name}</>;
+                        }}
+                    ></Column>
+
+                    <Column
+                        header="Vendor"
+                        body={(rowData) => {
+                            return <>{rowData?.bill?.vendor?.name}</>;
+                        }}
+                    ></Column>
+
                     <Column
                         header="Invoice Number"
                         body={(rowData) => {
@@ -128,6 +156,26 @@ const CashTransactions = () => {
                                     }`}
                                 >
                                     {rowData.current_amount.toLocaleString()}
+                                </div>
+                            );
+                        }}
+                    />
+                    <Column
+                        header="Receipt"
+                        body={(rowData) => {
+                            return (
+                                <div
+                                    title="Download Receipt"
+                                    onClick={() => handleDownload(rowData)}
+                                    className="rounded-md border w-fit p-1 cursor-pointer"
+                                >
+                                    <IconDownload />
+                                    <div className="hidden">
+                                        <CashReceiptPDF
+                                            data={rowData}
+                                            organizationData={orgData}
+                                        />
+                                    </div>
                                 </div>
                             );
                         }}

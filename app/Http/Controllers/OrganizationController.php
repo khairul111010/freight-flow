@@ -48,7 +48,7 @@ class OrganizationController extends Controller
                 $organization->logo = $path . $logoName;
             }
 
-            if($request->opening_cash_balance < 0) {
+            if ($request->opening_cash_balance < 0) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Opening cash balance cannot be negative',
@@ -89,10 +89,10 @@ class OrganizationController extends Controller
     public function showTransactions(Request $request)
     {
         try {
-            $transactions = Transactions::where('payment_method', 'cash')
-            ->whereMonth('transaction_date', $request->month)
-            ->whereYear('transaction_date', $request->year)
-            ->get();
+            $transactions = Transactions::where('payment_method', 'cash')->with(['bill.vendor', 'invoice.customer'])
+                ->whereMonth('transaction_date', $request->month)
+                ->whereYear('transaction_date', $request->year)
+                ->get();
 
             return response()->json([
                 'success' => true,

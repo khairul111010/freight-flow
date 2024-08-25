@@ -9,6 +9,7 @@ import BankEdit from "../modules/bank_and_accounts/pages/BankEdit";
 import BankTransactions from "../modules/bank_and_accounts/pages/BankTransactions";
 import Bills from "../modules/bills/pages/Bills";
 import BillsEdit from "../modules/bills/pages/BillsEdit";
+import CashReceiptPDF from "../modules/cash/components/CashReceiptPDF";
 import CashTransactions from "../modules/cash/pages/CashTransactions";
 import CustomerInvoices from "../modules/customers/pages/CustomerInvoices";
 import Customers from "../modules/customers/pages/Customers";
@@ -120,6 +121,10 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.CASH,
                 element: <CashTransactions />,
+            },
+            {
+                path: AppRoutesEnum.CASH_PDF,
+                element: <CashReceiptPDF />,
             },
             {
                 path: AppRoutesEnum.SETTINGS,
