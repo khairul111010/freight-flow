@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 25, 2024 at 12:34 AM
+-- Generation Time: Aug 25, 2024 at 11:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `freight-flow`
+-- Database: `frieght-flow`
 --
 
 -- --------------------------------------------------------
@@ -69,7 +69,7 @@ CREATE TABLE `bank_accounts` (
 --
 
 INSERT INTO `bank_accounts` (`id`, `account_name`, `account_number`, `account_routing_number`, `branch`, `opening_bank_balance`, `bank_id`, `created_at`, `updated_at`) VALUES
-(1, 'SONIKA BD SHIPPERS LTD', '00061050009741', '00061050009741', 'UTTARA MODEL TOWN', 91849, 1, '2024-08-24 13:07:41', '2024-08-24 13:07:41'),
+(1, 'SONIKA BD SHIPPERS LTD', '00061050009741', '00061050009741', 'UTTARA MODEL TOWN', 60849, 1, '2024-08-24 13:07:41', '2024-08-25 03:10:12'),
 (2, 'SONIKA PACKERS & SHIPPERS', '00061050009750', '00061050009750', 'UTTARA MODEL TOWN', 6071.91, 1, '2024-08-24 13:19:04', '2024-08-24 13:19:04');
 
 -- --------------------------------------------------------
@@ -120,7 +120,7 @@ CREATE TABLE `bills` (
 --
 
 INSERT INTO `bills` (`id`, `invoice_number`, `issue_date`, `bill_due_date`, `destination`, `master_air_way_bill`, `master_air_way_bill_fee`, `unit`, `cartoon_amount`, `gross_weight`, `chargeable_weight`, `bill_rate`, `bill_freight_amount`, `thc`, `ssc`, `cd`, `cgc`, `dtc`, `ait`, `ams`, `itt`, `others`, `bill_vat`, `bill_total_usd`, `exchange_rate`, `bill_payable_bdt`, `bill_paid_amount`, `bill_due_balance`, `bill_discounted_amount`, `bill_note`, `vendor_id`, `chart_of_account_id`, `created_at`, `updated_at`) VALUES
-(1, 'SBDL-1', '2024-08-04', '2024-08-14', 'DEL', '603-5051-2593', 12, 1, 42, 1996, 1996, 1.9, 3792.4, 20, 30, 15, 78, 94, 36, 66, 45, 23, 32, 4243.4, 110, 466774, 0, 466774, 0, 'TEST', 1, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59');
+(1, 'SBDL-1', '2024-08-04', '2024-08-14', 'DEL', '603-5051-2593', 12, 1, 42, 1996, 1996, 1.9, 3792.4, 20, 30, 15, 78, 94, 36, 66, 45, 23, 32, 4243.4, 110, 466774, 50000, 416774, 0, 'TEST', 1, 14, '2024-08-24 16:11:59', '2024-08-25 03:10:12');
 
 -- --------------------------------------------------------
 
@@ -751,7 +751,7 @@ CREATE TABLE `invoices` (
 --
 
 INSERT INTO `invoices` (`id`, `invoice_number`, `issue_date`, `invoice_due_date`, `destination`, `master_air_way_bill`, `master_air_way_bill_fee`, `unit`, `cartoon_amount`, `gross_weight`, `chargeable_weight`, `kg`, `invoice_rate`, `invoice_freight_amount`, `thc`, `ssc`, `cd`, `cgc`, `dtc`, `ait`, `ams`, `itt`, `others`, `invoice_vat`, `invoice_total_usd`, `exchange_rate`, `invoice_receivable_amount_bdt`, `invoice_received_amount`, `invoice_due_balance`, `invoice_discounted_amount`, `invoice_note`, `customer_id`, `chart_of_account_id`, `created_at`, `updated_at`) VALUES
-(1, 'SBDL-1', '2024-08-04', '2024-08-12', 'DEL', '603-5051-2593', 12, 1, 42, 1996, 1996, 1996, 2.3, 4590.8, 20, 30, 15, 78, 94, 36, 66, 45, 23, 13, 5022.8, 110, 552508, 0, 552508, 0, 'TEST', 1, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59');
+(1, 'SBDL-1', '2024-08-04', '2024-08-12', 'DEL', '603-5051-2593', 12, 1, 42, 1996, 1996, 1996, 2.3, 4590.8, 20, 30, 15, 78, 94, 36, 66, 45, 23, 13, 5022.8, 110, 552508, 69000, 483508, 0, 'TEST', 1, 14, '2024-08-24 16:11:59', '2024-08-25 03:09:41');
 
 -- --------------------------------------------------------
 
@@ -845,7 +845,7 @@ CREATE TABLE `organizations` (
 --
 
 INSERT INTO `organizations` (`id`, `name`, `description`, `address`, `logo`, `currency`, `invoice_prefix`, `invoice_start_number`, `opening_cash_balance`, `created_at`, `updated_at`) VALUES
-(1, 'SONIKA', 'SONIKA BD SHIPPERS LTD', 'Uttara, Dhaka', 'uploads/logo/1724529810.png', 'BDT', 'SBDL', 1, 569670, '2024-08-24 12:44:32', '2024-08-24 14:03:30');
+(1, 'SONIKA', 'SONIKA BD SHIPPERS LTD', 'Uttara, Dhaka', 'uploads/logo/1724562395.png', 'BDT', 'SBDL', 1, 619670, '2024-08-24 12:44:32', '2024-08-25 03:02:48');
 
 -- --------------------------------------------------------
 
@@ -895,7 +895,7 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at`, `created_at`, `updated_at`) VALUES
-(42, 'App\\Models\\User', 1, 'myAppToken', '2d78512c5456ff5dd94b54d7289eac299d7eaf5edba7732d1591753af12958a7', '[\"*\"]', '2024-08-24 16:26:15', NULL, '2024-08-24 16:18:12', '2024-08-24 16:26:15');
+(120, 'App\\Models\\User', 1, 'myAppToken', '58cea1721f3a2c3087f48c1dc2ca93558611379fb8af09c6eaeb24bd664f100c', '[\"*\"]', '2024-08-25 03:13:37', NULL, '2024-08-25 03:13:22', '2024-08-25 03:13:37');
 
 -- --------------------------------------------------------
 
@@ -962,7 +962,15 @@ INSERT INTO `transactions` (`id`, `amount`, `current_amount`, `transaction_type`
 (1, 552508, 0, 'invoice', '2024-08-24', 1, 'SBDL-1', NULL, NULL, 17, NULL, NULL, 1, NULL, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59'),
 (2, 0, 0, 'invoice', '2024-08-24', 0, 'SBDL-1', NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59'),
 (3, 0, 0, 'bill', '2024-08-24', 1, 'SBDL-1', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59'),
-(4, 466774, 0, 'bill', '2024-08-24', 0, 'SBDL-1', NULL, NULL, 65, NULL, 1, NULL, NULL, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59');
+(4, 466774, 0, 'bill', '2024-08-24', 0, 'SBDL-1', NULL, NULL, 65, NULL, 1, NULL, NULL, NULL, '2024-08-24 16:11:59', '2024-08-24 16:11:59'),
+(5, 502508, 50000, 'invoice', '2024-08-25', 1, 'SBDL-1', 'cash', 'CASH-113', 17, NULL, NULL, 1, NULL, NULL, '2024-08-25 03:02:48', '2024-08-25 03:02:48'),
+(6, 50000, 50000, 'invoice', '2024-08-25', 0, 'SBDL-1', 'cash', 'CASH-113', 107, NULL, NULL, 1, NULL, NULL, '2024-08-25 03:02:48', '2024-08-25 03:02:48'),
+(7, 487508, 15000, 'invoice', '2024-08-25', 1, 'SBDL-1', 'bank', 'CHECK-6546146545', 17, 1, NULL, 1, NULL, NULL, '2024-08-25 03:03:46', '2024-08-25 03:03:46'),
+(8, 65000, 15000, 'invoice', '2024-08-25', 0, 'SBDL-1', 'bank', 'CHECK-6546146545', 14, 1, NULL, 1, NULL, NULL, '2024-08-25 03:03:46', '2024-08-25 03:03:46'),
+(9, 483508, 4000, 'invoice', '2024-08-25', 1, 'SBDL-1', 'bank', 'CHECK-330', 17, 1, NULL, 1, NULL, NULL, '2024-08-25 03:09:41', '2024-08-25 03:09:41'),
+(10, 69000, 4000, 'invoice', '2024-08-25', 0, 'SBDL-1', 'bank', 'CHECK-330', 14, 1, NULL, 1, NULL, NULL, '2024-08-25 03:09:41', '2024-08-25 03:09:41'),
+(11, 50000, 50000, 'bill', '2024-08-25', 1, 'SBDL-1', 'bank', 'CASH-33664', 14, 1, 1, NULL, NULL, NULL, '2024-08-25 03:10:12', '2024-08-25 03:10:12'),
+(12, 416774, 50000, 'bill', '2024-08-25', 0, 'SBDL-1', 'bank', 'CASH-33664', 65, 1, 1, NULL, NULL, NULL, '2024-08-25 03:10:12', '2024-08-25 03:10:12');
 
 -- --------------------------------------------------------
 
@@ -1268,7 +1276,7 @@ ALTER TABLE `organizations`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT for table `tags`
@@ -1280,7 +1288,7 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
