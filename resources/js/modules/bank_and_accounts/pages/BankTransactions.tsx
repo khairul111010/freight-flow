@@ -1,3 +1,5 @@
+import { IconDownload } from "@tabler/icons-react";
+import html2pdf from "html2pdf.js";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
@@ -7,11 +9,13 @@ import BackButton from "../../../components/button/BackButton";
 import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
 import Spinner from "../../../components/preloader/Spinner";
 import { useLazyGetBankAccountTransactionsQuery } from "../../../store/apis/bankApi";
-
+import { useGetOrganizationQuery } from "../../../store/apis/organizationApi";
+import CashReceiptPDF from "../../cash/components/CashReceiptPDF";
 const BankTransactions = () => {
     const [tableData, setTableData] = useState([]);
     const [date, setDate] = useState<Date>(new Date());
     const { id } = useParams();
+    const { data: orgData, isLoading: orgLoading } = useGetOrganizationQuery();
     const [getBankAccountTransactions, { data, isLoading }] =
         useLazyGetBankAccountTransactionsQuery();
     useEffect(() => {
@@ -46,6 +50,10 @@ const BankTransactions = () => {
             </div>
         );
     }
+    const handleDownload = (data: any) => {
+        const element = document.getElementById(`${data.id}-receipt`);
+        html2pdf().from(element).save(`#MR${data.invoice_number}.pdf`);
+    };
 
     return (
         <div>
@@ -141,6 +149,34 @@ const BankTransactions = () => {
                                         }`}
                                     >
                                         {rowData.current_amount.toLocaleString()}
+                                    </div>
+                                );
+                            }}
+                        />
+                        <Column
+                            header="Receipt"
+                            body={(rowData) => {
+                                return (
+                                    <div
+                                        title="Download Receipt"
+                                        onClick={() => handleDownload(rowData)}
+                                        className="rounded-md border w-fit p-1 cursor-pointer"
+                                    >
+                                        <IconDownload />
+                                        <div className="hidden">
+                                            <CashReceiptPDF
+                                                data={rowData}
+                                                organizationData={orgData}
+                                                method="Bank"
+                                                bankInfo={{
+                                                    bank_name: data?.bank?.name,
+                                                    account_name:
+                                                        data?.account_name,
+                                                    account_number:
+                                                        data?.account_number,
+                                                }}
+                                            />
+                                        </div>
                                     </div>
                                 );
                             }}

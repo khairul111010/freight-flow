@@ -5,8 +5,16 @@ type Props = {
     data?: any;
     organizationData?: any;
     image?: any;
+    method?: string;
+    bankInfo?: any;
 };
-const CashReceiptPDF: FC<Props> = ({ data, image, organizationData }) => {
+const CashReceiptPDF: FC<Props> = ({
+    data,
+    image,
+    organizationData,
+    method = "Cash",
+    bankInfo,
+}) => {
     const [imageData, setImageData] = useState<string | null>(null);
     useEffect(() => {
         const imgUrl =
@@ -41,7 +49,7 @@ const CashReceiptPDF: FC<Props> = ({ data, image, organizationData }) => {
                     <div>
                         <div className="italic">BILL TO</div>
                         <div className="font-bold">
-                            {data?.invoice?.customer.name}
+                            {data?.invoice?.customer?.name}
                         </div>
                     </div>
                     <div className="flex items-center gap-8">
@@ -54,7 +62,17 @@ const CashReceiptPDF: FC<Props> = ({ data, image, organizationData }) => {
                     </div>
                 </div>
 
-                <div>Payment Method: Cash</div>
+                <div>Payment Method: {method}</div>
+                {method === "Bank" && (
+                    <div>
+                        <div>Bank Name: {bankInfo.bank_name}</div>
+                        <div>Account Name: {bankInfo.account_name}</div>
+                        <div>Account Number: {bankInfo.account_number}</div>
+                    </div>
+                )}
+                <div>
+                    {method} Note: {data?.transaction_note}
+                </div>
 
                 <div className="mt-2">
                     <table className="border mt-2 w-full">
