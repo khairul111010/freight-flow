@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('transaction_type');
             $table->date('transaction_date');
             $table->boolean('is_debit')->default(false);
-            $table->string('invoice_number');
+            $table->string('invoice_number')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('transaction_note')->nullable();
             $table->foreignId('chart_of_account_id')->nullable()->constrained('chart_of_accounts')->onUpdate('cascade')->onDelete('cascade');

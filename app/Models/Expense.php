@@ -19,8 +19,13 @@ class Expense extends Model
         return $this->belongsTo(Vendor::class);
     }
 
+    public function chart_of_account()
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'chart_of_account_id');
+    }
+
     public function transactions()
     {
-        return $this->hasMany(Transactions::class);
+        return $this->hasMany(Transactions::class, 'expense_id');
     }
 }
