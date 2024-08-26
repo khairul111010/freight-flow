@@ -723,6 +723,87 @@ class InvoiceController extends Controller
         }
     }
 
+    public function addInvoiceDiscount(Request $request, $invoiceId) {
+        try {
+            $invoice = Invoice::findOrFail($invoiceId);
+
+            if (!$invoice) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invoice not found!',
+                ], 404);
+            }
+
+            DB::transaction(function () use ($request, $invoice) {
+                $invoice->invoice_discounted_amount = $request->invoice_discounted_amount;
+
+                $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount - $invoice->invoice_discounted_amount;
+
+                $invoice->invoice_receivable_amount_bdt = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_discounted_amount;
+
+                $invoice->save();
+
+                $lastDebitTransaction = Transactions::where('invoice_id', $invoice->id)->where('is_debit', true)->latest()->first();
+
+                $lastDebitTransaction->amount = $invoice->invoice_due_balance;
+                $lastDebitTransaction->transaction_note = $request->transaction_note ?? 'Discounted Amount';
+                $lastDebitTransaction->save();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Discount added successfully',
+                'result' => InvoiceResource::make($invoice)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function addBillDiscount(Request $request, $billId) {
+        try {
+            $bill = Bill::findOrFail($billId);
+
+            if (!$bill) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bill not found!',
+                ], 404);
+            }
+
+            DB::transaction(function () use ($request, $bill) {
+                $bill->bill_discounted_amount = $request->bill_discounted_amount;
+
+                $bill->bill_due_balance = $bill->bill_payable_bdt - $bill->bill_paid_amount - $bill->bill_discounted_amount;
+                $bill->bill_payable_bdt = $bill->bill_payable_bdt - $bill->bill_discounted_amount;
+
+                $bill->save();
+
+                $lastCreditTransaction = Transactions::where('bill_id', $bill->id)->where('is_debit', false)->latest()->first();
+
+                $lastCreditTransaction->amount = $bill->bill_due_balance;
+                $lastCreditTransaction->transaction_note = $request->transaction_note ?? 'Discounted Amount';
+                $lastCreditTransaction->save();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Discount added successfully',
+                'result' => InvoiceResource::make($bill)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      */
