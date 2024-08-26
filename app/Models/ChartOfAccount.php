@@ -29,6 +29,11 @@ class ChartOfAccount extends Model
         return $this->hasMany(Bill::class, 'chart_of_account_id');
     }
 
+    public function expense()
+    {
+        return $this->hasMany(Expense::class, 'chart_of_account_id');
+    }
+
     public function transactions()
     {
         return $this->hasMany(Transactions::class, 'chart_of_account_id');

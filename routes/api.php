@@ -6,6 +6,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\ChargesController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManualJournalController;
 use App\Http\Controllers\OrganizationController;
@@ -65,6 +66,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::post('/{invoiceId}', [InvoiceController::class, 'updateInvoiceAmount']);
         Route::post('/bill/{billId}', [InvoiceController::class, 'updateBillAmount']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
+    });
+
+    Route::prefix('expenses')->group(function () {
+        Route::get('/', [ExpensesController::class, 'index']);
+        Route::post('/', [ExpensesController::class, 'store']);
+        Route::get('/{id}', [ExpensesController::class, 'show']);
+        Route::get('/generate-pdf/{id}', [ExpensesController::class, 'pdf']);
     });
 
     Route::prefix('vendors')->group(function () {
