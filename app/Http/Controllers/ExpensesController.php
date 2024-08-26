@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ExpenseResource;
+use App\Models\BankAccounts;
 use App\Models\Customer;
 use App\Models\Expense;
 use App\Models\Expenses;
+use App\Models\Organization;
 use App\Models\Transactions;
 use App\Models\Vendor;
 use Exception;
@@ -70,6 +72,31 @@ class ExpensesController extends Controller
                 ], 404);
             }
         }
+
+        if($request->payment_method == 'cash'){
+            $organization = Organization::find(1);    
+            $organization->opening_cash_balance -= $request->invoice_received_amount;
+            $organization->save();    
+        } else if($request->payment_method == 'bank'){
+            if(!$request->bank_account_id){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bank account is required for bank payment method',
+                ], 400);
+            }
+            $bank_account = BankAccounts::find($request->invoice_bank_account_id);
+            if (!$bank_account) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bank Account not found!',
+                ], 404);
+            }
+
+            $bank_account->opening_bank_balance -= $request->invoice_received_amount;
+            $bank_account->save();
+        }
+
+        
         DB::transaction(function () use ($vendor, $customer, $request) {
             $expense_count = Expense::count();
             $expense_number = 'EXP-00' . $expense_count + 1;
