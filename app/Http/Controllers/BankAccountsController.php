@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BankAccounts;
-use DB;
+use App\Models\Organization;
+use App\Models\Transactions;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -133,6 +135,69 @@ class BankAccountsController extends Controller
                 'success' => true,
                 'message' => 'Bank Account retrieved successfully',
                 'result' => BankAccounts::with('transactions.invoice', 'transactions.bill', 'bank')->whereMonth('created_at', $request->month)->whereYear('created_at', $request->year)->find($id)
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
+
+    public function withdrawAmount(Request $request, $bank_account_id)
+    {
+        try {
+            
+            $bank_account = BankAccounts::find($bank_account_id);
+            if(!$bank_account) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bank Account not found',
+                ], 404);
+            }
+
+            if($bank_account->opening_bank_balance < $request->amount) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient balance',
+                ], 400);
+            }
+
+            DB::transaction(function () use ($bank_account, $request) {
+
+                $bank_account->opening_bank_balance -= $request->amount;
+                $bank_account->save();
+                $organization = Organization::find(1);
+                $organization->opening_cash_balance += $request->amount;
+                $organization->save();
+
+                $debit_transaction = new Transactions();
+                $debit_transaction->amount = $request->amount;
+                $debit_transaction->current_amount = $request->amount;
+                $debit_transaction->transaction_type = 'deposit';
+                $debit_transaction->transaction_date = now();
+                $debit_transaction->payment_method = 'cash';
+                $debit_transaction->is_debit = true;
+                $debit_transaction->transaction_note = $request->transaction_note ?? 'Cash deposit';
+                $debit_transaction->save();
+
+                $credit_transaction = new Transactions();
+                $credit_transaction->amount = $request->amount;
+                $credit_transaction->current_amount = $request->amount;
+                $credit_transaction->transaction_type = 'withdraw';
+                $credit_transaction->transaction_date = now();
+                $credit_transaction->payment_method = 'bank';
+                $credit_transaction->is_debit = false;
+                $credit_transaction->transaction_note = $request->transaction_note ?? 'Bank withdrawal';
+                $credit_transaction->bank_account_id = $bank_account->id;
+                $credit_transaction->save();
+            });
+            
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Amount withdrawn successfully',
+                'result' => $bank_account
             ], 200);
         } catch (Exception $e) {
             return response()->json([
