@@ -64,7 +64,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/bill/search/{invoice_number}', [InvoiceController::class, 'searchBill']);
         Route::get('/bill/vendor/{id}', [InvoiceController::class, 'getBillByVendor']);
         Route::post('/{invoiceId}', [InvoiceController::class, 'updateInvoiceAmount']);
+        Route::post('/discount/{invoiceId}', [InvoiceController::class, 'addInvoiceDiscount']);
         Route::post('/bill/{billId}', [InvoiceController::class, 'updateBillAmount']);
+        Route::post('/bill/discount/{billId}', [InvoiceController::class, 'addBillDiscount']);
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
     });
 
