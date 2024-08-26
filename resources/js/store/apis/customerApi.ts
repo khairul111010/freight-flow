@@ -9,6 +9,14 @@ const customerApi = baseApi
                 providesTags: ["Customers"],
                 transformResponse: (response: any) => response.result,
             }),
+            getCustomerTransactions: builder.query<any, any>({
+                query: (pagination) =>
+                    `/customers/transactions/${pagination.id}?month=${
+                        pagination.month || new Date().getMonth() + 1
+                    }&year=${pagination.year || new Date().getFullYear()}`,
+                providesTags: ["Customers"],
+                transformResponse: (response: any) => response.result,
+            }),
             getCustomers: builder.query<any, any>({
                 query: (pagination) =>
                     `/customers?page=${pagination.page || 1}&search=${
@@ -50,6 +58,8 @@ const customerApi = baseApi
     });
 
 export const {
+    useGetCustomerTransactionsQuery,
+    useLazyGetCustomerTransactionsQuery,
     useGetInvoicesByCustomerQuery,
     useLazyGetInvoicesByCustomerQuery,
     useGetAllCustomersQuery,

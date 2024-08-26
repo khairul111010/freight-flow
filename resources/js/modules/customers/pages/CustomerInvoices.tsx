@@ -1,27 +1,58 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import { useParams } from "react-router-dom";
-import { useLazyGetInvoicesByCustomerQuery } from "../../../store/apis/customerApi";
+import {
+    useGetCustomerQuery,
+    useLazyGetCustomerTransactionsQuery,
+    useLazyGetInvoicesByCustomerQuery,
+} from "../../../store/apis/customerApi";
 import Spinner from "../../../components/preloader/Spinner";
 import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
 import { Column } from "primereact/column";
 import Pagination from "../../../components/pagination";
+import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
 
 const CustomerInvoices = () => {
-    const [search, setSearch] = useState("");
-    const debouncedValue = useDebounce(search, 500);
-    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    };
-
+    const [tableData, setTableData] = useState([]);
+    const [thisMonthDue, setThisMonthDue] = useState(0);
+    const [date, setDate] = useState<Date>(new Date());
     const { id } = useParams();
-    const [getInvoicesByCustomer, { data, isLoading }] =
-        useLazyGetInvoicesByCustomerQuery();
+    const [getCustomerTransactions, { isLoading }] =
+        useLazyGetCustomerTransactionsQuery();
+
+    const { data: customerData, isLoading: customerLoading } =
+        useGetCustomerQuery(id);
 
     useEffect(() => {
-        getInvoicesByCustomer({ id, page: 1, search: debouncedValue });
-    }, [debouncedValue]);
+        getCustomerTransactions({
+            id,
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+        })
+            .unwrap()
+            .then((res: any) => {
+                const _table = res
+                    .map((item: any) =>
+                        item.transactions.filter((transaction: any) => {
+                            return (
+                                transaction.is_debit === 0 &&
+                                transaction.amount !== 0
+                            );
+                        })
+                    )
+                    .flat();
+
+                const totalDue = res.reduce(
+                    (sum: number, item: any) => sum + item.invoice_due_balance,
+                    0
+                );
+
+                setThisMonthDue(totalDue);
+
+                setTableData(_table);
+            });
+    }, [id, date]);
 
     if (isLoading) {
         return (
@@ -33,6 +64,37 @@ const CustomerInvoices = () => {
 
     return (
         <div>
+            <div className="flex items-center justify-between mb-2">
+                <div className="w-fit">
+                    <SeparatedDateInput
+                        onChange={(val: any) => setDate(val)}
+                        value={date}
+                    />
+                </div>
+                <div>
+                    {!customerLoading ? (
+                        <>
+                            <div>
+                                Name: <span>{customerData.name}</span>
+                            </div>
+                            <div>
+                                Email: <span>{customerData.email}</span>
+                            </div>
+                            <div>
+                                Address: <span>{customerData.address}</span>
+                            </div>
+                            <div>
+                                (Selected Month)Due Balance:{" "}
+                                <span className="font-extrabold">
+                                    {thisMonthDue.toLocaleString()}
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <Spinner color="#44C7F4" />
+                    )}
+                </div>
+            </div>
             <DataTable
                 pt={{
                     column: {
@@ -55,7 +117,7 @@ const CustomerInvoices = () => {
                         ),
                     }),
                 }}
-                value={(data && data.data) || []}
+                value={tableData}
                 stripedRows
             >
                 <Column
@@ -65,126 +127,11 @@ const CustomerInvoices = () => {
                     }}
                 />
                 <Column field="invoice_number" header="Invoice Number"></Column>
-                <Column field="invoice_issue_date" header="Issued"></Column>
-                <Column field="invoice_due_date" header="Due"></Column>
-                <Column field="master_air_way_bill" header="MAWB"></Column>
-                <Column
-                    field="master_air_way_bill_fee"
-                    header="MAWB Fee"
-                    body={(rowData) => {
-                        return (
-                            <>
-                                {rowData.master_air_way_bill_fee.toLocaleString()}
-                            </>
-                        );
-                    }}
-                ></Column>
-                <Column field="destination" header="Dest."></Column>
-                <Column
-                    field="cartoon_amount"
-                    header="CTN"
-                    body={(rowData) => {
-                        return <>{rowData.cartoon_amount.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="chargeable_weight"
-                    header="CHW"
-                    body={(rowData) => {
-                        return (
-                            <>{rowData.chargeable_weight.toLocaleString()}</>
-                        );
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_rate"
-                    header="Rate"
-                    body={(rowData) => {
-                        return <>{rowData.invoice_rate.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_ait"
-                    header="AIT"
-                    body={(rowData) => {
-                        return <>{rowData.invoice_ait.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_cgc"
-                    header="CGC"
-                    body={(rowData) => {
-                        return <>{rowData.invoice_cgc.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_dtc"
-                    header="DTC"
-                    body={(rowData) => {
-                        return <>{rowData.invoice_dtc.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_vat"
-                    header="VAT"
-                    body={(rowData) => {
-                        return <>{rowData.invoice_vat.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="others"
-                    header="Others"
-                    body={(rowData) => {
-                        return <>{rowData.others.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_total_usd"
-                    header="TTL USD"
-                    body={(rowData) => {
-                        return (
-                            <>{rowData.invoice_total_usd.toLocaleString()}</>
-                        );
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_exchange_rate"
-                    header="Ex. Rate"
-                    body={(rowData) => {
-                        return (
-                            <>
-                                {rowData.invoice_exchange_rate.toLocaleString()}
-                            </>
-                        );
-                    }}
-                ></Column>
-                <Column
-                    field="invoice_receivable_amount_bdt"
-                    header="TTL BDT"
-                    body={(rowData) => {
-                        return (
-                            <>
-                                {rowData.invoice_receivable_amount_bdt.toLocaleString()}
-                            </>
-                        );
-                    }}
-                ></Column>
+                <Column field="transaction_date" header="Date"></Column>
+                <Column field="payment_method" header="Method"></Column>
+                <Column field="current_amount" header="Amount"></Column>
+                <Column field="transaction_note" header="Receipt"></Column>
             </DataTable>
-            {data && (
-                <Pagination
-                    className="my-5 flex justify-center"
-                    totalPages={data.last_page || 1}
-                    currentPage={data.current_page || 1}
-                    perPage={data.per_page || 1}
-                    onPageChange={({ currentPage }) =>
-                        getInvoicesByCustomer({
-                            id,
-                            page: currentPage,
-                            search: debouncedValue,
-                        })
-                    }
-                />
-            )}
         </div>
     );
 };

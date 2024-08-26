@@ -10,9 +10,11 @@ import { useGetOrganizationQuery } from "../../../store/apis/organizationApi";
 import { convertImageToBase64 } from "../../../utils/imageConvertion/convertImageToBase64";
 import InvoicePayForm from "../components/InvoicePayForm";
 import InvoicePDF from "../components/InvoicePDF";
+import DiscountForm from "../components/DiscountForm";
 const InvoiceEdit = () => {
     const [imageData, setImageData] = useState<string | null>(null);
     const [open, setOpen] = useState(false);
+    const [openDiscount, setOpenDiscount] = useState(false);
     const { id } = useParams();
     const { data, isLoading } = useGetInvoiceQuery(id);
     const { data: organizationData } = useGetOrganizationQuery();
@@ -241,9 +243,16 @@ const InvoiceEdit = () => {
                                 </th>
                             </tr>
                             <tr className="">
+                                <th className="p-2 text-center">Discount</th>
+                                <th className="p-2 text-left"></th>
+                                <th className="p-2 text-right text-red-500">
+                                    - {data?.invoice_discounted_amount ?? 0}
+                                </th>
+                            </tr>
+                            <tr className="">
                                 <th className="p-2 text-center">Total BDT</th>
                                 <th className="p-2 text-left"></th>
-                                <th className="p-2 text-right">
+                                <th className="p-2 text-right text-primary">
                                     {data?.invoice_receivable_amount_bdt}
                                 </th>
                             </tr>
@@ -255,12 +264,20 @@ const InvoiceEdit = () => {
             <div className="bg-white p-8 rounded-md h-full mt-4">
                 <div className="flex items-center justify-between mb-4">
                     <h1 className="text-base font-semibold">Transactions</h1>
-                    <button
-                        className="w-fit bg-primary text-white px-8 py-2 rounded-md"
-                        onClick={() => setOpen(true)}
-                    >
-                        Payment
-                    </button>
+                    <div className="flex items-center gap-1">
+                        <button
+                            className="w-fit border border-primary text-primary bg-white px-8 py-2 rounded-md"
+                            onClick={() => setOpenDiscount(true)}
+                        >
+                            Discount
+                        </button>
+                        <button
+                            className="w-fit bg-primary text-white px-8 py-2 rounded-md"
+                            onClick={() => setOpen(true)}
+                        >
+                            Payment
+                        </button>
+                    </div>
                 </div>
                 <div className="grid grid-cols-2 text-base font-normal italic border-t border-l border-r divide-x">
                     <div className="p-2">Due</div>
@@ -292,7 +309,18 @@ const InvoiceEdit = () => {
                     )}
                 </div>
             </div>
-
+            {id && (
+                <Modal
+                    onClose={() => setOpenDiscount(false)}
+                    open={openDiscount}
+                    title="Discount Add"
+                >
+                    <DiscountForm
+                        id={id}
+                        onSuccess={() => setOpenDiscount(false)}
+                    />
+                </Modal>
+            )}
             <Modal
                 onClose={() => setOpen(false)}
                 open={open}

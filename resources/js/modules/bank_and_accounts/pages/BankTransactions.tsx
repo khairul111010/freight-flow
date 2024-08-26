@@ -11,7 +11,10 @@ import Spinner from "../../../components/preloader/Spinner";
 import { useLazyGetBankAccountTransactionsQuery } from "../../../store/apis/bankApi";
 import { useGetOrganizationQuery } from "../../../store/apis/organizationApi";
 import CashReceiptPDF from "../../cash/components/CashReceiptPDF";
+import Modal from "../../../components/model/Modal";
+import WithDrawForm from "../components/WithDrawForm";
 const BankTransactions = () => {
+    const [open, setOpen] = useState(false);
     const [tableData, setTableData] = useState([]);
     const [date, setDate] = useState<Date>(new Date());
     const { id } = useParams();
@@ -36,6 +39,18 @@ const BankTransactions = () => {
                     if (
                         item.transaction_type === "bill" &&
                         item.is_debit === 1
+                    ) {
+                        return item;
+                    }
+                    if (
+                        item.transaction_type === "expense" &&
+                        item.is_debit === 1
+                    ) {
+                        return item;
+                    }
+                    if (
+                        item.transaction_type === "withdraw" &&
+                        item.is_debit === 0
                     ) {
                         return item;
                     }
@@ -67,7 +82,7 @@ const BankTransactions = () => {
                         />
                     </div>
                 </div>
-                <div>
+                <div className="">
                     <div>
                         Account Name:{" "}
                         <span className="font-extrabold">
@@ -86,6 +101,12 @@ const BankTransactions = () => {
                             {data?.opening_bank_balance.toLocaleString()}
                         </span>
                     </div>
+                    <button
+                        className="w-fit bg-primary text-white px-8 py-2 rounded-md mt-2"
+                        onClick={() => setOpen(true)}
+                    >
+                        Withdraw from Bank to Cash
+                    </button>
                 </div>
             </div>
             <div className="bg-white rounded-md overflow-hidden mt-4">
@@ -130,7 +151,7 @@ const BankTransactions = () => {
                             header="Invoice Number"
                         ></Column>
                         <Column
-                            header="Invoice Number"
+                            header="Note"
                             body={(rowData) => {
                                 return <>{rowData.transaction_note}</>;
                             }}
@@ -153,6 +174,10 @@ const BankTransactions = () => {
                                 );
                             }}
                         />
+                        <Column
+                            field="transaction_type"
+                            header="Transaction Type"
+                        ></Column>
                         <Column
                             header="Receipt"
                             body={(rowData) => {
@@ -183,6 +208,18 @@ const BankTransactions = () => {
                         />
                     </DataTable>
                 </>
+                {id && (
+                    <Modal
+                        onClose={() => setOpen(false)}
+                        open={open}
+                        title="Withdraw from Bank to Cash"
+                    >
+                        <WithDrawForm
+                            id={id}
+                            onSuccess={() => setOpen(false)}
+                        />
+                    </Modal>
+                )}
             </div>
         </div>
     );

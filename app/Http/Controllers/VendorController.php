@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\VendorResource;
+use App\Models\Bill;
 use App\Models\Vendor;
 use Exception;
 use Illuminate\Http\Request;
@@ -152,5 +153,31 @@ class VendorController extends Controller
     public function destroy(vendor $vendor)
     {
         //
+    }
+
+
+
+    public function transactions(Request $request)
+    {
+        try {
+            $query = Bill::with(['transactions', 'vendor'])
+                ->where('vendor_id', $request->id)
+                ->whereHas('transactions', function ($query) use ($request) {
+                    $query->whereMonth('transaction_date', $request->month)
+                        ->whereYear('transaction_date', $request->year);
+                })
+                ->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Vendor Transactions retrieved successfully',
+                'result' => $query
+            ], 200);
+        } catch (Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
+            ], 500);
+        }
     }
 }

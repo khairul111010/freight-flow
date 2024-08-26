@@ -31,6 +31,8 @@ export enum  AppRoutesEnum {
     SETTINGS = '/settings',
     CASH = '/cash',
     CASH_PDF = '/cash-pdf',
+    EXPENSE = '/expense',
+    EXPENSE_ADD = '/expense/add',
 }
 
 export enum ErrorRoutesEnum {

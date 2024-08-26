@@ -9,6 +9,14 @@ const vendorApi = baseApi
                 providesTags: ["Vendors"],
                 transformResponse: (response: any) => response.result,
             }),
+            getVendorsTransactions: builder.query<any, any>({
+                query: (pagination) =>
+                    `/vendors/transactions/${pagination.id}?month=${
+                        pagination.month || new Date().getMonth() + 1
+                    }&year=${pagination.year || new Date().getFullYear()}`,
+                providesTags: ["Vendors"],
+                transformResponse: (response: any) => response.result,
+            }),
             getVendors: builder.query<any, any>({
                 query: (pagination) =>
                     `/vendors?page=${pagination.page || 1}&search=${
@@ -49,6 +57,8 @@ const vendorApi = baseApi
     });
 
 export const {
+    useGetVendorsTransactionsQuery,
+    useLazyGetVendorsTransactionsQuery,
     useGetBillsByVendorQuery,
     useLazyGetBillsByVendorQuery,
     useGetAllVendorsQuery,

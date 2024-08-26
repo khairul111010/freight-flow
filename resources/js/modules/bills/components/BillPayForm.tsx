@@ -58,6 +58,13 @@ const BillPayForm: FC<Props> = ({ onSuccess }) => {
         }
     };
 
+    const handleBank = (e: any) => {
+        const formik = formikRef.current;
+        if (formik?.values.bill_payment_method === "cash") {
+            formik?.setFieldValue("bill_bank_account_id", null);
+        }
+    };
+
     return (
         <Formik
             initialValues={initialValues}
@@ -94,6 +101,7 @@ const BillPayForm: FC<Props> = ({ onSuccess }) => {
                                     };
                                 }) || []
                             }
+                            onChange={handleBank}
                         />
 
                         <TextInput name="bill_transaction_note" label="Note" />

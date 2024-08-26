@@ -77,7 +77,7 @@ class BankAccountsController extends Controller
     public function store(Request $request)
     {
         try {
-            if($request->opening_bank_balance < 0) {
+            if ($request->opening_bank_balance < 0) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Opening bank balance cannot be negative',
@@ -147,16 +147,16 @@ class BankAccountsController extends Controller
     public function withdrawAmount(Request $request, $bank_account_id)
     {
         try {
-            
+
             $bank_account = BankAccounts::find($bank_account_id);
-            if(!$bank_account) {
+            if (!$bank_account) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Bank Account not found',
                 ], 404);
             }
 
-            if($bank_account->opening_bank_balance < $request->amount) {
+            if ($bank_account->opening_bank_balance < $request->amount) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Insufficient balance',
@@ -192,7 +192,7 @@ class BankAccountsController extends Controller
                 $credit_transaction->bank_account_id = $bank_account->id;
                 $credit_transaction->save();
             });
-            
+
 
             return response()->json([
                 'success' => true,

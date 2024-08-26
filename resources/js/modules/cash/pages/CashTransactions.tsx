@@ -50,6 +50,18 @@ const CashTransactions = () => {
                     ) {
                         return item;
                     }
+                    if (
+                        item.transaction_type === "expense" &&
+                        item.is_debit === 1
+                    ) {
+                        return item;
+                    }
+                    if (
+                        item.transaction_type === "deposit" &&
+                        item.is_debit === 1
+                    ) {
+                        return item;
+                    }
                 });
                 setTableData(_data);
             });
@@ -138,7 +150,7 @@ const CashTransactions = () => {
                     ></Column>
 
                     <Column
-                        header="Invoice Number"
+                        header="Note"
                         body={(rowData) => {
                             return <>{rowData.transaction_note}</>;
                         }}
@@ -150,7 +162,9 @@ const CashTransactions = () => {
                             return (
                                 <div
                                     className={`${
-                                        rowData.transaction_type === "invoice"
+                                        rowData.transaction_type ===
+                                            "invoice" ||
+                                        rowData.transaction_type === "deposit"
                                             ? "text-green-500"
                                             : "text-red-500"
                                     }`}
@@ -160,6 +174,10 @@ const CashTransactions = () => {
                             );
                         }}
                     />
+                    <Column
+                        field="transaction_type"
+                        header="Transaction Type"
+                    ></Column>
                     <Column
                         header="Receipt"
                         body={(rowData) => {

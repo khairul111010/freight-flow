@@ -47,8 +47,16 @@ const invoiceApi = baseApi
                 }),
                 invalidatesTags: ["Invoice"],
             }),
+            createDiscountInvoice: builder.mutation({
+                query: (body) => ({
+                    url: `invoices/discount/${body.id}`,
+                    method: "POST",
+                    body: body.body,
+                }),
+                invalidatesTags: ["Invoice"],
+            }),
             updateInvoice: builder.mutation({
-                query: ({id, ...body}) => ({
+                query: ({ id, ...body }) => ({
                     url: `invoices/${id}`,
                     method: "POST",
                     body,
@@ -56,7 +64,7 @@ const invoiceApi = baseApi
                 invalidatesTags: ["Invoice"],
             }),
             updateBill: builder.mutation({
-                query: ({id, ...body}) => ({
+                query: ({ id, ...body }) => ({
                     url: `invoices/bill/${id}`,
                     method: "POST",
                     body,
@@ -67,6 +75,7 @@ const invoiceApi = baseApi
     });
 
 export const {
+    useCreateDiscountInvoiceMutation,
     useUpdateBillMutation,
     useGetBillQuery,
     useLazyGetBillQuery,
@@ -79,5 +88,5 @@ export const {
     useGetInvoicesQuery,
     useLazyGetInvoicesQuery,
     useGetInvoiceQuery,
-    useLazyGetInvoiceQuery
+    useLazyGetInvoiceQuery,
 } = invoiceApi;

@@ -113,7 +113,7 @@ class InvoiceController extends Controller
                     ], 404);
                 }
 
-                if($bank_account->opening_bank_balance < $request->bill_paid_amount) {
+                if ($bank_account->opening_bank_balance < $request->bill_paid_amount) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Insufficient balance in bank account!',
@@ -130,7 +130,7 @@ class InvoiceController extends Controller
             }
 
             $vendor = Vendor::find($request->vendor_id);
-            if(!$vendor) {
+            if (!$vendor) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Vendor not found!',
@@ -174,7 +174,7 @@ class InvoiceController extends Controller
                 $invoice->invoice_received_amount = $request->invoice_received_amount;
 
                 $invoice->invoice_discounted_amount = $request->invoice_discounted_amount ?? 0;
-                
+
                 $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount - $invoice->invoice_discounted_amount;
 
 
@@ -184,11 +184,11 @@ class InvoiceController extends Controller
                 $invoice->customer_id = $request->customer_id;
                 $invoice->chart_of_account_id = $request->invoice_chart_of_account_id;
 
-                if($request->invoice_payment_method == 'cash') {
+                if ($request->invoice_payment_method == 'cash') {
                     $organization->opening_cash_balance += $request->invoice_received_amount;
 
                     $organization->save();
-                } else if($request->invoice_payment_method == 'bank') {
+                } else if ($request->invoice_payment_method == 'bank') {
                     $bank_account = BankAccounts::find($request->invoice_bank_account_id);
                     $bank_account->opening_bank_balance += $request->invoice_received_amount;
 
@@ -297,11 +297,11 @@ class InvoiceController extends Controller
                 //     $bill->bill_bank_account_id = $request->bill_bank_account_id;
                 // }
 
-                if($request->bill_payment_method == 'cash') {
+                if ($request->bill_payment_method == 'cash') {
                     $organization->opening_cash_balance -= $request->bill_paid_amount;
 
                     $organization->save();
-                } else if($request->bill_payment_method == 'bank') {
+                } else if ($request->bill_payment_method == 'bank') {
                     $bank_account = BankAccounts::find($request->bill_bank_account_id);
                     $bank_account->opening_bank_balance -= $request->bill_paid_amount;
 
@@ -461,13 +461,12 @@ class InvoiceController extends Controller
                 ], 404);
             }
 
-            if($request->invoice_payment_method == 'cash') {
+            if ($request->invoice_payment_method == 'cash') {
                 $organization = Organization::find(1);
-                
+
                 $organization->opening_cash_balance += $request->invoice_received_amount;
-                $organization->save();    
-            }
-            else if ($request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id) {
+                $organization->save();
+            } else if ($request->invoice_payment_method == 'bank' && $request->invoice_bank_account_id) {
                 $bank_account = BankAccounts::find($request->invoice_bank_account_id);
 
                 if (!$bank_account) {
@@ -481,11 +480,11 @@ class InvoiceController extends Controller
                 $bank_account->save();
             }
 
-            
+
 
             // Update the received amount
             $invoice->invoice_received_amount += $request->invoice_received_amount;
-            
+
 
             // Recalculate the due balance
             $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount;
@@ -584,16 +583,16 @@ class InvoiceController extends Controller
     public function updateBillAmount(Request $request, $billId)
     {
         try {
-            
+
             $bill = Bill::findOrFail($billId);
-            
+
             if (!$bill) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Bill not found!',
                 ], 404);
             }
-            
+
             if ($request->bill_payment_method == 'cash') {
                 $organization = Organization::find(1);
 
@@ -607,7 +606,7 @@ class InvoiceController extends Controller
                 $organization->save();
             } else if (
                 $request->bill_payment_method == 'bank' && $request->bill_bank_account_id
-                ) {
+            ) {
                 $bank_account = BankAccounts::find($request->bill_bank_account_id);
 
                 if (!$bank_account) {
@@ -617,7 +616,7 @@ class InvoiceController extends Controller
                     ], 404);
                 }
 
-                if($bank_account->opening_bank_balance < $request->bill_paid_amount) {
+                if ($bank_account->opening_bank_balance < $request->bill_paid_amount) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Insufficient balance in bank account!',
@@ -723,18 +722,22 @@ class InvoiceController extends Controller
         }
     }
 
-    public function addInvoiceDiscount(Request $request, $invoiceId) {
+    public function addInvoiceDiscount(Request $request, $invoiceId)
+    {
         try {
-            $invoice = Invoice::findOrFail($invoiceId);
+            $_invoice = Invoice::find($invoiceId);
 
-            if (!$invoice) {
+            if (!$_invoice) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invoice not found!',
                 ], 404);
             }
 
-            DB::transaction(function () use ($request, $invoice) {
+            DB::transaction(function () use ($request, $invoiceId) {
+
+                $invoice = Invoice::find($invoiceId);
+
                 $invoice->invoice_discounted_amount = $request->invoice_discounted_amount;
 
                 $invoice->invoice_due_balance = $invoice->invoice_receivable_amount_bdt - $invoice->invoice_received_amount - $invoice->invoice_discounted_amount;
@@ -746,14 +749,14 @@ class InvoiceController extends Controller
                 $lastDebitTransaction = Transactions::where('invoice_id', $invoice->id)->where('is_debit', true)->latest()->first();
 
                 $lastDebitTransaction->amount = $invoice->invoice_due_balance;
-                $lastDebitTransaction->transaction_note = $request->transaction_note ?? 'Discounted Amount';
+                $lastDebitTransaction->transaction_note = $request->transaction_note . 'DISCOUNT-' . $request->invoice_discounted_amount;
                 $lastDebitTransaction->save();
             });
 
             return response()->json([
                 'success' => true,
                 'message' => 'Discount added successfully',
-                'result' => InvoiceResource::make($invoice)
+                'result' => InvoiceResource::make($_invoice)
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -764,7 +767,8 @@ class InvoiceController extends Controller
         }
     }
 
-    public function addBillDiscount(Request $request, $billId) {
+    public function addBillDiscount(Request $request, $billId)
+    {
         try {
             $bill = Bill::findOrFail($billId);
 
@@ -828,7 +832,7 @@ class InvoiceController extends Controller
             });
         }
         $query->orderBy('created_at', 'desc');
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Bills retrieved successfully',
@@ -885,4 +889,5 @@ class InvoiceController extends Controller
             'result' => InvoiceResource::make($bill)
         ], 200);
     }
+
 }

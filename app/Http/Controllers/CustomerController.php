@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Models\Invoice;
+use App\Models\Transactions;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -49,6 +51,31 @@ class CustomerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
+            ], 500);
+        }
+    }
+
+
+    public function transactions(Request $request)
+    {
+        try {
+            $query = Invoice::with(['transactions', 'customer'])
+                ->where('customer_id', $request->id)
+                ->whereHas('transactions', function ($query) use ($request) {
+                    $query->whereMonth('transaction_date', $request->month)
+                        ->whereYear('transaction_date', $request->year);
+                })
+                ->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Customers Transactions retrieved successfully',
+                'result' => $query
+            ], 200);
+        } catch (Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong',
             ], 500);
         }
     }

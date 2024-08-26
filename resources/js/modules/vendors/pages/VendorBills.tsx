@@ -2,7 +2,9 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
     useGetBillsByVendorQuery,
+    useGetVendorQuery,
     useLazyGetBillsByVendorQuery,
+    useLazyGetVendorsTransactionsQuery,
 } from "../../../store/apis/vendorApi";
 import Spinner from "../../../components/preloader/Spinner";
 import useDebounce from "../../../hooks/useDebounce";
@@ -10,21 +12,51 @@ import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
 import { Column } from "primereact/column";
 import Pagination from "../../../components/pagination";
+import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
 
 const VendorBills = () => {
-    const [search, setSearch] = useState("");
-    const debouncedValue = useDebounce(search, 500);
-    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    };
-
+    const [tableData, setTableData] = useState([]);
+    const [thisMonthDue, setThisMonthDue] = useState(0);
+    const [date, setDate] = useState<Date>(new Date());
     const { id } = useParams();
-    const [getBillsByVendor, { data, isLoading }] =
-        useLazyGetBillsByVendorQuery();
+
+    const [getVendorsTransactions, { data, isLoading }] =
+        useLazyGetVendorsTransactionsQuery();
+
+    const { data: vendorData, isLoading: vendorLoading } =
+        useGetVendorQuery(id);
 
     useEffect(() => {
-        getBillsByVendor({ id, page: 1, search: debouncedValue });
-    }, [debouncedValue]);
+        getVendorsTransactions({
+            id,
+            month: date.getMonth() + 1,
+            year: date.getFullYear(),
+        })
+            .unwrap()
+            .then((res: any) => {
+                const _table = res
+                    .map((item: any) =>
+                        item.transactions.filter((transaction: any) => {
+                            return (
+                                transaction.is_debit === 1 &&
+                                transaction.amount !== 0
+                            );
+                        })
+                    )
+                    .flat();
+
+                const totalDue = res.reduce(
+                    (sum: number, item: any) => sum + item.bill_due_balance,
+                    0
+                );
+
+                setThisMonthDue(totalDue);
+
+                setTableData(_table);
+            });
+    }, [id, date]);
+
+    console.log(data && data);
 
     if (isLoading) {
         return (
@@ -34,7 +66,38 @@ const VendorBills = () => {
         );
     }
     return (
-        <>
+        <div>
+            <div className="flex items-center justify-between mb-2">
+                <div className="w-fit">
+                    <SeparatedDateInput
+                        onChange={(val: any) => setDate(val)}
+                        value={date}
+                    />
+                </div>
+                <div>
+                    {!vendorLoading ? (
+                        <>
+                            <div>
+                                Name: <span>{vendorData.name}</span>
+                            </div>
+                            <div>
+                                Email: <span>{vendorData.email}</span>
+                            </div>
+                            <div>
+                                Address: <span>{vendorData.address}</span>
+                            </div>
+                            <div>
+                                (Selected Month) Due Balance:{" "}
+                                <span className="font-extrabold">
+                                    {thisMonthDue.toLocaleString()}
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <Spinner color="#44C7F4" />
+                    )}
+                </div>
+            </div>
             <DataTable
                 pt={{
                     column: {
@@ -57,7 +120,7 @@ const VendorBills = () => {
                         ),
                     }),
                 }}
-                value={(data && data.data) || []}
+                value={tableData}
                 stripedRows
             >
                 <Column
@@ -67,105 +130,12 @@ const VendorBills = () => {
                     }}
                 />
                 <Column field="invoice_number" header="Invoice Number"></Column>
-                <Column field="bill_issue_date" header="Issued"></Column>
-                <Column field="bill_due_date" header="Due"></Column>
-                <Column field="master_air_way_bill" header="MAWB" />
-                <Column
-                    field="master_air_way_bill_fee"
-                    header="MAWB Fee"
-                    body={(rowData) => {
-                        return (
-                            <>
-                                {rowData.master_air_way_bill_fee.toLocaleString()}
-                            </>
-                        );
-                    }}
-                ></Column>
-                <Column field="destination" header="Dest."></Column>
-                <Column
-                    field="cartoon_amount"
-                    header="CTN"
-                    body={(rowData) => {
-                        return <>{rowData.cartoon_amount.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="chargeable_weight"
-                    header="CHW"
-                    body={(rowData) => {
-                        return (
-                            <>{rowData.chargeable_weight.toLocaleString()}</>
-                        );
-                    }}
-                ></Column>
-                <Column
-                    field="bill_rate"
-                    header="Rate"
-                    body={(rowData) => {
-                        return <>{rowData.bill_rate.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="bill_ait"
-                    header="AIT"
-                    body={(rowData) => {
-                        return <>{rowData.bill_ait.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="bill_cgc"
-                    header="CGC"
-                    body={(rowData) => {
-                        return <>{rowData.bill_cgc.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="bill_vat"
-                    header="VAT"
-                    body={(rowData) => {
-                        return <>{rowData.bill_vat.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="bill_total_usd"
-                    header="TTL USD"
-                    body={(rowData) => {
-                        return <>{rowData.bill_total_usd.toLocaleString()}</>;
-                    }}
-                ></Column>
-                <Column
-                    field="bill_exchange_rate"
-                    header="Ex. Rate"
-                    body={(rowData) => {
-                        return (
-                            <>{rowData.bill_exchange_rate.toLocaleString()}</>
-                        );
-                    }}
-                ></Column>
-                <Column
-                    field="bill_payable_bdt"
-                    header="TTL BDT"
-                    body={(rowData) => {
-                        return <>{rowData.bill_payable_bdt.toLocaleString()}</>;
-                    }}
-                ></Column>
+                <Column field="transaction_date" header="Date"></Column>
+                <Column field="payment_method" header="Method"></Column>
+                <Column field="current_amount" header="Amount"></Column>
+                <Column field="transaction_note" header="Receipt"></Column>
             </DataTable>
-            {data && (
-                <Pagination
-                    className="my-5 flex justify-center"
-                    totalPages={data.last_page || 1}
-                    currentPage={data.current_page || 1}
-                    perPage={data.per_page || 1}
-                    onPageChange={({ currentPage }) =>
-                        getBillsByVendor({
-                            id,
-                            page: currentPage,
-                            search: debouncedValue,
-                        })
-                    }
-                />
-            )}
-        </>
+        </div>
     );
 };
 

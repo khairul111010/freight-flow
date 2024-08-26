@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{id}', [CustomerController::class, 'show']);
         Route::patch('/{id}', [CustomerController::class, 'update']);
         Route::delete('/{id}', [CustomerController::class, 'destroy']);
+        Route::get('/transactions/{id}', [CustomerController::class, 'transactions']);
     });
 
     Route::prefix('invoices')->group(function () {
@@ -70,6 +71,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::delete('/{id}', [InvoiceController::class, 'destroy']);
     });
 
+
     Route::prefix('expenses')->group(function () {
         Route::get('/', [ExpensesController::class, 'index']);
         Route::post('/', [ExpensesController::class, 'store']);
@@ -84,6 +86,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/{id}', [VendorController::class, 'show']);
         Route::patch('/{id}', [VendorController::class, 'update']);
         Route::delete('/{id}', [VendorController::class, 'destroy']);
+        Route::get('/transactions/{id}', [VendorController::class, 'transactions']);
     });
 
 

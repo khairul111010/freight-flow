@@ -1,7 +1,7 @@
 import { baseApi } from ".";
 
 const bankApi = baseApi
-    .enhanceEndpoints({ addTagTypes: ["Bank","Cash"] })
+    .enhanceEndpoints({ addTagTypes: ["Bank", "Cash"] })
     .injectEndpoints({
         endpoints: (builder) => ({
             getBanks: builder.query<any, void>({
@@ -31,8 +31,7 @@ const bankApi = baseApi
                 invalidatesTags: ["Bank"],
             }),
             getAllBankAccounts: builder.query<any, void>({
-                query: () =>
-                    `/bank-account/all`,
+                query: () => `/bank-account/all`,
                 providesTags: ["Bank"],
                 transformResponse: (response: any) => response.result,
             }),
@@ -50,14 +49,16 @@ const bankApi = baseApi
                 transformResponse: (response: any) => response.result,
             }),
             getBankAccountTransactions: builder.query<any, any>({
-                query: (pagination) => `/bank-account/transactions/${pagination.id}?month=${
+                query: (pagination) =>
+                    `/bank-account/transactions/${pagination.id}?month=${
                         pagination.month || new Date().getMonth() + 1
                     }&year=${pagination.year || new Date().getFullYear()}`,
                 providesTags: ["Bank"],
                 transformResponse: (response: any) => response.result,
             }),
             getCashTransactions: builder.query<any, any>({
-                query: (pagination) => `/organizations/transactions/cash?month=${
+                query: (pagination) =>
+                    `/organizations/transactions/cash?month=${
                         pagination.month || new Date().getMonth() + 1
                     }&year=${pagination.year || new Date().getFullYear()}`,
                 providesTags: ["Cash"],
@@ -68,6 +69,14 @@ const bankApi = baseApi
                     url: `bank-account`,
                     method: "POST",
                     body,
+                }),
+                invalidatesTags: ["Bank"],
+            }),
+            withdrawBankAccount: builder.mutation({
+                query: (body) => ({
+                    url: `bank-account/withdraw/${body.id}`,
+                    method: "POST",
+                    body: body.body,
                 }),
                 invalidatesTags: ["Bank"],
             }),
@@ -83,6 +92,7 @@ const bankApi = baseApi
     });
 
 export const {
+    useWithdrawBankAccountMutation,
     useGetCashTransactionsQuery,
     useLazyGetCashTransactionsQuery,
     useGetBankAccountTransactionsQuery,

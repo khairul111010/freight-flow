@@ -25,6 +25,8 @@ import VendorBills from "../modules/vendors/pages/VendorBills";
 import Vendors from "../modules/vendors/pages/Vendors";
 import VendorsAdd from "../modules/vendors/pages/VendorsAdd";
 import VendorsEdit from "../modules/vendors/pages/VendorsEdit";
+import Expense from "../modules/expense/pages/Expense";
+import ExpenseAdd from "../modules/expense/pages/ExpenseAdd";
 
 const appRoutes: RouteObject[] = [
     {
@@ -125,6 +127,14 @@ const appRoutes: RouteObject[] = [
             {
                 path: AppRoutesEnum.CASH_PDF,
                 element: <CashReceiptPDF />,
+            },
+            {
+                path: AppRoutesEnum.EXPENSE,
+                element: <Expense />,
+            },
+            {
+                path: AppRoutesEnum.EXPENSE_ADD,
+                element: <ExpenseAdd />,
             },
             {
                 path: AppRoutesEnum.SETTINGS,
