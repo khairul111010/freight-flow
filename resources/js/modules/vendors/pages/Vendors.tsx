@@ -1,17 +1,17 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Button from "../../../components/button";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
 
-import { DataTable } from "primereact/datatable";
+import { IconEye, IconPencil } from "@tabler/icons-react";
 import { Column } from "primereact/column";
-import Spinner from "../../../components/preloader/Spinner";
+import { DataTable } from "primereact/datatable";
 import { classNames } from "primereact/utils";
-import { IconEye, IconPencil, IconTrash } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import Pagination from "../../../components/pagination";
-import { useLazyGetVendorsQuery } from "../../../store/apis/vendorApi";
-import useDebounce from "../../../hooks/useDebounce";
 import SearchInput from "../../../components/form/search-input/SearchInput";
+import Pagination from "../../../components/pagination";
+import Spinner from "../../../components/preloader/Spinner";
+import useDebounce from "../../../hooks/useDebounce";
+import { useLazyGetVendorsQuery } from "../../../store/apis/vendorApi";
 
 const Vendors = () => {
     const [search, setSearch] = useState("");
@@ -31,7 +31,7 @@ const Vendors = () => {
                     className="w-fit rounded-md"
                     to={AppRoutesEnum.VENDORS_ADD}
                 >
-                    Add Vendors
+                    Add Carrier
                 </Button>
                 <SearchInput
                     name="search"

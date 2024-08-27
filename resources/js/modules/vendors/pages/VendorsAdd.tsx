@@ -4,7 +4,7 @@ const VendorsAdd = () => {
     return (
         <div className="w-[800px] mx-auto">
             <div className="text-center my-3 text-xl font-semibold">
-                Vendor Add Form
+                Carrier Add Form
             </div>
 
             <VendorAddForm />

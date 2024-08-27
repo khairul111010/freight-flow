@@ -1,16 +1,16 @@
 import { Form, Formik, FormikProps } from "formik";
-import React, { FC, useEffect, useRef } from "react";
-import { object, string } from "yup";
-import TextInput from "../../../components/form/text-input";
-import Button from "../../../components/button";
+import { FC, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { object, string } from "yup";
+import Button from "../../../components/button";
+import SelectInput from "../../../components/form/select-input";
+import TextInput from "../../../components/form/text-input";
 import { AppRoutesEnum } from "../../../enums/routeEnums";
 import {
     useCreateVendorMutation,
     useUpdateVendorMutation,
 } from "../../../store/apis/vendorApi";
-import SelectInput from "../../../components/form/select-input";
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
     name: "",
@@ -84,7 +84,7 @@ const VendorAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                 type="submit"
                                 className="rounded-md"
                             >
-                                {editData ? `Update` : `Add`} Vendor
+                                {editData ? `Update` : `Add`} Carrier
                             </Button>
                         </div>
                     </Form>

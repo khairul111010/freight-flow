@@ -33,7 +33,7 @@ const ProfitAndLoss = () => {
                     />
                 </div>
                 <div>
-                    Total Profit:{" "}
+                    Total:{" "}
                     <span className="font-bold">{total.toLocaleString()} </span>
                     BDT
                 </div>
@@ -113,6 +113,17 @@ const ProfitAndLoss = () => {
                                 }}
                             ></Column>
                             <Column
+                                field="gross_weight"
+                                header="GROSS WEIGHT"
+                                body={(rowData) => {
+                                    return (
+                                        <>
+                                            {rowData.gross_weight.toLocaleString()}
+                                        </>
+                                    );
+                                }}
+                            ></Column>
+                            <Column
                                 field="invoice_rate"
                                 header="Invoice Rate"
                                 body={(rowData) => {
@@ -180,7 +191,7 @@ const ProfitAndLoss = () => {
                             ></Column>
                             <Column
                                 field="profit"
-                                header="Profit (BDT)"
+                                header="Profit/Loss (BDT)"
                                 body={(rowData) => {
                                     return (
                                         <>{rowData.profit.toLocaleString()}</>

@@ -1,20 +1,16 @@
 import { Form, Formik, FormikProps } from "formik";
-import React, { FC, useEffect, useRef } from "react";
-import { number, object, string } from "yup";
-import TextInput from "../../../components/form/text-input";
-import Button from "../../../components/button";
-import {
-    useCreateCustomerMutation,
-    useGetAllCustomersQuery,
-    useUpdateCustomerMutation,
-} from "../../../store/apis/customerApi";
+import { FC, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { AppRoutesEnum } from "../../../enums/routeEnums";
-import SelectInput from "../../../components/form/select-input";
+import { number, object, string } from "yup";
+import Button from "../../../components/button";
 import DateInput from "../../../components/form/date-input";
-import { useGetAllVendorsQuery } from "../../../store/apis/vendorApi";
+import SelectInput from "../../../components/form/select-input";
+import TextInput from "../../../components/form/text-input";
+import { AppRoutesEnum } from "../../../enums/routeEnums";
+import { useGetAllCustomersQuery } from "../../../store/apis/customerApi";
 import { useCreateInvoiceMutation } from "../../../store/apis/invoiceApi";
+import { useGetAllVendorsQuery } from "../../../store/apis/vendorApi";
 type Props = { editData?: any | null; onSuccess?: (result: any) => void };
 const initialValues = {
     issue_date: "",
@@ -313,7 +309,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                 />
                                 <TextInput
                                     name="master_air_way_bill"
-                                    label="MAWB"
+                                    label="MAWB No."
                                 />
                                 <TextInput
                                     type="number"
@@ -321,15 +317,15 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     label="MAWB Fee"
                                     onChange={calculateTotal}
                                 />
-                                <TextInput
+                                {/* <TextInput
                                     type="number"
                                     name="unit"
                                     label="Unit"
-                                />
+                                /> */}
                                 <TextInput
                                     type="number"
                                     name="cartoon_amount"
-                                    label="Cartoon Amount"
+                                    label="Cartoon Quantity"
                                 />
                                 <TextInput
                                     type="number"
@@ -342,7 +338,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
                                     label="Chargeable Weight"
                                     onChange={calculateTotal}
                                 />
-                                <TextInput type="number" name="kg" label="Kg" />
+                                {/* <TextInput type="number" name="kg" label="Kg" /> */}
 
                                 <TextInput
                                     type="number"
@@ -518,7 +514,7 @@ const InvoiceAddForm: FC<Props> = ({ editData, onSuccess }) => {
 
                                     <SelectInput
                                         name="vendor_id"
-                                        label="Vendor"
+                                        label="Carrier"
                                         options={
                                             allVendors?.map((vendor: any) => {
                                                 return {

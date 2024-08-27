@@ -17,19 +17,19 @@ const sidebarMenuConfig: MenuItemType[] = [
         requiredPermissions: []
     },       
     {
-        name: 'Invoices',
+        name: 'Customer Invoices',
         path: AppRoutesEnum.INVOICE,
         icon: IconClipboardText,
         requiredPermissions: []
     },       
     {
-        name: 'Bills',
+        name: 'Carrier Bills',
         path: AppRoutesEnum.BILL,
         icon: IconClipboardText,
         requiredPermissions: []
     },       
     {
-        name: 'Vendors',
+        name: 'Carrier',
         path: AppRoutesEnum.VENDORS,
         icon: IconPlane,
         requiredPermissions: []

@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { Form, Formik, FormikProps } from "formik";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { mixed, number, object, string } from "yup";
+import Button from "../../../components/button";
+import FileInput from "../../../components/form/file-input";
+import TextInput from "../../../components/form/text-input";
 import {
     useGetOrganizationQuery,
     useUpdateOrganizationMutation,
 } from "../../../store/apis/organizationApi";
-import { Form, Formik, FormikProps } from "formik";
-import FileInput from "../../../components/form/file-input";
-import Button from "../../../components/button";
-import TextInput from "../../../components/form/text-input";
-import toast from "react-hot-toast";
 const initialValues = {
     name: "",
     description: "",
@@ -128,7 +128,7 @@ const SettingsForm = () => {
                         <TextInput
                             type="number"
                             name="opening_cash_balance"
-                            label="Balance"
+                            label="Cash Opening Balance"
                         />
 
                         <div className="flex items-center justify-center">

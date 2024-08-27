@@ -38,7 +38,7 @@ const Bills = () => {
                     className="w-fit rounded-md"
                     to={AppRoutesEnum.INVOICE_ADD}
                 >
-                    Add Bill
+                    Add Invoice
                 </Button>
                 <SearchInput
                     name="search"
