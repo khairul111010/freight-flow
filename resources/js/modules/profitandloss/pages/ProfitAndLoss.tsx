@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 import SeparatedDateInput from "../../../components/form/date-input/SeparatedDateInput";
 import Spinner from "../../../components/preloader/Spinner";
 import { useLazyGetProfitLossQuery } from "../../../store/apis/profitLossApi";
-
+import Button from "../../../components/button";
+import * as XLSX from "xlsx";
+interface DataRow {
+    [key: string]: any;
+}
 const ProfitAndLoss = () => {
     const [date, setDate] = useState<Date>(new Date());
     const [total, setTotal] = useState(0);
@@ -23,6 +27,47 @@ const ProfitAndLoss = () => {
         }
     }, [data]);
 
+    const handleExport = () => {
+        if (data && data.length > 0) {
+            const columnMapping: { [key: string]: string } = {
+                invoice_number: "Invoice Number",
+                issue_date: "Issue Date",
+                master_air_way_bill: "MAWB",
+                destination: "Destination",
+                cartoon_amount: "Cartoon Amount",
+                gross_weight: "Gross Weight",
+                chargeable_weight: "Chargeable Weight",
+                invoice_rate: "Invoice Rate",
+                bill_rate: "Bill Rate",
+                customer: "Customer",
+                vendor: "Vendor",
+                invoice_total_usd: "Invoice Total Usd",
+                bill_total_usd: "Bill Total Usd",
+                exchange_rate: "Exchange Rate",
+                invoice_receivable_amount_bdt: "Invoice Receivable Amount BDT",
+                bill_payable_bdt: "Bill Payable BDT",
+                profit: "Profit",
+
+            };
+
+            // Transform data to use new column names
+            const transformedData: DataRow[] = data.map((row: DataRow) => {
+                const newRow: DataRow = {};
+                for (const key in row) {
+                    if (row.hasOwnProperty(key)) {
+                        newRow[columnMapping[key] || key] = row[key];
+                    }
+                }
+                return newRow;
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(transformedData);
+            XLSX.utils.book_append_sheet(wb, ws, `ProfitAndLoss`);
+            XLSX.writeFile(wb, `ProfitAndLoss.xlsx`);
+        }
+    };
+
     return (
         <div>
             <div className="flex items-center justify-between">
@@ -33,9 +78,14 @@ const ProfitAndLoss = () => {
                     />
                 </div>
                 <div>
-                    Total:{" "}
-                    <span className="font-bold">{total.toLocaleString()} </span>
-                    BDT
+                    <div>
+                        Total:{" "}
+                        <span className="font-bold">
+                            {total.toLocaleString()}{" "}
+                        </span>
+                        BDT
+                    </div>
+                    <Button onClick={handleExport}>Export</Button>
                 </div>
             </div>
             <div className="bg-white rounded-md overflow-hidden mt-4">
